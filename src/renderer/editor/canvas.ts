@@ -1,6 +1,9 @@
 import { openContextMenu } from './contextMenuPlacement.js';
 import type { Deck, Slide, SlideElement } from '@shared/deck.js';
+import { canHoldText, shapeToTextBox } from '@shared/shapeText.js';
+import { moveCorner, polygonPoints } from '@shared/polygonShape.js';
 import { type Rect, fitScale, makeId } from '@shared/geometry.js';
+import { isMeshName } from '@shared/meshFiles.js';
 
 type XY = { x: number; y: number };
 import {
@@ -593,7 +596,8 @@ type DragMode =
       /** Original endpoints of every selected line, keyed by id. */
       origins: Map<string, { start: XY; end: XY }>;
     }
-  | { kind: 'curve-control'; elementId: string };
+  | { kind: 'curve-control'; elementId: string }
+  | { kind: 'polygon-corner'; elementId: string; index: number };
 
 /** Fired on the canvas host with a message (`detail`) for the shell's status bar. */
 export const CANVAS_NOTICE_EVENT = 'deckwerk-canvas-notice';
@@ -1302,7 +1306,7 @@ export class EditorCanvas {
       // and forgotten by the other. Everything below is genuinely editor-side:
       // details that live on child nodes a rebuild would have recreated.
       const before = previous?.elements.find((e) => e.id === el.id);
-      applyElementBoxStyles(node, el, before);
+      applyElementBoxStyles(node, el, before, resolve.resolveSrc);
       applyTextRenderState(node, el, before);
       if (el.type === 'image' || el.type === 'video') {
         syncMediaFrame(node, el);
@@ -1800,6 +1804,23 @@ export class EditorCanvas {
         box.appendChild(h);
       }
       if (selection.size === 1) {
+        // A straight-sided shape offers its corners. The box is rotated with
+        // the element, so corners are placed in its own unrotated frame.
+        const corners = el.type === 'shape' ? polygonPoints(el) : null;
+        if (corners && el.type === 'shape') {
+          const size = el.pathSize ?? { w: el.w, h: el.h };
+          corners.forEach((corner, index) => {
+            const h = document.createElement('div');
+            h.className = 'handle handle-corner';
+            h.dataset.corner = String(index);
+            h.dataset.elementId = el.id;
+            h.title = 'Drag to move this corner';
+            h.style.left = `${(corner.x / size.w) * el.w}px`;
+            h.style.top = `${(corner.y / size.h) * el.h}px`;
+            h.style.margin = '0';
+            box.appendChild(h);
+          });
+        }
         if (tableLayout && tableLayout.columnWidths.length > 1) {
           const total = tableLayout.columnWidths.reduce((sum, width) => sum + width, 0);
           let offset = 0;
@@ -2038,7 +2059,7 @@ export class EditorCanvas {
     // turns any ordinary object handle into a rotation handle. Curve controls
     // remain dedicated to bending the curve.
     const rotationHandle = target.closest<HTMLElement>(
-      '.handle:not(.handle-curve-control)[data-element-id]',
+      '.handle:not(.handle-curve-control):not(.handle-corner)[data-element-id]',
     );
     if (commandModifier(ev) && rotationHandle?.dataset.elementId) {
       const el = slide.elements.find(
@@ -2060,6 +2081,17 @@ export class EditorCanvas {
         };
         return;
       }
+    }
+
+    // A corner of a straight-sided shape: drag it anywhere, the frame follows.
+    if (target.dataset?.corner !== undefined && target.dataset.elementId) {
+      this.store.beginTransaction('Move corner');
+      this.drag = {
+        kind: 'polygon-corner',
+        elementId: target.dataset.elementId,
+        index: Number(target.dataset.corner),
+      };
+      return;
     }
 
     // Bend handle on a quadratic line or arrow.
@@ -2228,7 +2260,8 @@ export class EditorCanvas {
       !this.dragStarted &&
       this.drag.kind !== 'marquee' &&
       this.drag.kind !== 'endpoint' &&
-      this.drag.kind !== 'curve-control'
+      this.drag.kind !== 'curve-control' &&
+      this.drag.kind !== 'polygon-corner'
     ) {
       const start = this.drag.startCanvas;
       const moved =
@@ -2613,6 +2646,16 @@ export class EditorCanvas {
         break;
       }
 
+      case 'polygon-corner': {
+        const drag = this.drag;
+        this.store.updateSelected((target) => {
+          if (target.id === drag.elementId && target.type === 'shape') {
+            moveCorner(target, drag.index, point);
+          }
+        });
+        break;
+      }
+
       case 'marquee': {
         const s = this.drag.startCanvas;
         this.marquee = {
@@ -2813,6 +2856,19 @@ export class EditorCanvas {
     if (!hit) return;
 
     if (hit.type === 'text' || hit.type === 'html') {
+      this.beginTextEdit(hit.id);
+    } else if (hit.type === 'shape' && canHoldText(hit)) {
+      // Typing into a rectangle or an ellipse makes it a text box with the
+      // same fill, border and corners: one object, not a label laid over a
+      // shape. The store renders synchronously, so the box is on the canvas
+      // by the time the edit opens.
+      const index = this.store.get().slideIndex;
+      this.store.commit((deck) => {
+        const elements = deck.slides[index].elements;
+        const at = elements.findIndex((candidate) => candidate.id === hit.id);
+        const shape = elements[at];
+        if (shape?.type === 'shape') elements[at] = shapeToTextBox(shape);
+      }, { label: 'Add text to shape' });
       this.beginTextEdit(hit.id);
     } else if (hit.type === 'video') {
       this.toggleVideo(hit.id);
@@ -6180,7 +6236,12 @@ export class EditorCanvas {
       // A file is media by its extension, or failing that by its MIME type:
       // Photos, a browser's "save image" and scanners hand over `image`,
       // `photo.jfif` or `scan.tiff`, and those used to vanish without a word.
-      const dropped = [...(e.dataTransfer?.files ?? [])];
+      // 3D models become one interactive page between them (dropMeshes); the
+      // rest of the drop goes on as usual.
+      const all = [...(e.dataTransfer?.files ?? [])];
+      const meshes = all.filter((file) => isMeshName(file.name));
+      if (meshes.length > 0) await this.dropMeshes(meshes, dropPoint);
+      const dropped = all.filter((file) => !isMeshName(file.name));
       const files = dropped.flatMap((original) => {
         const name = mediaFileName(original.name, original.type);
         const kind = name ? classifyMediaName(name) : null;
@@ -6197,16 +6258,17 @@ export class EditorCanvas {
       // A drag out of a web page carries no file at all -- only markup and the
       // image's URL -- so it takes the fetch-the-bytes path instead.
       if (files.length === 0) {
+        if (meshes.length > 0 && refused.length === 0) return;
         const fetched = await this.dropWebImage(e.dataTransfer, dropPoint);
         if (!fetched && (refused.length > 0 || offeredImage)) {
           this.notice(refused.length > 0
-            ? `Can't add ${refused.join(', ')}: only images and videos can go on a slide.`
+            ? `Can't add ${refused.join(', ')}: only images, videos and 3D models (.glb, .gltf, .obj) can go on a slide.`
             : "That image can't be copied out of the page it came from. Save it, then drop the file.");
         }
         return;
       }
       if (refused.length > 0) {
-        this.notice(`Skipped ${refused.join(', ')}: only images and videos can go on a slide.`);
+        this.notice(`Skipped ${refused.join(', ')}: only images, videos and 3D models (.glb, .gltf, .obj) can go on a slide.`);
       }
 
       // Natural size and a preview frame are read from the local bytes before
@@ -6308,6 +6370,39 @@ export class EditorCanvas {
    * straight away -- the browser can decode a remote image for display, so
    * its natural size and a live preview are known before the fetch lands.
    */
+  /**
+   * Dropped .glb/.gltf/.obj files: built into one interactive 3D page (the
+   * main process or the collab server does the work, see meshPage.ts) and
+   * placed as a web element centred on the drop.
+   */
+  private async dropMeshes(files: File[], dropPoint: { x: number; y: number }): Promise<void> {
+    if (!window.api.importMeshFiles) return;
+    this.notice(files.length > 1 ? `Building a 3D view of ${files.length} models…` : 'Building a 3D view…');
+    let page: Awaited<ReturnType<typeof window.api.importMeshFiles>>;
+    try {
+      page = await window.api.importMeshFiles(files);
+    } catch (error) {
+      this.notice(`Could not show that model: ${error instanceof Error ? error.message : String(error)}`);
+      return;
+    }
+    const { canvas } = this.store.get().deck;
+    const scale = Math.min(1, (canvas.w * 0.8) / page.w, (canvas.h * 0.8) / page.h);
+    const w = Math.round(page.w * scale);
+    const h = Math.round(page.h * scale);
+    const id = makeId('web');
+    this.store.commit((deck) => {
+      const slide = deck.slides[this.store.get().slideIndex];
+      const z = slide.elements.reduce((max, el) => Math.max(max, el.z), 0) + 1;
+      slide.elements.push({
+        id, type: 'web', src: page.src, poster: page.poster, title: page.title, interactive: true,
+        x: Math.round(Math.min(Math.max(0, dropPoint.x - w / 2), canvas.w - w)),
+        y: Math.round(Math.min(Math.max(0, dropPoint.y - h / 2), canvas.h - h)),
+        w, h, rot: 0, z, opacity: 1, class: [], style: {},
+      });
+    }, { label: 'Add 3D model' });
+    this.store.select([id]);
+  }
+
   private async dropWebImage(
     data: DataTransfer | null,
     dropPoint: { x: number; y: number },

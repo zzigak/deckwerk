@@ -28,3 +28,26 @@
 :root[data-ui-theme="light"] .workflow-overlay { background: rgb(31 35 48 / 28%); }
 /* Trim window: the ffmpeg command readout. The viewers stay dark, like the canvas. */
 :root[data-ui-theme="light"] #command { background: var(--panel-2); }
+
+/* The no-deck welcome screen and its two actions. */
+:root[data-ui-theme="light"] .welcome-screen {
+  background:
+    radial-gradient(circle at 50% 38%, rgb(59 99 216 / 10%), transparent 38%),
+    var(--bg);
+}
+:root[data-ui-theme="light"] .welcome-action { border-color: var(--line); background: var(--panel); }
+:root[data-ui-theme="light"] .welcome-action:hover:not(:disabled) { background: var(--panel-2); }
+
+/* Ending a collaboration: the warning keeps its red, on a light card. */
+:root[data-ui-theme="light"] #end-collaboration-popover {
+  background: linear-gradient(145deg, rgb(201 58 84 / 10%), var(--panel) 58%);
+  box-shadow: 0 14px 38px rgb(0 0 0 / 18%), 0 0 0 1px rgb(201 58 84 / 12%);
+}
+:root[data-ui-theme="light"] #end-collaboration-popover::before { background: #f6e4e7; }
+:root[data-ui-theme="light"] #end-collaboration-popover h2 { color: var(--danger); }
+
+/* Agent chat: the error and fast-mode colours were pale tints made for a dark panel. */
+:root[data-ui-theme="light"] .agent-chat-message-system .agent-chat-message-body,
+:root[data-ui-theme="light"] .agent-chat-message.error .agent-chat-message-body,
+:root[data-ui-theme="light"] .agent-chat-error { color: var(--danger); }
+:root[data-ui-theme="light"] .agent-chat-fast-mode.active { color: var(--yellow); }

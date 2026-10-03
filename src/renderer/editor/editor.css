@@ -180,6 +180,10 @@ select.panel-action-select {
 }
 
 body.welcome-mode .deck-only { display: none; }
+/* The theme toggle is the one control on the right that also belongs to the
+   welcome screen: show that group with only it. */
+body.welcome-mode .bar-right.deck-only:has(.ui-theme-toggle) { display: flex; }
+body.welcome-mode .bar-right.deck-only > :not(.ui-theme-toggle) { display: none; }
 
 /* --- layout --- */
 

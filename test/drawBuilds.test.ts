@@ -131,6 +131,7 @@ describe('drawing an arrow in while presenting', () => {
 
   it('grows from nothing to the whole line over its duration', () => {
     const { player, line, hidden } = present(deckWith(arrow(), draw()));
+    const full = x2(line());
     expect(hidden()).toBe(true);
 
     player.next();
@@ -144,7 +145,9 @@ describe('drawing an arrow in while presenting', () => {
     expect(halfway).toBeLessThan(300);
 
     vi.advanceTimersByTime(600);
-    expect(x2(line())).toBe(400);
+    // Whole again: exactly the line the static slide draws, which stops behind its head.
+    expect(x2(line())).toBe(full);
+    expect(full).toBeLessThan(400);
   });
 
   it('finishes the stroke at once when the talk moves on mid-draw', () => {
@@ -155,21 +158,37 @@ describe('drawing an arrow in while presenting', () => {
       action: { type: 'appear', target: 'second', value: null },
     });
     const { player, line } = present(deck);
+    const full = x2(line());
     player.next();
     vi.advanceTimersByTime(300);
-    expect(x2(line())).toBeLessThan(400);
+    expect(x2(line())).toBeLessThan(full);
     player.next();
-    expect(x2(line())).toBe(400);
+    expect(x2(line())).toBe(full);
     // And nothing keeps animating it afterwards.
     vi.advanceTimersByTime(3000);
-    expect(x2(line())).toBe(400);
+    expect(x2(line())).toBe(full);
   });
 
   it('shows the finished line when a step is jumped to rather than played', () => {
     const { player, line, hidden } = present(deckWith(arrow(), draw()));
+    const full = x2(line());
     player.goTo({ slide: 0, step: 1 });
     expect(hidden()).toBe(false);
-    expect(x2(line())).toBe(400);
+    expect(x2(line())).toBe(full);
+  });
+
+  it('carries the arrowhead on the tip and leaves it where the slide draws it', () => {
+    const { player, line } = present(deckWith(arrow(), draw()));
+    const head = () => line().parentElement!.querySelector<SVGElement>('path.arrowhead')!;
+    const full = x2(line());
+    player.next();
+    vi.advanceTimersByTime(400);
+    const moved = head().getAttribute('transform') ?? '';
+    const shift = Number(moved.match(/translate\((-?[\d.]+)/)![1]) - full;
+    // Pulled back from the end by as much as the line is still short of it.
+    expect(shift).toBeCloseTo(x2(line()) - full, 1);
+    vi.advanceTimersByTime(700);
+    expect(head().getAttribute('transform')).toBeNull();
   });
 
   it('draws a curve with its tip on the curve', () => {

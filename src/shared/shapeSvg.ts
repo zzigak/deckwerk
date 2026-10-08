@@ -303,6 +303,42 @@ export const ARROWHEAD_PATH = 'M0,0 L6,3 L0,6 Z';
 export const ARROWHEAD_REF = { x: 5, y: 3 };
 
 /**
+ * The line or curve `lineSvg` drew (already stopped short of its heads),
+ * drawn only as far as `progress` (0..1), for the draw-in build. Returns the
+ * attributes to set on the stroke, plus where its tip is now (`tip`), where
+ * it ends when finished (`end`) and how far the tip's direction has turned
+ * from the finished end's (`turn`, degrees), so the end head or end cap can
+ * be carried along: translate `end` to `tip` and rotate by `turn`.
+ */
+export function partialRenderedStroke(
+  finished: { x1: number; y1: number; x2: number; y2: number } | { d: string },
+  progress: number,
+): { attrs: Record<string, string>; tip: XY; end: XY; turn: number } | null {
+  const p = Math.min(1, Math.max(0, progress));
+  const n = (value: number): string => String(Math.round(value * 100) / 100 + 0);
+  if ('x1' in finished) {
+    const tip = { x: finished.x1 + (finished.x2 - finished.x1) * p, y: finished.y1 + (finished.y2 - finished.y1) * p };
+    return { attrs: { x2: n(tip.x), y2: n(tip.y) }, tip, end: { x: finished.x2, y: finished.y2 }, turn: 0 };
+  }
+  const v = finished.d.match(/-?\d+(?:\.\d+)?(?:e-?\d+)?/gi)?.map(Number);
+  if (!/^\s*M/i.test(finished.d) || !/Q/i.test(finished.d) || !v || v.length !== 6) return null;
+  const a = { x: v[0], y: v[1] };
+  const c = { x: v[2], y: v[3] };
+  const b = { x: v[4], y: v[5] };
+  // As in partialStroke: a sliver rather than a point keeps the head facing along the curve.
+  const t = Math.max(p, 0.002);
+  const mix = (u: XY, w: XY): XY => ({ x: u.x + (w.x - u.x) * t, y: u.y + (w.y - u.y) * t });
+  const first = mix(a, c);
+  const tip = mix(first, mix(c, b));
+  const deg = (dx: number, dy: number): number => (Math.atan2(dy, dx) * 180) / Math.PI;
+  const turn = deg(tip.x - first.x, tip.y - first.y) - deg(b.x - c.x, b.y - c.y);
+  return {
+    attrs: { d: `M ${n(a.x)} ${n(a.y)} Q ${n(first.x)} ${n(first.y)} ${n(tip.x)} ${n(tip.y)}` },
+    tip, end: b, turn,
+  };
+}
+
+/**
  * The attributes of a line or arrow drawn only as far as `progress` (0..1)
  * along its length, for the draw-in build. The geometry itself is shortened,
  * rather than masked with a dash pattern, so an arrowhead rides the tip of

@@ -12,7 +12,7 @@ import {
   resolveState,
   stepCount,
 } from '@shared/timeline.js';
-import { ARROWHEAD_PATH, ARROWHEAD_REF, partialStroke } from '@shared/shapeSvg.js';
+import { ARROWHEAD_PATH, ARROWHEAD_REF, partialRenderedStroke } from '@shared/shapeSvg.js';
 import {
   applyStageScale,
   fitAutoTextElement,
@@ -1343,11 +1343,13 @@ export class Player {
     if (!el || el.type !== 'shape') return;
     // The stroke is the SVG's own child; an arrowhead's path sits in <defs>.
     const stroke = this.stage.querySelector<SVGElement>(
-      `[data-element-id="${CSS.escape(el.id)}"] svg > :is(line, path, rect, ellipse)`,
+      `[data-element-id="${CSS.escape(el.id)}"] svg > :is(line, path, rect, ellipse):not(.arrowhead)`,
     );
     if (!stroke || duration <= 0) return;
 
-    // A line or arrow is shortened, so its head rides the tip. An outline (a
+    // A line or arrow is shortened along the geometry it is drawn with (which
+    // already stops behind its heads), and its end head, or the round cap a
+    // curve has where there is no head, rides the tip. An outline (a
     // box, an ellipse, a drawn path) is traced with a dash as long as the
     // outline, slid into place; its fill comes in once the outline is nearly
     // closed, the way a drawn shape is coloured in.
@@ -1355,6 +1357,23 @@ export class Player {
     const length = open ? 0 : (stroke as SVGGeometryElement).getTotalLength?.() ?? 0;
     if (!open && !(length > 0)) return;
     const filled = !open && el.fill !== null;
+    // The finished stroke, exactly as the static slide draws it, to cut from
+    // and to put back when the draw ends.
+    const kept = open ? ['x1', 'y1', 'x2', 'y2', 'd'].flatMap((name) => {
+      const value = stroke.getAttribute(name);
+      return value === null ? [] : [[name, value] as const];
+    }) : [];
+    const finished = !open ? null : stroke.tagName.toLowerCase() === 'line'
+      ? {
+        x1: Number(stroke.getAttribute('x1')), y1: Number(stroke.getAttribute('y1')),
+        x2: Number(stroke.getAttribute('x2')), y2: Number(stroke.getAttribute('y2')),
+      }
+      : { d: stroke.getAttribute('d') ?? '' };
+    const endHeadOn = el.arrowEnd || (!el.arrowStart && el.shape === 'arrow');
+    const svg = stroke.parentElement;
+    const rider = !open || !svg ? null : endHeadOn
+      ? [...svg.querySelectorAll<SVGElement>(':scope > path.arrowhead')].pop() ?? null
+      : [...svg.querySelectorAll<SVGElement>(':scope > circle')].pop() ?? null;
     // A traced path's end marker sits at the path's last point, so it would be
     // there from the first frame. While it draws, the marker is lifted off and
     // a copy of the head rides the tip instead, turned along the path.
@@ -1386,9 +1405,16 @@ export class Player {
     };
     const show = (progress: number): void => {
       if (open) {
-        const geometry = partialStroke(el, progress);
+        if (progress >= 1) {
+          for (const [name, value] of kept) stroke.setAttribute(name, value);
+          rider?.removeAttribute('transform');
+          return;
+        }
+        const geometry = finished ? partialRenderedStroke(finished, progress) : null;
         if (!geometry) return;
-        for (const [name, value] of Object.entries(geometry)) stroke.setAttribute(name, String(value));
+        for (const [name, value] of Object.entries(geometry.attrs)) stroke.setAttribute(name, value);
+        rider?.setAttribute('transform', `translate(${geometry.tip.x} ${geometry.tip.y})`
+          + ` rotate(${geometry.turn}) translate(${-geometry.end.x} ${-geometry.end.y})`);
         return;
       }
       if (progress >= 1) {

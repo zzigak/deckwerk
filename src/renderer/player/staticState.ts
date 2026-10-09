@@ -1,5 +1,6 @@
 import type { Slide } from '@shared/deck.js';
 import { applyParagraphVisibility } from '@shared/paragraphs.js';
+import { applyChartBuildVisibility } from '@shared/chartBuild.js';
 import type { SlideState } from '@shared/timeline.js';
 import { curvedShadowClasses } from '@shared/shapeShadow.js';
 
@@ -15,6 +16,7 @@ export function applyStaticSlideState(
   state: SlideState,
 ): void {
   applyParagraphVisibility(stage, state);
+  applyChartBuildVisibility(stage, slide, state);
   const nodes = new Map(
     [...stage.querySelectorAll<HTMLElement>('[data-element-id]')]
       .map((node) => [node.dataset.elementId ?? '', node] as const),

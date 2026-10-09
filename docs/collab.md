@@ -391,6 +391,38 @@ the participant id.
   surface ends the show on both. Speaker View needs pop-ups allowed for the
   site; if the second window is refused, Present falls back to presenting in
   this tab and says why.
+- **Present from a phone** — **Pair phone** in Speaker View's footer (or
+  `P` on either presentation surface, or **Present → Present with phone
+  remote**, which opens the presentation with the code already up) shows a
+  QR code. Scanning it opens `remote.html` on the phone: Next / Previous
+  buttons and left/right swipes, the current slide and whatever the next press
+  will show (the next build, then the next slide), slide and build position,
+  speaker notes with A− / A+, elapsed and per-slide timers, the wall clock and
+  Blank. It holds a screen wake lock where the browser allows one (HTTPS,
+  e.g. `tailscale serve`). The QR is built on the address the presenter's
+  browser reached the server on — the Tailscale name — or, when that is
+  loopback (the desktop app hosting a session), on the server's Tailscale or
+  LAN address.
+
+  The phone talks to the server, not to the presenter's browser: the
+  presenting page opens a relay socket (`/remote-ws`,
+  `src/server/phoneRemote.ts`), separate from the collaboration room so no
+  collaborator ever sees a press. The page stays the authority — it publishes
+  its state and runs the phone's commands exactly like its own buttons, so
+  after **Switch views** the same phone keeps working. A phone may send next,
+  previous, blank and go-to; never end the show or swap displays.
+
+  Pairing codes are 128 random bits in the URL fragment (never sent in a
+  request line, log or `Referer`). A code admits phones for ten minutes and is
+  replaced while the panel stays up; joining hands each phone its own device
+  key, which every command carries and which survives the phone's reconnects.
+  **Disconnect phones** revokes every key and the code on screen; ending the
+  presentation ends the session (a dropped presenter socket gets a minute's
+  grace to reconnect with its session key). On an `--access` server both the
+  presenter and the phone also need a tailnet login that can open the deck —
+  a code is the presenter's say-so, not access. The desktop app pairs phones
+  only while it hosts a collaboration session (presenting then runs through
+  this same page); its standalone presentation windows have no relay.
 - **Sidebar tabs** — Props, Theme (the full preset gallery + adoption
   controls, shared code with the desktop app), Build, History. Restoring a
   history snapshot broadcasts as an ordinary transaction.

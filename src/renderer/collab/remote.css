@@ -44,7 +44,7 @@ html, body {
   gap: 10px var(--gap);
   touch-action: pan-y;
 }
-.remote-current { position: relative; grid-area: current; }
+.remote-current { position: relative; grid-area: current; align-self: start; }
 .remote-preview {
   position: relative;
   overflow: hidden;
@@ -106,8 +106,10 @@ html, body {
 }
 .remote-controls button {
   min-height: 76px;
+  padding: 4px 6px;
   font-size: 18px;
   font-weight: 650;
+  white-space: nowrap;
   touch-action: manipulation;
 }
 .remote-controls button:active:not(:disabled) { transform: scale(.98); }
@@ -135,7 +137,19 @@ html, body {
     grid-template-areas: "bar bar" "stage notes" "controls controls";
   }
   .remote-bar { grid-area: bar; }
-  .remote-stage { grid-area: stage; align-content: start; }
+  /* Half a phone's width is too little for the portrait stack: the current
+     slide takes the left of the column, next slide and clocks the right. */
+  .remote-stage {
+    grid-area: stage;
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+    grid-template-areas: "current next" "current info";
+    align-content: start;
+    min-height: 0;
+    overflow: hidden;
+  }
+  .remote-info { justify-content: flex-start; }
+  .remote-position strong { font-size: 14px; }
+  .remote-elapsed { font-size: 26px; }
   .remote-notes { grid-area: notes; padding-top: 0; border-top: 0; }
   .remote-controls { grid-area: controls; }
   .remote-controls button { min-height: 56px; }

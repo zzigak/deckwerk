@@ -76,10 +76,12 @@ Quarto-like: a CSV (or pasted table) plus a color scheme becomes a native chart.
 
 ## 7. Presenting from a phone
 
-- [ ] Phone remote page served by the collab server: next/previous, current and
+- [x] Phone remote page served by the collab server: next/previous, current and
       next slide thumbnails, speaker notes, timer.
-- [ ] Pair by QR code shown in Speaker View.
-- [ ] Reuse the existing presentation bus messages; works over Tailscale.
+- [x] Pair by QR code shown in Speaker View.
+- [x] Reuse the existing presentation bus messages; works over Tailscale.
+- [ ] Pairing from the desktop app's own presentation windows (today: only
+      while hosting a collaboration session).
 
 ## 8. 3D model shading modes (no agent needed)
 

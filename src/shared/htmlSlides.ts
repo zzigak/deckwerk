@@ -3,10 +3,19 @@ import { MediaEffectSchema, MIRRORED_TEXT_STYLE_PROPERTIES, SlideSchema } from '
 import type { Deck, MediaEffect, Slide, SlideElement, TimelineEntry } from './deck.js';
 import { fitAutoTextElement } from './autoFit.js';
 import { KATEX_AUTO_RENDER_JS, KATEX_CSS, KATEX_JS } from './katexInline.js';
+import {
+  equationBuildAttributes,
+  equationBuildSpec,
+  equationBuildsFromNode,
+  pageBuildKind,
+} from './equationBuildHtml.js';
 import { shapeSvg } from './shapeSvg.js';
 import { codeElementFromNode, codeElementToHtml, lineBuildFromNode } from './codeHtml.js';
 import { CODE_AUTHORING_CSS } from './codeBlocks.js';
 import { applyTableColumnWidths } from './paragraphs.js';
+import { chartFieldsFromHtml, chartToHtml } from './chartHtml.js';
+import { isChartBuildValue } from './chartBuild.js';
+import { compareDataAttrs, compareFromDataset } from './compare.js';
 import { layoutMaster, placeNewPlaceholders, syncSlideWithLayoutMaster, type FixedLayout } from './layoutMasters.js';
 import {
   cssMediaBorder,
@@ -296,6 +305,13 @@ export function renderAuthoredMath(
     ],
     throwOnError: false,
     strict: 'ignore',
+    // Equation term markers, exactly as the player trusts them
+    // (`katexTermOptions` in shared/equationTerms.ts). Written out rather than
+    // imported, because this function is serialised into the page.
+    trust: (context: { command?: string; class?: string }) => context.command === '\\htmlClass'
+      && (context.class ?? '').trim().split(/\s+/)
+        .every((name) => /^step-[A-Za-z0-9_-]+$/.test(name)),
+    macros: { '\\step': '\\htmlClass{step-#1}{#2}', '\\class': '\\htmlClass{#1}{#2}' },
   });
   // An escaped dollar shows as a dollar, but stays recognisably escaped: the
   // compile reads this page back into the deck, where a bare `$` would be
@@ -412,6 +428,9 @@ export function authoringCss(canvas: { w: number; h: number }): string {
      and clamping it to the slide silently resizes the object. The slide clips
      what overflows, which is what the player does too. */
   img, video { display: block; }
+  /* A chart's content is an inert data script, so a figure given no height
+     would measure as nothing and vanish; a 16:9 box is its natural default. */
+  [data-element="chart"] { display: block; aspect-ratio: 16 / 9; min-width: 240px; }
 ${CODE_AUTHORING_CSS}`;
 }
 
@@ -815,13 +834,16 @@ function sortedJson(value: unknown): string | undefined {
  */
 function mergedTimeline(previous: Slide, compiled: Slide, theirs = new Set<string>()): TimelineEntry[] {
   const present = new Set(compiled.elements.map((element) => element.id));
+  // Keyed by kind and object: a page states an object's appearance, and its
+  // equation builds (`equationBuildHtml.ts`), each separately.
   const authored = new Map<string, TimelineEntry>();
   // A code block's line steps (`data-build-lines`) are the page's to state too.
   const authoredLines = new Map<string, TimelineEntry>();
   for (const entry of compiled.timeline) {
     // An object kept as somebody else left it keeps the builds they gave it.
     if (theirs.has(entry.action.target)) continue;
-    if (entry.action.type === 'appear' && !authored.has(entry.action.target)) authored.set(entry.action.target, entry);
+    const kind = pageBuildKind(entry);
+    if (kind && !authored.has(kind)) authored.set(kind, entry);
     if (entry.action.type === 'lines' && !authoredLines.has(entry.action.target)) authoredLines.set(entry.action.target, entry);
   }
   const claimed = new Set<string>();
@@ -841,14 +863,22 @@ function mergedTimeline(previous: Slide, compiled: Slide, theirs = new Set<strin
         continue;
       }
     }
-    const page = entry.action.type === 'appear' ? authored.get(target) : undefined;
+    const kind = pageBuildKind(entry);
+    const page = kind ? authored.get(kind) : undefined;
     // The page took the build off this object.
-    if (entry.action.type === 'appear' && !page && !theirs.has(target)) continue;
-    if (page && !claimed.has(target)) {
-      claimed.add(target);
+    if (kind && !page && !theirs.has(target)) continue;
+    if (kind && page && !claimed.has(kind)) {
+      claimed.add(kind);
       const kept = page.trigger.on === entry.trigger.on && entry.trigger.ref && present.has(entry.trigger.ref)
         ? entry.trigger.ref : null;
-      merged.push({ ...structuredClone(entry), trigger: { ...page.trigger, ref: page.trigger.ref ?? kept } });
+      // An equation build's every parameter is on the page, so the page's
+      // action stands; an appearance keeps what its markup cannot say.
+      const action = entry.action.type === 'appear' ? entry.action : page.action;
+      merged.push({
+        ...structuredClone(entry),
+        action: structuredClone(action),
+        trigger: { ...page.trigger, ref: page.trigger.ref ?? kept },
+      });
       continue;
     }
     // Not something a page can state — another kind of step, or a second
@@ -860,7 +890,8 @@ function mergedTimeline(previous: Slide, compiled: Slide, theirs = new Set<strin
   const ids = new Set(merged.map((entry) => entry.id));
   for (const entry of compiled.timeline) {
     if (theirs.has(entry.action.target)) continue;
-    if (entry.action.type === 'appear' && claimed.has(entry.action.target)) continue;
+    const kind = pageBuildKind(entry);
+    if (kind && claimed.has(kind)) continue;
     if (entry.action.type === 'lines' && claimedLines.has(entry.action.target)) continue;
     merged.push({ ...entry, id: uniqueId(entry.id, ids) });
   }
@@ -932,7 +963,8 @@ function elementFingerprint(element: SlideElement, build: string): string {
 /** An object's first appearance, as `data-build` states it. */
 function buildSpec(slide: Slide, elementId: string): string {
   const entry = slide.timeline.find((candidate) => candidate.action.type === 'appear' && candidate.action.target === elementId);
-  const spec = entry ? `${entry.trigger.on}+${entry.trigger.delay}@${entry.trigger.ref ?? ''}` : '';
+  const spec = (entry ? `${entry.trigger.on}+${entry.trigger.delay}@${entry.trigger.ref ?? ''}` : '')
+    + equationBuildSpec(slide, elementId);
   // A code block's line steps are stated by its page as well; said only when
   // there are some, so every other object's fingerprint is what it was.
   const lines = slide.timeline.find((candidate) => candidate.action.type === 'lines' && candidate.action.target === elementId);
@@ -1240,6 +1272,7 @@ export function slideFromMeasured(
       const lines = lineBuildFromNode(node, id, timeline.length);
       if (lines) timeline.push(lines);
     }
+    timeline.push(...equationBuildsFromNode(node, id, timeline.length));
   });
 
   return {
@@ -1287,7 +1320,11 @@ export function elementFromNode(
   // not authored element CSS and must not accumulate in the deck on every
   // HTML round trip.
   delete mediaBase.style.overflow;
-  const mediaDecoration = mediaDecorationFromNode(node, mediaBase.style);
+  const mediaDecoration = {
+    ...mediaDecorationFromNode(node, mediaBase.style),
+    // A before/after wipe's top layer (shared/compare.ts).
+    ...compareFromDataset(node.dataset),
+  };
 
   // A cropped picture is exported as a window with the media inside it, the
   // way the player renders one, so the wrapper — not the `<img>` — is the
@@ -1405,6 +1442,12 @@ export function elementFromNode(
       title: node.dataset.title ?? '',
       ...(node.dataset.fragment ? { fragment: node.dataset.fragment } : {}),
     };
+  }
+
+  // A chart: options on data attributes, the data as the text of its
+  // `text/csv` script, which the walk hands over as the node's html.
+  if (node.dataset.element === 'chart') {
+    return { ...base, ...chartFieldsFromHtml(node.dataset, node.html) };
   }
 
   if (node.dataset.element === 'unsupported') {
@@ -1534,13 +1577,18 @@ export function buildFromNode(
   const effect = node.dataset.buildEffect;
   const animated = effect === 'draw' || effect === 'dissolve' || effect === 'blur';
   const duration = Number(node.dataset.buildDuration);
+  // On a chart, `bySeries` / `byCategory` reveal it a part at a time.
+  const parts = node.dataset.element === 'chart'
+    ? ({ byseries: 'bySeries', series: 'bySeries', bycategory: 'byCategory', category: 'byCategory' } as const)[
+      (effect ?? '').toLowerCase() as 'series']
+    : undefined;
   return {
     id: `${elementId}-build-${index + 1}`,
     trigger: { on, ref: node.dataset.buildRef ?? null, delay: Number(delay ?? 0) || 0 },
     action: {
       type: 'appear',
       target: elementId,
-      value: animated ? effect : null,
+      value: animated ? effect : parts ?? null,
       ...(animated && Number.isFinite(duration) && duration >= 0 ? { duration } : {}),
     },
   };
@@ -1568,7 +1616,10 @@ export function slideToHtml(slide: Slide, canvas: { w: number; h: number }): str
   const stamp = pageStampOf([slide])[slide.id];
   const body = [...slide.elements]
     .sort((a, b) => a.z - b.z)
-    .map((element) => elementToHtml(element, builds.get(element.id), stamp.elements[element.id], lineBuilds.get(element.id)))
+    .map((element) => elementToHtml(
+      element, builds.get(element.id), stamp.elements[element.id], equationBuildAttributes(slide, element.id),
+      lineBuilds.get(element.id),
+    ))
     .join('\n');
 
   // Both halves, and as separate declarations rather than the `background`
@@ -1593,7 +1644,9 @@ export function slideToHtml(slide: Slide, canvas: { w: number; h: number }): str
     + `${background}>\n${body}\n</section>\n`;
 }
 
-function elementToHtml(element: SlideElement, build?: TimelineEntry, base?: string, lineBuild?: TimelineEntry): string {
+function elementToHtml(
+  element: SlideElement, build?: TimelineEntry, base?: string, extraAttrs: string[] = [], lineBuild?: TimelineEntry,
+): string {
   const position = `position:absolute; left:${element.x}px; top:${element.y}px;`
     + ` width:${element.w}px; height:${element.h}px;`
     + (element.rot ? ` transform:rotate(${element.rot}deg);` : '')
@@ -1618,11 +1671,15 @@ function elementToHtml(element: SlideElement, build?: TimelineEntry, base?: stri
     build?.trigger.ref ? `data-build-ref="${escape(build.trigger.ref)}"` : '',
     build && isEffectName(build.action.value)
       ? `data-build-effect="${build.action.value}"` : '',
+    // A chart revealed a series (or a category) at a time.
+    build && isChartBuildValue(build.action.value)
+      ? `data-build-effect="${build.action.value}"` : '',
     build && isEffectName(build.action.value)
       && build.action.duration !== undefined
       ? `data-build-duration="${build.action.duration}"` : '',
     element.type === 'text' && element.layoutPlaceholder
       ? `data-layout-slot="${element.layoutPlaceholder}"` : '',
+    ...extraAttrs,
   ].filter(Boolean).join(' ');
 
   switch (element.type) {
@@ -1765,6 +1822,8 @@ function elementToHtml(element: SlideElement, build?: TimelineEntry, base?: stri
         + '</div>';
     case 'code':
       return codeElementToHtml(element, attrs, styleAttr, position, inline, lineBuild);
+    case 'chart':
+      return chartToHtml(element, attrs, styleAttr(position, inline));
     case 'unsupported':
       // An import gap, described well enough to be fixed: replace this element
       // with real markup and it becomes a real object on the way back.
@@ -1861,7 +1920,7 @@ function mediaDataAttrs(element: Extract<SlideElement, { type: 'image' | 'video'
   const mask = element.maskShape !== undefined
     ? ` data-mask-shape="${element.maskShape}"`
     : '';
-  return border + radius + mask;
+  return border + radius + mask + compareDataAttrs(element);
 }
 
 function effectsDataAttrs(

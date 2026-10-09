@@ -892,6 +892,9 @@ export function measureSlides(doc: Document): MeasuredSlide[] {
     // half of the computed presentation: without the authored font size it
     // came back rendered at the deck's default body size, columns and all.
     if (node.dataset.element === 'table') return 'text';
+    // A chart is drawn from its data, never laid out as prose: no text
+    // presentation is baked into it and its CSV is not whitespace-collapsed.
+    if (node.dataset.element === 'chart') return 'chart';
     if (node.dataset.element === 'html' || CONTENT_TAGS.has(tag)) return 'html';
     return 'text';
   };
@@ -1276,7 +1279,10 @@ export function measureSlides(doc: Document): MeasuredSlide[] {
       // A text box exported from a deck carries the player's own wrappers so
       // that it lays out identically; the deck stores only what is inside
       // them. Hand-authored markup has no such wrapper and is read whole.
-      html: verbatim ? (() => {
+      // A chart's data is the text of its `text/csv` script, exactly as written.
+      html: node.dataset.element === 'chart'
+        ? node.querySelector(':scope > script[type="text/csv"]')?.textContent ?? ''
+        : verbatim ? (() => {
         // An HTML region exported from the deck: the export wrapped the
         // stored markup in a positioned box of its own. That box is the
         // object, not part of its markup — kept, it nested the region one

@@ -124,6 +124,8 @@ export function describeElement(el: SlideElement): string {
       const short = first.length > 32 ? `${first.slice(0, 31)}…` : first;
       return short ? `code: ${short}` : 'code';
     }
+    case 'chart':
+      return `${el.kind.replace('-', ' ')} chart${el.title ? `: ${el.title}` : ''}`;
     case 'shape': {
       const name = SHAPE_NAMES[el.shape] ?? el.shape;
       // A shape's identity on the slide is its outline colour when it is a

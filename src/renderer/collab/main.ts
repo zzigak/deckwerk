@@ -19,12 +19,14 @@ import {
 } from '../editor/exportPicker.js';
 import { showPdfExportDialog } from '../editor/pdfExportDialog.js';
 import { HistoryPanel } from '../editor/historyPanel.js';
+import { MediaPanel, installMediaDrop } from '../editor/mediaPanel.js';
 import {
   createShapeInsertPicker,
   createTableInsertPicker,
   insertText,
 } from '../editor/elementCreation.js';
 import { CODE_ICON, insertCode } from '../editor/codeInspector.js';
+import { PAPER_ICON, insertPaperCard } from '../editor/paperCardDialog.js';
 import { Inspector } from '../editor/inspector.js';
 import {
   barButton,
@@ -52,6 +54,7 @@ import { openEndCollaborationPopover } from './endCollaborationPopover.js';
 import { captureEditorView, decodeEditorView, encodeEditorView, restoreEditorView } from '@shared/editorView.js';
 import { createDeckNameField, type DeckNameField } from './deckNameField.js';
 import { AgentPanel } from '../editor/agentPanel.js';
+import { createChartInsertPicker } from '../editor/chartCreation.js';
 import { startPresenting } from './presentOverlay.js';
 import { rangeForSlideSelection } from '@shared/presentationRange.js';
 import { setRenderInvariantChecks } from '../editor/renderInvariants.js';
@@ -253,6 +256,11 @@ new SpeakerNotesDrawer(el('canvas'), store, {
 const inspector = new Inspector(el('inspector'), store);
 new TimelinePanel(el('timeline'), store);
 new HistoryPanel(el('history'), store);
+const mediaPanel = new MediaPanel(el('media'), store, {
+  setStatusMessage,
+  beginOperation: (message) => operationProgress.begin(message),
+});
+installMediaDrop(el('canvas'), store, mediaPanel);
 const rail = new SlideRail(el('rail'), store);
 rail.onStatus = setStatusMessage;
 // The CSS buffer backs the Theme panel and live theme sync. Like the desktop
@@ -695,7 +703,7 @@ async function exportPdf(): Promise<void> {
  * exactly as the desktop app does: a selection of two or more slides starts at
  * the first and ends the show after the last.
  */
-function startPresentation(speakerView = false): void {
+function startPresentation(speakerView = false, pairPhone = false): void {
   // present.html and its bundle are served by the collab server; with the
   // server gone the iframe would load nothing — a white overlay with no
   // explanation. Refuse with the reason instead.
@@ -710,7 +718,7 @@ function startPresentation(speakerView = false): void {
     deckId!,
     range?.start ?? slideIndex,
     () => ({ deck: store.get().deck, themeCss: cssEditor.getValue() }),
-    { endSlideIndex: range?.end, speakerView, onStatus: setStatusMessage },
+    { endSlideIndex: range?.end, speakerView, onStatus: setStatusMessage, pairPhone },
   );
 }
 
@@ -935,6 +943,12 @@ function buildToolbar(): void {
     createShapeInsertPicker(store),
     createTableInsertPicker(store),
     barIconButton('Code', CODE_ICON, () => insertCode(store)),
+    createChartInsertPicker(store),
+    barIconButton('Paper', PAPER_ICON, () => void insertPaperCard({
+      store,
+      beginOperation: (message) => operationProgress.begin(message),
+      setStatusMessage,
+    })),
   );
 
   const right = document.createElement('div');
@@ -1017,7 +1031,11 @@ function buildToolbar(): void {
     createToolbarSplitButton(
       'Present',
       () => startPresentation(),
-      [{ label: 'Present in Speaker View', action: () => startPresentation(true) }],
+      [
+        { label: 'Present in Speaker View', action: () => startPresentation(true) },
+        // The QR comes up on the presentation itself; it closes once a phone joins.
+        { label: 'Present with phone remote', action: () => startPresentation(false, true) },
+      ],
       { variant: 'primary', menuLabel: 'Presentation options' },
     ),
   );
@@ -1031,11 +1049,12 @@ const PANELS = [
   { id: 'themePanel', label: 'Design' },
   { id: 'timeline', label: 'Build' },
   { id: 'history', label: 'History' },
+  { id: 'media', label: 'Media' },
   { id: 'chat', label: 'Chat' },
 ] as const;
 
 /** Tabs that stay open while several slides are selected: they are not about one slide. */
-const DECK_LEVEL_PANELS: ReadonlySet<string> = new Set(['themePanel', 'inspector', 'chat']);
+const DECK_LEVEL_PANELS: ReadonlySet<string> = new Set(['themePanel', 'inspector', 'chat', 'media']);
 
 let activePanelId = 'inspector';
 

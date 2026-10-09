@@ -5,6 +5,8 @@ import { moveCorner, polygonPoints } from '@shared/polygonShape.js';
 import { braceDepthToward, bracePolyline, braceTip } from '@shared/brace.js';
 import { type Rect, fitScale, makeId } from '@shared/geometry.js';
 import { isMeshName } from '@shared/meshFiles.js';
+import { insertChartsFromFiles, isCsvFile } from './chartCreation.js';
+import { syncChartBody } from '../player/chartBody.js';
 
 type XY = { x: number; y: number };
 import {
@@ -1527,6 +1529,8 @@ export class EditorCanvas {
       if (el.type === 'shape') syncShapeBody(node, el);
       // A code block's lines are drawn from its fields; redraw when they change.
       if (el.type === 'code') syncCodeBody(node, el);
+      // A chart is drawn for its box and its data; redraw when either changed.
+      if (el.type === 'chart') syncChartBody(node, el);
     }
   }
 
@@ -6681,7 +6685,10 @@ export class EditorCanvas {
       const all = [...(e.dataTransfer?.files ?? [])];
       const meshes = all.filter((file) => isMeshName(file.name));
       if (meshes.length > 0) await this.dropMeshes(meshes, dropPoint);
-      const dropped = all.filter((file) => !isMeshName(file.name));
+      // A CSV file becomes a chart of its data, centred on the drop.
+      const tables = all.filter((file) => isCsvFile(file));
+      if (tables.length > 0) await insertChartsFromFiles(this.store, tables, dropPoint);
+      const dropped = all.filter((file) => !isMeshName(file.name) && !isCsvFile(file));
       const files = dropped.flatMap((original) => {
         const name = mediaFileName(original.name, original.type);
         const kind = name ? classifyMediaName(name) : null;
@@ -6698,7 +6705,7 @@ export class EditorCanvas {
       // A drag out of a web page carries no file at all -- only markup and the
       // image's URL -- so it takes the fetch-the-bytes path instead.
       if (files.length === 0) {
-        if (meshes.length > 0 && refused.length === 0) return;
+        if ((meshes.length > 0 || tables.length > 0) && refused.length === 0) return;
         const fetched = await this.dropWebImage(e.dataTransfer, dropPoint);
         if (!fetched && (refused.length > 0 || offeredImage)) {
           this.notice(refused.length > 0

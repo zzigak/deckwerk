@@ -36,6 +36,12 @@ export interface SpeakerViewOptions {
   swapTitle?: string;
   /** Injectable clock, so timer formatting is testable without waiting. */
   now?: () => number;
+  /**
+   * Offer "Pair phone". Only the browser shell passes it: the phone relay
+   * lives on the collaboration server, which a desktop presentation does not
+   * run unless it is hosting one (and then it presents from the browser shell).
+   */
+  onPairPhone?: () => void;
 }
 
 export interface SpeakerView {
@@ -46,6 +52,8 @@ export interface SpeakerView {
   refresh(): void;
   /** Advance the clocks. Called on a timer internally; exposed for tests. */
   tick(): void;
+  /** How many phones are paired, shown on the Pair phone control. */
+  setPhones(count: number): void;
   destroy(): void;
 }
 
@@ -170,6 +178,19 @@ export function createSpeakerView(options: SpeakerViewOptions): SpeakerView {
   pick('.speaker-end').addEventListener('click', send({ type: 'exit' }));
   if (swap.isConnected) swap.addEventListener('click', send({ type: 'swapDisplays' }));
 
+  // Pair phone sits with the show controls rather than in a menu: whether the
+  // clicker in your hand is connected is something to see at a glance.
+  let phoneButton: HTMLButtonElement | null = null;
+  if (options.onPairPhone) {
+    const onPairPhone = options.onPairPhone;
+    phoneButton = document.createElement('button');
+    phoneButton.className = 'speaker-phone';
+    phoneButton.textContent = 'Pair phone';
+    phoneButton.title = 'Use your phone as a clicker with notes';
+    phoneButton.addEventListener('click', () => onPairPhone());
+    pick('.speaker-end').before(phoneButton);
+  }
+
   tick();
   const clock = setInterval(tick, 250);
 
@@ -193,6 +214,13 @@ export function createSpeakerView(options: SpeakerViewOptions): SpeakerView {
     },
     refresh: render,
     tick,
+    setPhones(count) {
+      if (!phoneButton) return;
+      phoneButton.classList.toggle('connected', count > 0);
+      phoneButton.textContent = count === 0 ? 'Pair phone'
+        : count === 1 ? 'Phone connected' : `${count} phones connected`;
+      phoneButton.title = count === 0 ? 'Use your phone as a clicker with notes' : 'Show the code again, or disconnect phones';
+    },
     destroy() {
       clearInterval(clock);
       theme?.remove();

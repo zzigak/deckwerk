@@ -14,6 +14,8 @@ import {
 } from '@shared/timeline.js';
 import { ARROWHEAD_PATH, ARROWHEAD_REF, partialRenderedStroke } from '@shared/shapeSvg.js';
 import { followerCorrection, followerTarget, syncGroupsOf } from './videoSync.js';
+import { mountGroupScrubber } from './groupScrubber.js';
+import { mountWipeDrag } from './wipe.js';
 import {
   applyStageScale,
   fitAutoTextElement,
@@ -35,6 +37,8 @@ import {
   type MorphPair,
 } from '@shared/morph.js';
 import { morphTransforms, type Rect, type TextLayout } from './morphTransform.js';
+import { prepareEquationEffect } from './equationBuilds.js';
+import { morphEquationGlyphs } from './equationMorph.js';
 import { isPendingSrc } from '@shared/media.js';
 import { WEB_BRIDGE_SOURCE, isWebBridgeAction, type WebBridgeEvent } from '@shared/webBridge.js';
 import { prepareCodeBlocks } from './codeRender.js';
@@ -104,6 +108,11 @@ export class Player {
   private trimmed = new Set<string>();
   /** Sync groups whose clock is already running on the current slide. */
   private syncedGroups = new Set<string>();
+  /** Wipe dividers and group scrubbers are live for the current step. */
+  private compareMounted = false;
+  /** Sync groups the presenter paused from their scrubber, on slide `heldSlide`. */
+  private heldGroups = new Set<string>();
+  private heldSlide: string | null = null;
   /**
    * Videos the current build state says should be running, and the recovery
    * bookkeeping for keeping them that way. See `keepPlaying`.
@@ -302,8 +311,12 @@ export class Player {
    * delays and effects — the way advancing to any later step does. Builds
    * that land at once with no effect are still part of the first paint, so a
    * Morph into the slide sees them. Jumping never plays: it resolves.
+   *
+   * `morph: false` is a jump that must not animate even onto the very next
+   * slide: a deep link, or a capture that renders slides one after another in
+   * the same page and would otherwise photograph the transition in flight.
    */
-  goTo(cursor: Cursor, opts: { play?: boolean } = {}): void {
+  goTo(cursor: Cursor, opts: { play?: boolean; morph?: boolean } = {}): void {
     this.clearPending();
     const slides = this.deck.slides;
     if (slides.length === 0) {
@@ -322,7 +335,7 @@ export class Player {
     // -- a rail click, goToSlide, or stepping backwards -- used to animate
     // between two slides that were never authored as a pair, which reads as
     // objects flying around at random.
-    const morph = slides.indexOf(slide) === previousSlideIndex + 1
+    const morph = opts.morph !== false && slides.indexOf(slide) === previousSlideIndex + 1
       && previousSlide !== undefined && morphEnabled;
     const steps = stepCount(slide);
     this.cursor = {
@@ -868,6 +881,16 @@ export class Player {
         pairedSources.delete(from.id);
         continue;
       }
+      // Two equations that say different things move glyph by glyph: every
+      // symbol they share travels to its new place, and only what was added
+      // or removed fades. Nothing shared falls back to the object motion below.
+      if (morphEquationGlyphs({
+        from, to, node, source: previousNodes.get(from.id), duration, easing,
+        zIndex: domRank.get(to.id),
+      })) {
+        zIndexInUse ||= domRank.has(to.id);
+        continue;
+      }
       const {
         start: startTransform,
         final: finalTransform,
@@ -1124,10 +1147,14 @@ export class Player {
     // so the element itself is hidden at once and the state stays exact.
     const fade = effect === 'dissolve' || effect === 'blur' ? effect : null;
     if (fade && entry.action.type === 'disappear') this.dissolveOut(target, duration, fade === 'blur');
+    // An equation build animates from what is on screen now (a term's old
+    // colour), so it looks before the state lands and plays after.
+    const equation = prepareEquationEffect(this.stage, slide, entry, duration);
     applyAction(state, entry, slide);
     this.applyState(slide, state);
     if (effect === 'draw') this.drawIn(slide, entry, duration);
     else if (fade && entry.action.type === 'appear') this.dissolveIn(target, duration, fade === 'blur');
+    if (equation) this.effects.push(equation());
   }
 
   /**
@@ -1219,6 +1246,61 @@ export class Player {
       }
     }
     this.syncVideoGroups(slide);
+    this.mountCompareControls(slide);
+  }
+
+  /**
+   * The presenter's hands on a comparison: a draggable wipe divider, and a
+   * scrubber with play/pause for each sync group (wipe.ts, groupScrubber.ts).
+   *
+   * A group the presenter paused stays paused through the slide's later
+   * builds -- they would otherwise restart it -- until it is played again or
+   * the slide is left. Pausing withdraws the play intent `keepPlaying`
+   * records, or its recovery would start the clips again a moment later.
+   */
+  private mountCompareControls(slide: Slide): void {
+    if (this.heldSlide !== slide.id) {
+      this.heldGroups.clear();
+      this.heldSlide = slide.id;
+    }
+    const groups = syncGroupsOf(slide.elements);
+    const videoOf = (id: string) => this.stage
+      .querySelector<HTMLElement>(`[data-element-id="${CSS.escape(id)}"]`)?.querySelector('video') ?? null;
+    const setPlaying = (members: Array<{ id: string }>, playing: boolean): void => {
+      for (const el of members) {
+        const video = videoOf(el.id);
+        if (!video || video.dataset.holdFrame === 'true') continue;
+        const node = video.closest<HTMLElement>('[data-element-id]');
+        if (playing && !this.blanked && node?.style.visibility !== 'hidden') {
+          this.keepPlaying(el.id, video);
+        } else if (!playing) {
+          this.intendedPlaying.delete(el.id);
+          this.playAttempts.delete(el.id);
+          if (!video.paused) video.pause();
+        }
+      }
+    };
+    for (const [group, members] of groups) {
+      if (this.heldGroups.has(group)) setPlaying(members, false);
+    }
+    if (this.compareMounted) return;
+    const root = this.stage.firstElementChild as HTMLElement | null;
+    if (!root) return;
+    this.compareMounted = true;
+    this.mediaListeners.push(mountWipeDrag(root));
+    for (const [group, members] of groups) {
+      const leaderVideo = videoOf(members[0].id);
+      if (!leaderVideo) continue;
+      this.mediaListeners.push(mountGroupScrubber(root, {
+        members,
+        leaderVideo,
+        setPlaying: (playing) => {
+          if (playing) this.heldGroups.delete(group);
+          else this.heldGroups.add(group);
+          setPlaying(members, playing);
+        },
+      }));
+    }
   }
 
   /**
@@ -1533,6 +1615,7 @@ export class Player {
     // watcher must be attached when the slide is drawn again.
     this.trimmed.clear();
     this.syncedGroups.clear();
+    this.compareMounted = false;
   }
 
   /** Blank the screen (the `B` key) without losing position. */

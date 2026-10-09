@@ -30,6 +30,7 @@ export const IPC = {
   assetImportUrl: 'asset:importUrl',
   assetImportProgress: 'asset:importProgress',
   meshImport: 'mesh:import',
+  paperCard: 'paper:card',
   clipboardWrite: 'clipboard:write',
   clipboardRead: 'clipboard:read',
   assetProbe: 'asset:probe',
@@ -136,6 +137,8 @@ export interface PresentationState {
   slideStartedAt: number;
   /** Inclusive bounds when presenting a multi-slide rail selection. */
   range?: { start: number; end: number };
+  /** The audience screen is blanked (B). Reported so a phone remote can show it. */
+  blank?: boolean;
 }
 
 export interface DisplayInfo {

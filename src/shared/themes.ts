@@ -1,5 +1,6 @@
 import type { Deck, Slide, SlideElement, ThemeSelection, ThemeStyle } from './deck.js';
 import { type FontSet, deckProseMax, fontSetCss, roleForElement } from './fontSets.js';
+import { chartThemeCss } from './chartPalettes.js';
 
 /**
  * Theme presets, modelled on how omarchy themes work: installing a theme
@@ -494,6 +495,8 @@ export function themeStyleCss(style: ThemeStyle, label = 'Custom deck defaults')
     ``,
     `.role-caption { color: ${style.colors.muted}; }`,
     ``,
+    // Charts paint with these, so they wear the theme (shared/chartPalettes.ts).
+    chartThemeCss(style),
   ].join('\n');
 }
 

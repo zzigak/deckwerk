@@ -217,6 +217,12 @@ const ImageElement = BaseElement.extend({
   borderWidth: z.number().min(0).optional(),
   borderRadius: z.number().min(0).optional(),
   /**
+   * The upper layer of a before/after wipe, exactly as on a video: a still
+   * over a still, or a still over a clip. See `compare` on VideoElement.
+   */
+  compare: z.enum(['wipe']).optional(),
+  wipe: z.number().min(0).max(1).optional(),
+  /**
    * A crop, expressed as where the *whole* image sits relative to this
    * element's box. The element box is the visible window; anything outside it
    * is clipped.
@@ -257,6 +263,18 @@ const VideoElement = BaseElement.extend({
    * simulation stay frame-matched however long the talk dwells on them.
    */
   syncGroup: z.string().min(1).optional(),
+  /**
+   * A before/after wipe. On the upper of two pictures stacked in one box,
+   * `compare: 'wipe'` shows this one only left of a vertical divider and
+   * whatever lies beneath it (usually its sync partner, or a still) right of
+   * it. `wipe` is where the divider sits, as a fraction of the box's width
+   * (default 0.5); the presenter can drag it while presenting, which moves the
+   * divider on screen without editing the deck. Set on the top layer only, so
+   * there is one position and nothing to disagree about; the helpers that
+   * read, write and arrange it live in src/shared/compare.ts.
+   */
+  compare: z.enum(['wipe']).optional(),
+  wipe: z.number().min(0).max(1).optional(),
   /**
    * Crop, expressed exactly as on an image: where the *whole* video sits
    * relative to this element's box, which acts as the visible window.
@@ -387,6 +405,56 @@ const CodeElement = BaseElement.extend({
 });
 
 /**
+ * A chart drawn from data the deck carries itself, as CSV text, so it diffs,
+ * round-trips through the HTML authoring format and never depends on a file
+ * outside the deck. One pure function (shared/chartSvg.ts) turns it into SVG
+ * sized to the box for every surface — canvas, player, web export, PDF — in
+ * the theme's fonts and text colours, so a chart looks native to its deck.
+ *
+ * `bar` puts several series side by side in each category (grouped);
+ * `stacked-bar` piles them up. `line` and `area` join each series across x;
+ * `scatter` plots each series as points against a numeric x.
+ */
+const ChartElement = BaseElement.extend({
+  type: z.literal('chart'),
+  kind: z.enum(['bar', 'stacked-bar', 'line', 'area', 'scatter']).default('bar'),
+  /** The data: CSV with a header row, kept exactly as written. */
+  csv: z.string().default(''),
+  /** Header of the category (x) column; absent means the first column. */
+  xColumn: z.string().optional(),
+  /** Headers of the plotted columns, in order; empty means every numeric column but x. */
+  series: z.array(z.string()).default([]),
+  title: z.string().default(''),
+  xLabel: z.string().default(''),
+  yLabel: z.string().default(''),
+  /** Fixed value-axis ends; absent or null fits the data with nice ticks. */
+  yMin: z.number().nullable().optional(),
+  yMax: z.number().nullable().optional(),
+  /** Fixed x-axis ends, for a numeric x (line, area, scatter). */
+  xMin: z.number().nullable().optional(),
+  xMax: z.number().nullable().optional(),
+  yScale: z.enum(['linear', 'log']).default('linear'),
+  xScale: z.enum(['linear', 'log']).default('linear'),
+  /** Where the legend sits; `auto` is on top when there is more than one series. */
+  legend: z.enum(['auto', 'top', 'right', 'bottom', 'none']).default('auto'),
+  /** Print each bar's value on it. */
+  valueLabels: z.boolean().default(false),
+  /**
+   * Series colours. `deck` follows the theme's own swatches through CSS
+   * variables, so it recolours when the theme changes; `grayscale` greys
+   * every series but `highlight`, which takes the theme's accent; `custom`
+   * uses `colors`.
+   */
+  palette: z.enum(['deck', 'tableau10', 'okabe-ito', 'viridis', 'grayscale', 'custom']).default('deck'),
+  /** The custom palette: CSS colours, cycled across series. */
+  colors: z.array(z.string()).optional(),
+  /** The series the grayscale palette picks out; absent means the first. */
+  highlight: z.string().optional(),
+  /** Base text size in canvas px; absent scales with the box. */
+  fontSize: z.number().positive().optional(),
+});
+
+/**
  * Produced by the Keynote importer when it meets an object it cannot map.
  * Carries the original geometry so the slide stays laid out correctly, and
  * renders as a labelled dashed box so the gap is visible rather than silent.
@@ -406,6 +474,7 @@ export const ElementSchema = z.discriminatedUnion('type', [
   HtmlElement,
   WebElement,
   CodeElement,
+  ChartElement,
   UnsupportedElement,
 ]);
 
@@ -444,6 +513,10 @@ export const ActionSchema = z.object({
     'addClass',
     'removeClass',
     'lines',
+    // An equation's marked terms, revealed or coloured one per step (see
+    // shared/equationTerms.ts), and an emphasis pulse of a term or an object.
+    'terms',
+    'pulse',
   ]),
   target: Id,
   /**
@@ -461,6 +534,18 @@ export const ActionSchema = z.object({
   value: z.union([z.number(), z.string()]).nullable().default(null),
   /** Milliseconds an animated build takes (`"draw"`, `"dissolve"`, `"blur"`). */
   duration: z.number().min(0).optional(),
+  /**
+   * The equation term a `terms` or `pulse` action acts on: the label of a
+   * `\step{label}{…}` (`\htmlClass{step-label}{…}`) marker in the target's
+   * TeX. Absent, a `terms` action steps through every term in order — one
+   * step each, like a by-paragraph reveal — and a `pulse` enlarges the whole
+   * object. On `terms`, `value` is `"appear"` (default) or `"color"`.
+   */
+  term: z.string().regex(/^[A-Za-z0-9_-]+$/).optional(),
+  /** The colour a `terms` action with value `"color"` paints its terms. */
+  color: z.string().optional(),
+  /** How far a `pulse` enlarges its target at the peak (default 1.6). */
+  scale: z.number().min(1).max(4).optional(),
 });
 
 export const TimelineEntrySchema = z.object({
@@ -558,6 +643,7 @@ export type ShapeEl = z.infer<typeof ShapeElement>;
 export type HtmlEl = z.infer<typeof HtmlElement>;
 export type CodeEl = z.infer<typeof CodeElement>;
 export type UnsupportedEl = z.infer<typeof UnsupportedElement>;
+export type ChartEl = z.infer<typeof ChartElement>;
 export type Slide = z.infer<typeof SlideSchema>;
 export type Comment = z.infer<typeof CommentSchema>;
 export type Deck = z.infer<typeof DeckSchema>;

@@ -1,8 +1,10 @@
 import type { Slide } from '@shared/deck.js';
 import { applyParagraphVisibility } from '@shared/paragraphs.js';
+import { applyChartBuildVisibility } from '@shared/chartBuild.js';
 import type { SlideState } from '@shared/timeline.js';
 import { curvedShadowClasses } from '@shared/shapeShadow.js';
 import { applyCodeLineState } from './codeRender.js';
+import { applyTermStates } from './equationBuilds.js';
 
 /**
  * Apply the resolved, motion-free endpoint of one build state.
@@ -17,6 +19,8 @@ export function applyStaticSlideState(
 ): void {
   applyParagraphVisibility(stage, state);
   applyCodeLineState(stage, slide, state);
+  applyChartBuildVisibility(stage, slide, state);
+  applyTermStates(stage, slide, state);
   const nodes = new Map(
     [...stage.querySelectorAll<HTMLElement>('[data-element-id]')]
       .map((node) => [node.dataset.elementId ?? '', node] as const),

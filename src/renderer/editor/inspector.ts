@@ -21,6 +21,7 @@ import { sameDeckDrawing, type EditorStore } from './store.js';
 import { LAYOUT_LABELS, applySlideLayout, type SlideLayout } from './slideLayouts.js';
 import { elementFollowsLayout, layoutGeometryFor, realignElementToLayout } from '@shared/layoutMasters.js';
 import { MorphPanel } from './morphPanel.js';
+import { chartInspectorSections } from './chartInspector.js';
 import { fontFamilyField, primaryFamily } from './fontPicker.js';
 import {
   deckTheme,
@@ -2305,6 +2306,13 @@ export class Inspector {
         wrap.appendChild(page.section);
         return wrap;
       }
+
+      case 'chart':
+        // The chart's controls live with the feature (chartInspector.ts), built
+        // from this file's own field components.
+        return chartInspectorSections(el, this.store, {
+          typeSections, optionSection, segmentedSelectField, textAreaField, checkboxField, numberField, hint,
+        });
 
       case 'html': {
         const wrap = typeSections();

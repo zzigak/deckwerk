@@ -51,6 +51,7 @@ import { openEndCollaborationPopover } from './endCollaborationPopover.js';
 import { captureEditorView, decodeEditorView, encodeEditorView, restoreEditorView } from '@shared/editorView.js';
 import { createDeckNameField, type DeckNameField } from './deckNameField.js';
 import { AgentPanel } from '../editor/agentPanel.js';
+import { createChartInsertPicker } from '../editor/chartCreation.js';
 import { startPresenting } from './presentOverlay.js';
 import { rangeForSlideSelection } from '@shared/presentationRange.js';
 import { setRenderInvariantChecks } from '../editor/renderInvariants.js';
@@ -933,6 +934,7 @@ function buildToolbar(): void {
     barIconButton('Text', TEXT_ICON, () => canvas.beginTextEdit(insertText(store).id)),
     createShapeInsertPicker(store),
     createTableInsertPicker(store),
+    createChartInsertPicker(store),
   );
 
   const right = document.createElement('div');

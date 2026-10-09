@@ -1,0 +1,33 @@
+/* Chart inspector (chartInspector.ts): the shared field components, with the
+   few layouts they need here that no other object does. */
+
+.chart-kind-field .segmented-buttons { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+.chart-two-way .segmented-buttons { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.chart-two-way .segment-button { font-size: 11px; }
+
+.chart-series-list .field { margin-bottom: 0; }
+
+/* Column names are data: shown as written, not in the label case. */
+.chart-series-list .field-check > span { text-transform: none; letter-spacing: normal; }
+
+.chart-csv-field textarea {
+  min-height: 96px;
+  white-space: pre;
+  overflow-x: auto;
+  font-size: 11px;
+  line-height: 1.45;
+  tab-size: 12;
+}
+
+.chart-swatches {
+  display: flex;
+  gap: 3px;
+  margin: -3px 0 8px;
+}
+
+.chart-swatch {
+  flex: 1 1 0;
+  height: 10px;
+  border-radius: 2px;
+  box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.12);
+}

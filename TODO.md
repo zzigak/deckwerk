@@ -26,10 +26,11 @@ Paste an arXiv/DOI/project URL or drop a PDF and get a figure-ready card: the
 paper's first page or the site's screenshot, with a drop shadow, plus title,
 authors and venue as editable text.
 
-- [ ] Server/desktop job: PDF → first page PNG (crop top N%), URL → headless
+- [x] Server/desktop job: PDF → first page PNG (crop top N%), URL → headless
       screenshot at 16:10.
-- [ ] Metadata: arXiv API / DOI (Crossref) for title, authors, year, venue.
-- [ ] Inserted as a group: image (shadow, radius) + title + "Authors, Venue Year".
+- [x] Metadata: arXiv API / DOI (Crossref) for title, authors, year, venue.
+- [x] Inserted as a group: image (shadow, radius) + title + "Authors, Venue Year".
+      (The deck has no groups yet: the three objects arrive selected together.)
 - [ ] Re-fetch action when the paper updates.
 
 ## 3. Code blocks with syntax highlighting

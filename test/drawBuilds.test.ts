@@ -438,7 +438,7 @@ describe('choosing dissolve from the Build panel', () => {
     const select = () => host.querySelector<HTMLSelectElement>('.timeline-row select.build-action')!;
     expect([...select().options].map((option) => option.value))
       .toEqual([
-        'appear', 'appear:dissolve', 'appear:blur', 'appear:paragraph',
+        'appear', 'appear:dissolve', 'appear:blur', 'appear:pop', 'appear:paragraph',
         'disappear', 'disappear:dissolve', 'disappear:blur', 'play', 'pause',
         // Any object can pulse for emphasis (equation builds add it for every element).
         'pulse',

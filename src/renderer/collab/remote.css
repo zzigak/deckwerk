@@ -1,0 +1,142 @@
+/*
+ * The phone remote. Its own small layout — a pocket clicker is not the editor
+ * — but drawn with the app's colour tokens (appChrome.css, lightTheme.css),
+ * so it follows the phone's light or dark appearance like every DeckWerk
+ * surface follows the OS.
+ */
+html, body {
+  height: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.remote {
+  --gap: 12px;
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr) auto;
+  gap: var(--gap);
+  height: 100dvh;
+  padding:
+    max(10px, env(safe-area-inset-top)) max(14px, env(safe-area-inset-right))
+    max(12px, env(safe-area-inset-bottom)) max(14px, env(safe-area-inset-left));
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.remote-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; font-size: 13px; }
+.remote-status { display: inline-flex; align-items: center; gap: 8px; color: var(--muted); }
+.remote-status i { width: 8px; height: 8px; border-radius: 50%; background: var(--muted); }
+.remote[data-connection="live"] .remote-status { color: var(--text); }
+.remote[data-connection="live"] .remote-status i { background: var(--green); }
+.remote[data-connection="presenter-away"] .remote-status i,
+.remote[data-connection="offline"] .remote-status i { background: var(--yellow); }
+.remote[data-connection="done"] .remote-status i { background: var(--danger); }
+.remote-wall { font-variant-numeric: tabular-nums; font-size: 15px; font-weight: 600; }
+
+.remote-label { color: var(--muted); font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+
+.remote-stage {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, .82fr);
+  grid-template-areas: "current current" "info next";
+  gap: 10px var(--gap);
+  touch-action: pan-y;
+}
+.remote-current { position: relative; grid-area: current; }
+.remote-preview {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 16 / 9;
+  background: #000;
+  box-shadow: 0 0 0 1px var(--line);
+}
+.remote-blank-badge {
+  position: absolute;
+  inset: auto 8px 8px auto;
+  padding: 3px 8px;
+  background: var(--danger);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+}
+.remote-info { display: flex; grid-area: info; flex-direction: column; justify-content: space-between; gap: 6px; min-width: 0; }
+.remote-position { display: grid; gap: 2px; }
+.remote-position strong { font-size: 17px; }
+.remote-position span { color: var(--muted); font-size: 13px; }
+.remote-timers { display: grid; gap: 2px; color: var(--muted); font-size: 12px; font-variant-numeric: tabular-nums; }
+.remote-elapsed {
+  color: var(--text);
+  font-size: clamp(30px, 10vw, 44px);
+  font-weight: 750;
+  letter-spacing: -.05em;
+  line-height: 1;
+}
+.remote-upnext { display: grid; grid-area: next; align-content: start; gap: 4px; min-width: 0; }
+
+.remote-notes {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 6px;
+  min-height: 0;
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+}
+.remote-notes-head { display: flex; align-items: center; justify-content: space-between; }
+.remote-size { display: inline-flex; gap: 6px; }
+.remote-size button { min-width: 44px; min-height: 36px; font-size: 14px; }
+.remote-notes-text {
+  min-height: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  touch-action: pan-y;
+  font: 18px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  white-space: pre-wrap;
+  user-select: text;
+  -webkit-user-select: text;
+}
+.remote-notes-text.empty { color: var(--muted); font-style: italic; }
+
+.remote-controls {
+  display: grid;
+  grid-template-columns: 1fr .8fr 1.9fr;
+  gap: 10px;
+}
+.remote-controls button {
+  min-height: 76px;
+  font-size: 18px;
+  font-weight: 650;
+  touch-action: manipulation;
+}
+.remote-controls button:active:not(:disabled) { transform: scale(.98); }
+.remote-blank.active { border-color: var(--danger); background: var(--danger); color: var(--bg); }
+
+.remote-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: var(--bg);
+}
+.remote-overlay[hidden] { display: none; }
+.remote-overlay-card { max-width: 340px; text-align: center; }
+.remote-overlay-card h1 { margin: 0 0 10px; color: var(--accent); font-size: 18px; letter-spacing: .06em; text-transform: uppercase; }
+.remote-overlay-card p { margin: 0; color: var(--text); font-size: 15px; line-height: 1.5; }
+
+/* Phone on its side: slides on the left, notes on the right. */
+@media (orientation: landscape) and (max-height: 560px) {
+  .remote {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    grid-template-areas: "bar bar" "stage notes" "controls controls";
+  }
+  .remote-bar { grid-area: bar; }
+  .remote-stage { grid-area: stage; align-content: start; }
+  .remote-notes { grid-area: notes; padding-top: 0; border-top: 0; }
+  .remote-controls { grid-area: controls; }
+  .remote-controls button { min-height: 56px; }
+}

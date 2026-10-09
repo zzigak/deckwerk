@@ -694,7 +694,7 @@ async function exportPdf(): Promise<void> {
  * exactly as the desktop app does: a selection of two or more slides starts at
  * the first and ends the show after the last.
  */
-function startPresentation(speakerView = false): void {
+function startPresentation(speakerView = false, pairPhone = false): void {
   // present.html and its bundle are served by the collab server; with the
   // server gone the iframe would load nothing — a white overlay with no
   // explanation. Refuse with the reason instead.
@@ -709,7 +709,7 @@ function startPresentation(speakerView = false): void {
     deckId!,
     range?.start ?? slideIndex,
     () => ({ deck: store.get().deck, themeCss: cssEditor.getValue() }),
-    { endSlideIndex: range?.end, speakerView, onStatus: setStatusMessage },
+    { endSlideIndex: range?.end, speakerView, onStatus: setStatusMessage, pairPhone },
   );
 }
 
@@ -1015,7 +1015,11 @@ function buildToolbar(): void {
     createToolbarSplitButton(
       'Present',
       () => startPresentation(),
-      [{ label: 'Present in Speaker View', action: () => startPresentation(true) }],
+      [
+        { label: 'Present in Speaker View', action: () => startPresentation(true) },
+        // The QR comes up on the presentation itself; it closes once a phone joins.
+        { label: 'Present with phone remote', action: () => startPresentation(false, true) },
+      ],
       { variant: 'primary', menuLabel: 'Presentation options' },
     ),
   );

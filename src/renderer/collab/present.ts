@@ -22,6 +22,9 @@ import { mediaVariantsSnapshot, pinMediaVariant, setMediaVariants } from './medi
 import { trackVideoLoading } from '../player/videoLoadingProgress.js';
 import { eventOnInteractiveWeb, slideLinkFromEvent } from '../player/links.js';
 import { selectionPreventsAdvance } from '../player/presentationPointer.js';
+import { createPhoneRemoteLink, type PhoneRemoteLink } from './phoneRemoteLink.js';
+import { openPairPhoneDialog, type PairPhoneDialog } from './pairPhoneDialog.js';
+import type { RemoteCommand } from '@shared/phoneRemote.js';
 
 /**
  * The collab presentation page, in either of its two roles.
@@ -148,6 +151,12 @@ let lastState: PresentationState = {
 /** Whether this surface has already told its partner the show is over. */
 let announcedExit = false;
 
+/** Whether the audience Player is blanked; only the audience role keeps it. */
+let blanked = false;
+/** The phone relay link and its pairing panel (see "phone remote" below). */
+let phoneLink: PhoneRemoteLink | null = null;
+let pairDialog: PairPhoneDialog | null = null;
+
 function announceExit(): void {
   if (announcedExit) return;
   announcedExit = true;
@@ -156,6 +165,7 @@ function announceExit(): void {
 
 function exitPresentation(): void {
   announceExit();
+  phoneLink?.close();
   bus?.close();
   if (embedded) window.parent.postMessage({ type: 'present-exit' }, location.origin);
   else window.close();
@@ -193,8 +203,16 @@ function publishState(cursor: Cursor, steps: number): void {
     startedAt,
     slideStartedAt,
     ...(range ? { range } : {}),
+    blank: blanked,
   };
   bus?.post({ kind: 'state', state: lastState });
+  phoneLink?.publishState(lastState);
+}
+
+function toggleBlank(): void {
+  if (!player) return;
+  blanked = player.toggleBlank();
+  publishState(player.getCursor(), lastState.steps);
 }
 
 function advance(): void {
@@ -242,6 +260,8 @@ function mountAudience(): void {
     trackVideoLoading(stageHost);
     videoLoadingTracked = true;
   }
+  // A fresh Player is never blank, whatever the one before it was.
+  blanked = false;
   player = new Player({
     deck,
     container: stageHost,
@@ -263,6 +283,7 @@ function mountAudience(): void {
     onNext: advance,
     onPrev: retreat,
     onHome: () => player?.goToSlide(range?.start ?? 0),
+    onBlank: toggleBlank,
   });
   goFullscreen();
   window.focus();
@@ -313,7 +334,9 @@ function mountSpeaker(): void {
     // surface plays which role instead of moving either of them.
     swapLabel: 'Switch views',
     swapTitle: 'Swap which window shows the audience and which shows Speaker View',
+    onPairPhone: () => openPairing(),
   });
+  if (phoneLink) speaker.setPhones(phoneLink.status().phones);
   if (themeCss) speaker.setTheme(themeCss);
   if (deck) speaker.setDeck(deck);
   speaker.setState(lastState);
@@ -385,6 +408,7 @@ function applyDeck(nextDeck: Deck, nextThemeCss: string | null, source: 'seed' |
     readiness.painting();
   }
   speaker?.setDeck(nextDeck);
+  phoneLink?.deckChanged();
 }
 
 /* --- bus ------------------------------------------------------------------- */
@@ -409,6 +433,7 @@ bus?.subscribe((message) => {
     if (role !== 'speaker') return;
     lastState = message.state;
     speaker?.setState(message.state);
+    phoneLink?.publishState(message.state);
     return;
   }
   if (message.kind === 'swap') {
@@ -434,7 +459,7 @@ bus?.subscribe((message) => {
   const command = message.command;
   if (command.type === 'next') advance();
   else if (command.type === 'prev') retreat();
-  else if (command.type === 'toggleBlank') player.toggleBlank();
+  else if (command.type === 'toggleBlank') toggleBlank();
   else if (command.type === 'goTo') {
     player.goToSlide(range
       ? Math.min(Math.max(command.slide, range.start), range.end)
@@ -449,6 +474,62 @@ bus?.subscribe((message) => {
     setRole('speaker');
   }
 });
+
+/* --- phone remote --------------------------------------------------------- */
+
+/*
+ * The phone relay link is opened the first time this page is asked to pair one
+ * and kept for as long as it presents. It belongs to the page, not the role:
+ * after "Switch views" the same phone keeps working, its commands simply take
+ * the other road — straight into the Player as the audience, over the bus as
+ * the speaker — exactly like this page's own buttons.
+ */
+
+function runPhoneCommand(command: RemoteCommand): void {
+  if (role === 'speaker') {
+    sendCommand(command);
+    return;
+  }
+  if (!player) return;
+  if (command.type === 'next') advance();
+  else if (command.type === 'prev') retreat();
+  else if (command.type === 'toggleBlank') toggleBlank();
+  else if (command.type === 'goTo') {
+    player.goToSlide(range
+      ? Math.min(Math.max(command.slide, range.start), range.end)
+      : command.slide);
+  }
+}
+
+function openPairing(): void {
+  if (agentViewer) return;
+  if (pairDialog && !pairDialog.closed) return;
+  phoneLink ??= createPhoneRemoteLink({
+    deckId: deckId!,
+    onCommand: runPhoneCommand,
+    onStatus: (status) => {
+      speaker?.setPhones(status.phones);
+      pairDialog?.update(status);
+    },
+  });
+  phoneLink.publishState(lastState);
+  pairDialog = openPairPhoneDialog(phoneLink, () => {
+    pairDialog = null;
+    window.focus();
+  });
+}
+
+if (!agentViewer) {
+  // P pairs a phone from either surface — the one way in when presenting in a
+  // single window, where there is no Speaker View footer to hold the button.
+  window.addEventListener('keydown', (event) => {
+    if ((event.key === 'p' || event.key === 'P') && !event.metaKey && !event.ctrlKey && !event.altKey) {
+      event.preventDefault();
+      openPairing();
+    }
+  });
+  if (params.get('pair') === '1') openPairing();
+}
 
 /* --- transports ------------------------------------------------------------ */
 
@@ -500,6 +581,7 @@ const bridge = new CollabBridge(wsUrl, name ? `${name} (${label.toLowerCase()})`
     themeCss = css;
     themeTag.textContent = css;
     speaker?.setTheme(css);
+    phoneLink?.deckChanged();
   },
   onStatus: () => {},
   onCleanChange: () => {},
@@ -520,6 +602,7 @@ window.addEventListener('resize', () => speaker?.refresh());
 // desktop presentation window closes its Speaker View.
 window.addEventListener('pagehide', () => {
   if (!agentViewer) announceExit();
+  phoneLink?.close();
   bus?.close();
 });
 

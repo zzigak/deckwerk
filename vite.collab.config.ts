@@ -25,6 +25,7 @@ export default defineConfig({
         index: resolve(__dirname, 'src/renderer/collab/index.html'),
         present: resolve(__dirname, 'src/renderer/collab/present.html'),
         print: resolve(__dirname, 'src/renderer/collab/print.html'),
+        remote: resolve(__dirname, 'src/renderer/collab/remote.html'),
       },
     },
   },
@@ -32,6 +33,7 @@ export default defineConfig({
     fs: { allow: [resolve(__dirname)] },
     proxy: {
       '/ws': { target: 'ws://localhost:5800', ws: true },
+      '/remote-ws': { target: 'ws://localhost:5800', ws: true },
       '/decks': 'http://localhost:5800',
       '/api': 'http://localhost:5800',
     },

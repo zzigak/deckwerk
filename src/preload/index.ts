@@ -4,6 +4,8 @@ import type { DeckHistoryDocument } from '@shared/deckHistory.js';
 import type { ClipboardReadResult, ClipboardWriteRequest } from '@shared/clipboard.js';
 import type { ClipboardImageSource } from '@shared/clipboardImages.js';
 import { IPC } from '@shared/ipc.js';
+import type { PaperCard } from '@shared/paperCard.js';
+import { DECK_ASSET_IPC, type DeckAssetListing, type DeckAssetTrashResult } from '@shared/mediaIndex.js';
 import type {
   AgentContextDraft,
   AgentPanelState,
@@ -127,6 +129,24 @@ const api = {
       files.map((file) => webUtils.getPathForFile(file)).filter(Boolean),
     ),
   /**
+   * Make a paper card from a pasted arXiv id, DOI or URL, or from a PDF file.
+   * Phases arrive through onOperationProgress under `operationId`; the
+   * browser collab client streams them from the server instead (netApi.ts),
+   * which is what `onProgress` is for.
+   */
+  fetchPaperCard: (
+    request: { input: string } | { file: File },
+    operationId?: string,
+    _onProgress?: (message: string) => void,
+  ): Promise<PaperCard> =>
+    ipcRenderer.invoke(
+      IPC.paperCard,
+      'file' in request
+        ? { pdfPath: webUtils.getPathForFile(request.file), name: request.file.name }
+        : { input: request.input },
+      operationId,
+    ),
+  /**
    * Import an image that a drag or a paste only pointed at — a remote URL or
    * an inline `data:` payload. The renderer cannot fetch cross-origin bytes
    * itself, so the main process goes and gets them.
@@ -143,6 +163,11 @@ const api = {
    */
   videoPoster: (req: VideoPosterRequest): Promise<VideoPosterResult> =>
     ipcRenderer.invoke(IPC.videoPoster, req),
+  /** The Media panel: every file in the deck's assets/ and what refers to it. */
+  listDeckAssets: (): Promise<DeckAssetListing> => ipcRenderer.invoke(DECK_ASSET_IPC.list),
+  /** Move unused asset files to the system Trash, rechecked against `deck` and the saved deck. */
+  trashDeckAssets: (files: string[], deck: Deck): Promise<DeckAssetTrashResult> =>
+    ipcRenderer.invoke(DECK_ASSET_IPC.trash, files, deck),
 
   /**
    * A dropped File carries no usable path once context isolation is on;

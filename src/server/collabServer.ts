@@ -79,8 +79,13 @@ import type { LocalAgentLink, LocalAgentRegistry } from './localAgents.js';
 import { planHtmlReplacement } from './htmlReplacement.js';
 import { MirrorThemeRequestSchema, mirrorThemeAction, type MirrorThemeRequest } from './mirrorTheme.js';
 import { htmlDraftWorkflow, type HtmlDraftWorkflow } from './htmlDraftWorkflow.js';
+import { PhoneRemoteRelay } from './phoneRemote.js';
+import { REMOTE_SOCKET_PATH } from '../shared/phoneRemote.js';
 import { injectWebBridgeRuntime } from '../shared/webBridge.js';
 import { importMeshPage } from '../main/meshPage.js';
+import { fetchPaperCard } from '../main/paperCard.js';
+import type { PaperCardJob } from '@shared/paperCard.js';
+import { deckAssetListing, restoreTrashedAssets, trashDeckAssets } from './assetTrash.js';
 import { isMeshName } from '@shared/meshFiles.js';
 import { checkWebPage } from '../cli/renderSlides.js';
 import {
@@ -878,9 +883,12 @@ export async function startCollabServer(options: CollabServerOptions): Promise<R
 
   interface TrashMeta {
     originalPath: string;
-    kind: 'deck' | 'folder';
+    /** 'assets': unused files the Media panel moved out of the deck at originalPath. */
+    kind: 'deck' | 'folder' | 'assets';
     name: string;
     title?: string;
+    /** For 'assets', the deck-relative paths kept under item/. */
+    files?: string[];
     deletedAt: string;
     deletedBy: string;
   }
@@ -921,10 +929,16 @@ export async function startCollabServer(options: CollabServerOptions): Promise<R
     return { visible, editable };
   }
 
+  /** Who may see and restore a trash entry of unused media: whoever may see and edit its deck. */
+  async function assetTrashAccess(identity: Identity | null, deckId: string): Promise<{ visible: boolean; editable: boolean }> {
+    if (!splitDeckPath(deckId)) return { visible: false, editable: false };
+    return { visible: await deckAllowed(identity, deckId), editable: await deckWritable(identity, deckId) };
+  }
+
   async function readTrashMeta(entryDir: string): Promise<TrashMeta | null> {
     try {
       const raw = JSON.parse(await readFile(join(entryDir, 'trash.json'), 'utf8')) as Partial<TrashMeta>;
-      if (typeof raw.originalPath !== 'string' || (raw.kind !== 'deck' && raw.kind !== 'folder')) return null;
+      if (typeof raw.originalPath !== 'string' || (raw.kind !== 'deck' && raw.kind !== 'folder' && raw.kind !== 'assets')) return null;
       return {
         originalPath: raw.originalPath,
         kind: raw.kind,
@@ -932,6 +946,7 @@ export async function startCollabServer(options: CollabServerOptions): Promise<R
         title: typeof raw.title === 'string' ? raw.title : undefined,
         deletedAt: typeof raw.deletedAt === 'string' ? raw.deletedAt : '',
         deletedBy: typeof raw.deletedBy === 'string' ? raw.deletedBy : '',
+        ...(Array.isArray(raw.files) ? { files: raw.files.filter((file): file is string => typeof file === 'string') } : {}),
       };
     } catch {
       return null;
@@ -1787,7 +1802,9 @@ export async function startCollabServer(options: CollabServerOptions): Promise<R
         const entryDir = join(TRASH_DIR, id);
         const meta = await readTrashMeta(entryDir);
         if (!meta || !existsSync(join(entryDir, 'item'))) continue;
-        const access = await treeAccess(join(entryDir, 'item'), identity);
+        const access = meta.kind === 'assets'
+          ? await assetTrashAccess(identity, meta.originalPath)
+          : await treeAccess(join(entryDir, 'item'), identity);
         if (!access.visible) continue;
         listed.push({ id, ...meta, canRestore: access.editable });
       }
@@ -1861,9 +1878,20 @@ export async function startCollabServer(options: CollabServerOptions): Promise<R
       const meta = await readTrashMeta(entryDir);
       const item = join(entryDir, 'item');
       if (!meta || !existsSync(item)) return respondJson(response, 404, { error: 'no such item in the trash' });
-      const access = await treeAccess(item, identity);
+      const access = meta.kind === 'assets' ? await assetTrashAccess(identity, meta.originalPath) : await treeAccess(item, identity);
       if (!access.visible) return respondJson(response, 404, { error: 'no such item in the trash' });
       if (!access.editable) return respondJson(response, 403, { error: 'you cannot restore this item' });
+      // Unused media files go back into the deck they came from.
+      if (meta.kind === 'assets') {
+        try {
+          const deckDir = deckDirOf(meta.originalPath);
+          if (!isDeckDir(deckDir)) return respondJson(response, 409, { error: `"${meta.originalPath}" is no longer a presentation` });
+          await restoreTrashedAssets(entryDir, deckDir, meta.files ?? []);
+        } catch (error) {
+          return respondJson(response, 409, { error: error instanceof Error ? error.message : String(error) });
+        }
+        return respondJson(response, 200, { path: meta.originalPath, kind: meta.kind });
+      }
       const segments = splitDeckPath(meta.originalPath);
       if (!segments) return respondJson(response, 400, { error: 'the original path is invalid' });
       const to = folderDirOf(meta.originalPath);
@@ -2208,6 +2236,43 @@ export async function startCollabServer(options: CollabServerOptions): Promise<R
       return;
     }
 
+    // A paper card (paperCard.ts) from { input } as JSON, or from a PDF sent
+    // as the raw body with ?name=. The answer is NDJSON: { progress } lines
+    // while it works — fetching, rendering and capturing take seconds — then
+    // one { card } or { error }, so the browser shows the same phases the app does.
+    if (path === '/api/paper-card' && request.method === 'POST') {
+      if (!deckParam) return respondJson(response, 400, { error: 'missing deck' });
+      const dir = await mkdtemp(join(tmpdir(), 'collab-paper-'));
+      response.writeHead(200, { 'content-type': 'application/x-ndjson; charset=utf-8', 'cache-control': 'no-store' });
+      const send = (line: object) => {
+        if (!response.writableEnded) response.write(`${JSON.stringify(line)}\n`);
+      };
+      try {
+        let job: PaperCardJob;
+        if ((request.headers['content-type'] ?? '').startsWith('application/pdf')) {
+          const name = sanitizeFilename(url.searchParams.get('name') ?? 'paper.pdf');
+          const pdfPath = join(dir, name.toLowerCase().endsWith('.pdf') ? name : `${name}.pdf`);
+          await pipeline(request, createWriteStream(pdfPath));
+          job = { pdfPath, name };
+        } else {
+          const payload = JSON.parse((await readBody(request)).toString('utf8')) as { input?: string };
+          if (!payload.input?.trim()) throw new Error('missing input');
+          job = { input: payload.input };
+        }
+        const card = await fetchPaperCard(deckDirOf(deckParam), job, {
+          blockPrivateAddresses: true,
+          onProgress: (progress) => send({ progress }),
+        });
+        send({ card });
+      } catch (error) {
+        send({ error: String(error instanceof Error ? error.message : error) });
+      } finally {
+        response.end();
+        await rm(dir, { recursive: true, force: true });
+      }
+      return;
+    }
+
     if (path === '/api/import-url' && request.method === 'POST') {
       if (!deckParam) return respondJson(response, 400, { error: 'missing deck' });
       const payload = JSON.parse((await readBody(request)).toString('utf8')) as {
@@ -2264,6 +2329,37 @@ export async function startCollabServer(options: CollabServerOptions): Promise<R
       } catch (error) {
         respondJson(response, 400, { error: String(error instanceof Error ? error.message : error) });
       }
+      return;
+    }
+
+    // The Media panel: the deck's assets/ folder and what refers to what in it,
+    // and moving files nothing uses into the trash (assetTrash.ts).
+    if (path === '/api/deck-assets' && request.method === 'GET') {
+      if (!deckParam) return respondJson(response, 400, { error: 'missing deck' });
+      const room = await getRoom(deckParam);
+      respondJson(response, 200, await deckAssetListing(
+        deckDirOf(deckParam), room.session.deck, room.session.themeCss, !hostedDeckId,
+      ));
+      return;
+    }
+    if (path === '/api/deck-assets/trash' && request.method === 'POST') {
+      if (!deckParam) return respondJson(response, 400, { error: 'missing deck' });
+      // A hosted session has no Trash dialog to restore from.
+      if (hostedDeckId) return respondJson(response, 403, { error: 'this shared session has no Trash' });
+      const payload = JSON.parse((await readBody(request)).toString('utf8') || '{}') as { files?: unknown };
+      const files = Array.isArray(payload.files) ? payload.files.filter((file): file is string => typeof file === 'string') : [];
+      const room = await getRoom(deckParam);
+      const stamp = new Date().toISOString().replace(/[:.]/g, '-');
+      respondJson(response, 200, await trashDeckAssets({
+        trashDir: TRASH_DIR,
+        entryId: `${stamp}-${randomUUID().slice(0, 8)}`,
+        deckId: deckParam,
+        deckDir: deckDirOf(deckParam),
+        deck: room.session.deck,
+        themeCss: room.session.themeCss,
+        files,
+        deletedBy: identity?.login ?? 'local',
+      }));
       return;
     }
 
@@ -3508,8 +3604,33 @@ export async function startCollabServer(options: CollabServerOptions): Promise<R
   // is a megabyte or more of JSON. Uncompressed, that one frame was most of
   // the wait before a presentation could paint its first slide.
   const wss = new WebSocketServer({ noServer: true, perMessageDeflate: { threshold: 1024 } });
+  // Presenting from a phone (phoneRemote.ts): its own socket, never a room,
+  // so a phone's Next press is not something any collaborator can see. The
+  // relay asks the same access question every deck route asks.
+  const phoneRemote = new PhoneRemoteRelay({
+    authorize: async (request, deckId) => {
+      if (!splitDeckPath(deckId) || (hostedDeckId && deckId !== hostedDeckId)) return false;
+      if (!accessControl) return true;
+      const identity = resolveIdentity(request, accessControl);
+      return Boolean(identity) && deckAllowed(identity, deckId);
+    },
+    snapshot: async (deckId) => {
+      const room = await getRoom(deckId);
+      return {
+        deckId,
+        deck: room.session.deck,
+        themeCss: room.session.themeCss,
+        mediaVariants: deckMediaVariants(room.session.dir, room.session.deck),
+      };
+    },
+    origins: () => (boundPort === null ? [] : reachableUrls(host, boundPort)),
+  });
   httpServer.on('upgrade', (request, socket, head) => {
     const url = new URL(request.url ?? '/', 'http://localhost');
+    if (url.pathname === REMOTE_SOCKET_PATH) {
+      phoneRemote.handleUpgrade(request, socket, head);
+      return;
+    }
     if (url.pathname !== '/ws') {
       socket.destroy();
       return;
@@ -3781,6 +3902,7 @@ export async function startCollabServer(options: CollabServerOptions): Promise<R
     },
     close: async () => {
       wss.close();
+      phoneRemote.close();
       unsubscribeSharedAgent?.();
       for (const stream of sharedAgentStreams) stream.response.end();
       sharedAgentStreams.clear();

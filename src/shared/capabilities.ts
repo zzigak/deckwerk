@@ -76,6 +76,7 @@ export function capabilities(): Capability[] {
         '$…$ is inline and stays in the sentence flow; $$…$$ is display.',
         'A literal dollar sign is written \\$.',
         'The equation is part of the text element’s html — not a separate element.',
+        'Mark a term with \\step{label}{…} (or KaTeX’s \\htmlClass{step-label}{…}) so builds can reveal, colour or pulse it; see equation-builds.',
       ],
       elements: [
         text('cap-latex-title', 'Maths is text, not layout', TITLE, { class: ['role-title'] }),
@@ -235,6 +236,31 @@ export function capabilities(): Capability[] {
       ],
     },
     {
+      id: 'paper-card',
+      what: 'A related-work card: the paper\u2019s first page (or its project page) with a soft shadow, a bold title and an "Authors, Venue Year" line.',
+      when: 'Citing prior work visually. Never screenshot, crop and type it by hand.',
+      notes: [
+        '`slide-agent paper <deck> <arXiv id|DOI|url|file.pdf>` fetches the metadata (arXiv API, Crossref, or the page\u2019s citation_* tags), renders the top 55% of the PDF\u2019s first page or screenshots the page at 1440\u00d7900, imports the PNG into assets/, and answers with the metadata and a ready <figure> for an authoring page.',
+        'In the editor it is the toolbar\u2019s Paper button: paste an id or link, or choose or drop a PDF.',
+        'It is three ordinary objects, not a group: an image with borderRadius and a box-shadow in its style, a role-body text box with font-weight 700, and a role-caption byline the theme already mutes.',
+        'More than three authors become "First Author et al."; the venue is shortened (CVPR, ACM TOG) and falls back to arXiv.',
+      ],
+      elements: [
+        text('cap-paper-heading', 'Related work', TITLE, { class: ['role-title'] }),
+        {
+          id: 'cap-paper-image', type: 'image', x: 560, y: 280, w: 800, h: 450, rot: 0, z: 2,
+          opacity: 1, class: [], style: { 'box-shadow': '0px 10px 32px rgba(0, 0, 0, 0.18)' },
+          src: 'assets/swatch.png', fit: 'cover', alt: 'NeRF: Representing Scenes as Neural Radiance Fields for View Synthesis',
+          borderRadius: 6, sourceBox: null,
+        },
+        text('cap-paper-title', 'NeRF: Representing Scenes as Neural Radiance Fields for View Synthesis',
+          { x: 560, y: 754, w: 800, h: 80 }, { z: 3, style: { 'font-weight': '700' }, overrides: ['font-weight'], autoFit: true }),
+        text('cap-paper-byline', 'Ben Mildenhall et al., ECCV 2020', { x: 560, y: 840, w: 800, h: 40 }, {
+          z: 4, class: ['role-caption'], autoFit: true,
+        }),
+      ],
+    },
+    {
       id: 'video',
       what: 'Video as a first-class object, with a non-destructive trim.',
       when: 'Any result clip. This editor exists for this.',
@@ -268,6 +294,36 @@ export function capabilities(): Capability[] {
           trigger: { on: 'mediaEnd', ref: 'cap-video', delay: 0 },
           action: { type: 'appear', target: 'cap-video-caption', value: null },
         },
+      ],
+    },
+    {
+      id: 'video-compare',
+      what: 'Videos that play in sync, with a shared scrubber, and a before/after wipe.',
+      when: 'Real vs. simulated, before vs. after: two clips (or stills) the audience must compare frame for frame.',
+      notes: [
+        'syncGroup (data-sync-group) on two or more videos plays them from one clock while presenting: the lowest in z leads, each follower is measured from its own in-point.',
+        'While presenting, hovering a synced video shows one bar along the bottom of the group: play/pause for the group and a scrubber over the leader’s trim window. It never shows in PDFs, thumbnails or posters.',
+        'A wipe is two pictures stacked in the same box. The UPPER one (later in the HTML, higher z) carries compare: "wipe" (data-compare="wipe") and wipe: 0–1 (data-wipe, also accepts "40%"), the divider’s position across the box. It shows left of the divider; whatever is beneath shows right of it.',
+        'The lower layer needs nothing. For video pairs give both the same syncGroup so they show the same moment. Images work as either layer.',
+        'The presenter can drag the divider while presenting; that never edits the deck. The editor, thumbnails and PDF show it at the stored position.',
+        'In the editor: select two videos (or two images) → Compare → Arrange as wipe; a layer of a wipe shows a Divider slider and Turn off wipe.',
+      ],
+      elements: [
+        text('cap-compare-title', 'Real and simulated, one divider', TITLE, { class: ['role-title'] }),
+        {
+          id: 'cap-compare-sim', type: 'video', x: 460, y: 300, w: 1000, h: 563, rot: 0, z: 2,
+          opacity: 1, class: [], style: {}, src: 'assets/testclip.mp4', fit: 'cover',
+          autoplay: true, loop: true, muted: true, controls: false,
+          start: 0, end: null, poster: null, sourceBox: null, syncGroup: 'cap-compare',
+        },
+        {
+          id: 'cap-compare-real', type: 'video', x: 460, y: 300, w: 1000, h: 563, rot: 0, z: 3,
+          opacity: 1, class: [], style: {}, src: 'assets/testclip.mp4', fit: 'cover',
+          autoplay: true, loop: true, muted: true, controls: false,
+          start: 0, end: null, poster: null, sourceBox: null, syncGroup: 'cap-compare',
+          compare: 'wipe', wipe: 0.5, effects: [{ type: 'grayscale', amount: 1 }],
+        },
+        text('cap-compare-caption', 'Left of the divider is the upper clip, right is the one beneath; both run on one clock.', CAPTION, { class: ['role-caption'] }),
       ],
     },
     {
@@ -328,6 +384,7 @@ export function capabilities(): Capability[] {
         'withPrev fires together with the step before it; afterPrev fires on its own after that step, with an optional delay in ms.',
         'An appear or disappear with value: \'dissolve\' fades the element in or out; an appear with value: \'draw\' on a shape is Line Draw: a line or arrow grows from its start with its head leading, and a box, ellipse or path is traced along its outline with its fill following. action.duration is the time in ms (defaults 1000 and 600), and an afterPrev build waits for an animated one before it to finish. In authoring HTML: data-build="click" data-build-effect="dissolve" data-build-duration="800". Animations play when a step is reached by advancing (including builds that run on arriving at a slide); jumping to a step shows its finished state.',
         "The other actions are disappear, play/pause (media), seek (value: seconds) and addClass/removeClass (value: the class name) — the last two are the hook for anything theme.css can animate.",
+        "type: 'pulse' briefly enlarges any object about its own centre (scale, default 1.6; duration, default 800 ms) and settles back without moving anything; type: 'terms' steps through an equation's marked terms — see equation-builds. In authoring HTML: data-pulse=\"click\" data-pulse-scale=\"1.6\".",
       ],
       elements: [
         text('cap-build-title', 'Builds', TITLE, { class: ['role-title'] }),
@@ -391,6 +448,69 @@ export function capabilities(): Capability[] {
         text('cap-morph2-title', 'The same object, moved', TITLE, { class: ['role-title'] }),
         text('cap-morph2-term', '$E = mc^2$', { x: 1000, y: 640, w: 700, h: 200 }, {
           class: ['role-title'], morphId: 'cap-morph-equation',
+        }),
+      ],
+    },
+    {
+      id: 'equation-builds',
+      what: 'Build an equation term by term: reveal or colour its marked terms one step at a time, and pulse one to point at it.',
+      when: 'A derivation or a definition you talk through part by part, rather than showing the whole equation at once.',
+      notes: [
+        'Mark terms in the TeX: \\step{1}{…}, \\step{2}{…} (KaTeX’s \\htmlClass{step-2}{…} and MathJax’s \\class{step-2}{…} mean the same). Numbers set the order; a word label (\\step{force}{f}) names a term and comes after the numbers. A label used twice is one term.',
+        "An action { type: 'terms', target, value: 'appear' } steps through every marked term in order, one click each (or a cascade when afterPrev/withPrev), like a by-paragraph build. The unmarked parts are on screen from the start; an unrevealed term keeps its place, so nothing reflows.",
+        "value: 'color' paints the terms instead (action.color, a CSS colour) and they stay painted. action.term: '2' acts on that one term only. action.duration is the fade or colour change in ms (default 400; 0 is instant).",
+        "{ type: 'pulse', target, term: '2' } enlarges that term for a moment (scale default 1.6, duration default 800 ms) and settles it back exactly; without term the whole object pulses. Any object can pulse.",
+        'In authoring HTML, on the text element: data-term-build="click" (data-term-effect="color" data-term-color="#d9480f" data-term-duration="400" data-term="2" optional) and data-pulse="click" data-pulse-term="2" (data-pulse-scale="1.6" data-pulse-duration="800" optional). A page states the first build of each kind; the Build panel can add more.',
+        'Jumping to a step, the presenter preview and PDF export show the finished state of each step; a pulse leaves no state behind.',
+      ],
+      elements: [
+        text('cap-eqb-title', 'Momentum balance, term by term', TITLE, { class: ['role-title'] }),
+        text(
+          'cap-eqb-equation',
+          '$$\\nabla \\cdot \\sigma \\step{1}{+ \\, f} = \\step{2}{\\rho \\, \\ddot{u}}$$',
+          { x: 160, y: 360, w: 1600, h: 300 },
+          { class: ['role-title'], align: 'center', valign: 'middle' },
+        ),
+      ],
+      timeline: [
+        {
+          id: 'cap-eqb-terms',
+          trigger: { on: 'click', ref: null, delay: 0 },
+          action: { type: 'terms', target: 'cap-eqb-equation', value: 'appear' },
+        },
+        {
+          id: 'cap-eqb-pulse',
+          trigger: { on: 'click', ref: null, delay: 0 },
+          action: { type: 'pulse', target: 'cap-eqb-equation', value: null, term: '2' },
+        },
+      ],
+    },
+    {
+      id: 'equation-morph',
+      what: `${MORPH_NAME} between two equations moves them glyph by glyph.`,
+      when: 'An equation that grows or is rewritten from one slide to the next: f(x) = 0 → f(x) = y → f(x) = y + 1.',
+      notes: [
+        'Pair the two text elements with the same morphId (data-morph) and set morphFromPrevious on the later slide, exactly as for any Morph.',
+        'When both sides hold maths and say different things, every KaTeX glyph they share (matched by symbol in reading order, position breaking ties) travels to its new place and grows or shrinks to its new size; glyphs only one side has fade out or in. Glyphs stay live type, so they stay crisp, and the last frame is the next slide exactly.',
+        'Nothing shared — or a rotated element — falls back to the ordinary Morph of the whole object.',
+      ],
+      elements: [
+        text('cap-eqm-title', 'Equilibrium', TITLE, { class: ['role-title'] }),
+        text('cap-eqm-equation', '$$\\nabla \\cdot \\sigma = 0$$', { x: 160, y: 360, w: 1600, h: 300 }, {
+          class: ['role-title'], align: 'center', valign: 'middle', morphId: 'cap-eqm',
+        }),
+      ],
+    },
+    {
+      id: 'equation-morph-target',
+      what: 'The second half of the equation pair: the same identity, a richer equation.',
+      when: 'Always authored together with the slide before it.',
+      notes: ['∇, ·, σ and = move to their new places; + f and ρü fade in, 0 fades out.'],
+      slide: { morphFromPrevious: true, morphDuration: 1200 },
+      elements: [
+        text('cap-eqm2-title', 'Momentum balance', TITLE, { class: ['role-title'] }),
+        text('cap-eqm2-equation', '$$\\nabla \\cdot \\sigma + f = \\rho \\, \\ddot{u}$$', { x: 160, y: 360, w: 1600, h: 300 }, {
+          class: ['role-title'], align: 'center', valign: 'middle', morphId: 'cap-eqm',
         }),
       ],
     },
@@ -467,6 +587,7 @@ export function capabilities(): Capability[] {
         'The import writes a small runtime that exposes window.deckwerk — onActive(fn), onInactive(fn), onStep(fn), next(), prev(), ready(promise) — and forwards unhandled arrow/space keys so a focused page never traps the presenter.',
         'While presenting, the page is hidden behind its poster until it has loaded and painted. A page that lays itself out from script after load calls `deckwerk.ready(promise)` from its top-level script and the deck also waits for that promise (at most 5 s).',
         'Design for the element box (usually the 1920×1080 canvas) with no scrolling. Clicks inside the page go to the page while `interactive` is true; set it false to have them advance the deck.',
+        'Settings for the page go in `fragment`, handed to it as its address `#…` (HTML `data-fragment`), never in `src`: a dropped 3D model reads `fragment: "shading=normals"` (auto, clay, normals, depth, uv or wireframe).',
         'Nothing inside the page is a slide object: it cannot be restyled with the inspector, Morphed, or auto-fitted. Set `poster` to a still for PDF export and thumbnails.',
       ],
       elements: [

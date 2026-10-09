@@ -217,6 +217,12 @@ const ImageElement = BaseElement.extend({
   borderWidth: z.number().min(0).optional(),
   borderRadius: z.number().min(0).optional(),
   /**
+   * The upper layer of a before/after wipe, exactly as on a video: a still
+   * over a still, or a still over a clip. See `compare` on VideoElement.
+   */
+  compare: z.enum(['wipe']).optional(),
+  wipe: z.number().min(0).max(1).optional(),
+  /**
    * A crop, expressed as where the *whole* image sits relative to this
    * element's box. The element box is the visible window; anything outside it
    * is clipped.
@@ -257,6 +263,18 @@ const VideoElement = BaseElement.extend({
    * simulation stay frame-matched however long the talk dwells on them.
    */
   syncGroup: z.string().min(1).optional(),
+  /**
+   * A before/after wipe. On the upper of two pictures stacked in one box,
+   * `compare: 'wipe'` shows this one only left of a vertical divider and
+   * whatever lies beneath it (usually its sync partner, or a still) right of
+   * it. `wipe` is where the divider sits, as a fraction of the box's width
+   * (default 0.5); the presenter can drag it while presenting, which moves the
+   * divider on screen without editing the deck. Set on the top layer only, so
+   * there is one position and nothing to disagree about; the helpers that
+   * read, write and arrange it live in src/shared/compare.ts.
+   */
+  compare: z.enum(['wipe']).optional(),
+  wipe: z.number().min(0).max(1).optional(),
   /**
    * Crop, expressed exactly as on an image: where the *whole* video sits
    * relative to this element's box, which acts as the visible window.
@@ -462,6 +480,10 @@ export const ActionSchema = z.object({
     'seek',
     'addClass',
     'removeClass',
+    // An equation's marked terms, revealed or coloured one per step (see
+    // shared/equationTerms.ts), and an emphasis pulse of a term or an object.
+    'terms',
+    'pulse',
   ]),
   target: Id,
   /**
@@ -474,6 +496,18 @@ export const ActionSchema = z.object({
   value: z.union([z.number(), z.string()]).nullable().default(null),
   /** Milliseconds an animated build takes (`"draw"`, `"dissolve"`, `"blur"`). */
   duration: z.number().min(0).optional(),
+  /**
+   * The equation term a `terms` or `pulse` action acts on: the label of a
+   * `\step{label}{…}` (`\htmlClass{step-label}{…}`) marker in the target's
+   * TeX. Absent, a `terms` action steps through every term in order — one
+   * step each, like a by-paragraph reveal — and a `pulse` enlarges the whole
+   * object. On `terms`, `value` is `"appear"` (default) or `"color"`.
+   */
+  term: z.string().regex(/^[A-Za-z0-9_-]+$/).optional(),
+  /** The colour a `terms` action with value `"color"` paints its terms. */
+  color: z.string().optional(),
+  /** How far a `pulse` enlarges its target at the peak (default 1.6). */
+  scale: z.number().min(1).max(4).optional(),
 });
 
 export const TimelineEntrySchema = z.object({

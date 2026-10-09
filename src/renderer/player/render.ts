@@ -12,8 +12,10 @@ import { isMediaBorderPaint, typedPropertyOwnsCss } from '@shared/nativeCss.js';
 import { applyTableColumnWidths } from '@shared/paragraphs.js';
 import { isEmbeddableWebSrc, webReadinessAction } from '@shared/webBridge.js';
 import { renderChartBody } from './chartBody.js';
+import { syncWipe } from './wipe.js';
 import renderMathInElement from 'katex/contrib/auto-render';
 import 'katex/dist/katex.min.css';
+import { katexTermOptions } from '@shared/equationTerms.js';
 
 /**
  * deck.json -> DOM.
@@ -524,6 +526,9 @@ export function syncMediaFrame(
     if (radius) mediaBody.style.borderRadius = radius;
     else mediaBody.style.removeProperty('border-radius');
   }
+  // A before/after wipe is part of the picture's framing too, so it rides
+  // the same shared path (wipe.ts).
+  syncWipe(node, el, mediaBody);
 }
 
 function renderVisualEffects(
@@ -695,6 +700,9 @@ function renderBody(el: SlideElement, opts: RenderOptions): HTMLElement | SVGEle
         ],
         throwOnError: false,
         strict: 'ignore',
+        // Equation terms (`\step{2}{…}`) render as classed spans that term
+        // builds and pulses address; nothing else KaTeX gates is trusted.
+        ...katexTermOptions(),
       });
       const walker = document.createTreeWalker(content, NodeFilter.SHOW_TEXT);
       while (walker.nextNode()) {

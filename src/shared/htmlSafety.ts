@@ -24,6 +24,9 @@ export function sanitizeAuthoredHtml(source: string): {
   };
 
   for (const node of document.querySelectorAll('script, object, embed, iframe')) {
+    // A chart's data block never runs: a browser executes no script whose
+    // type is not JavaScript, so `text/csv` is inert text and stays.
+    if (node.matches('[data-element="chart"] > script[type="text/csv" i]')) continue;
     report.removedScripts += 1;
     node.remove();
   }

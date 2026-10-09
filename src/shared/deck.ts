@@ -530,6 +530,9 @@ export const ActionSchema = z.object({
    * `"1-3; 4-6; highlight:5"`: each `;`-separated step reveals its lines, or
    * with `highlight:` dims every other line (shared/codeBlocks.ts). One entry
    * fans out into one step per part, as a by-paragraph reveal does.
+   *
+   * On `pulse` of a whole object, `"lift"` also casts a drop shadow at the
+   * peak and paints the object over its neighbours while it is up.
    */
   value: z.union([z.number(), z.string()]).nullable().default(null),
   /** Milliseconds an animated build takes (`"draw"`, `"dissolve"`, `"blur"`). */

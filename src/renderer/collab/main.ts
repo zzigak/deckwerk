@@ -24,6 +24,7 @@ import {
   createTableInsertPicker,
   insertText,
 } from '../editor/elementCreation.js';
+import { CODE_ICON, insertCode } from '../editor/codeInspector.js';
 import { Inspector } from '../editor/inspector.js';
 import {
   barButton,
@@ -933,6 +934,7 @@ function buildToolbar(): void {
     barIconButton('Text', TEXT_ICON, () => canvas.beginTextEdit(insertText(store).id)),
     createShapeInsertPicker(store),
     createTableInsertPicker(store),
+    barIconButton('Code', CODE_ICON, () => insertCode(store)),
   );
 
   const right = document.createElement('div');

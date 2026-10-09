@@ -43,14 +43,14 @@ authors and venue as editable text.
 
 ## 4. Equation builds and equation Morph
 
-- [ ] Equation builds: reveal or color individual terms of a LaTeX equation
+- [x] Equation builds: reveal or color individual terms of a LaTeX equation
       step by step (`\htmlClass{step-1}{…}` or `\class` markers per term).
-- [ ] Equation Morph: when a slide pair has two LaTeX equations, match KaTeX
+- [x] Equation Morph: when a slide pair has two LaTeX equations, match KaTeX
       glyphs (by character and position in the token stream) and animate each
       matched glyph to its new place; fade only unmatched ones
       (`f(x) = 0` → `f(x) = y` → `f(x) = y + 1` moves, never blurs).
-- [ ] Fallback to today's cross-fade when nothing matches.
-- [ ] Emphasis build ("pulse"): a marked term grows for a moment (about 1.6x,
+- [x] Fallback to today's cross-fade when nothing matches.
+- [x] Emphasis build ("pulse"): a marked term grows for a moment (about 1.6x,
       ~0.8 s) and settles back, to point the audience at one part of the
       equation without changing it.
 

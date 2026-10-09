@@ -47,6 +47,7 @@ backgrounds, request only the matching named recipe:
     slide-agent capabilities paper-card     (or: slide-agent paper . <arXiv id | DOI | URL | file.pdf>)
     slide-agent capabilities text-roles lists auto-fit latex background background-image
     slide-agent capabilities comments web-element html-element
+    slide-agent capabilities chart-element
 
 Edit speaker notes in `notes.md`. Sections are separated by a line containing
 only `---`; keep each generated slide-id anchor with its note.

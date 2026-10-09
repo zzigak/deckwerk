@@ -374,6 +374,56 @@ const WebElement = BaseElement.extend({
 });
 
 /**
+ * A chart drawn from data the deck carries itself, as CSV text, so it diffs,
+ * round-trips through the HTML authoring format and never depends on a file
+ * outside the deck. One pure function (shared/chartSvg.ts) turns it into SVG
+ * sized to the box for every surface — canvas, player, web export, PDF — in
+ * the theme's fonts and text colours, so a chart looks native to its deck.
+ *
+ * `bar` puts several series side by side in each category (grouped);
+ * `stacked-bar` piles them up. `line` and `area` join each series across x;
+ * `scatter` plots each series as points against a numeric x.
+ */
+const ChartElement = BaseElement.extend({
+  type: z.literal('chart'),
+  kind: z.enum(['bar', 'stacked-bar', 'line', 'area', 'scatter']).default('bar'),
+  /** The data: CSV with a header row, kept exactly as written. */
+  csv: z.string().default(''),
+  /** Header of the category (x) column; absent means the first column. */
+  xColumn: z.string().optional(),
+  /** Headers of the plotted columns, in order; empty means every numeric column but x. */
+  series: z.array(z.string()).default([]),
+  title: z.string().default(''),
+  xLabel: z.string().default(''),
+  yLabel: z.string().default(''),
+  /** Fixed value-axis ends; absent or null fits the data with nice ticks. */
+  yMin: z.number().nullable().optional(),
+  yMax: z.number().nullable().optional(),
+  /** Fixed x-axis ends, for a numeric x (line, area, scatter). */
+  xMin: z.number().nullable().optional(),
+  xMax: z.number().nullable().optional(),
+  yScale: z.enum(['linear', 'log']).default('linear'),
+  xScale: z.enum(['linear', 'log']).default('linear'),
+  /** Where the legend sits; `auto` is on top when there is more than one series. */
+  legend: z.enum(['auto', 'top', 'right', 'bottom', 'none']).default('auto'),
+  /** Print each bar's value on it. */
+  valueLabels: z.boolean().default(false),
+  /**
+   * Series colours. `deck` follows the theme's own swatches through CSS
+   * variables, so it recolours when the theme changes; `grayscale` greys
+   * every series but `highlight`, which takes the theme's accent; `custom`
+   * uses `colors`.
+   */
+  palette: z.enum(['deck', 'tableau10', 'okabe-ito', 'viridis', 'grayscale', 'custom']).default('deck'),
+  /** The custom palette: CSS colours, cycled across series. */
+  colors: z.array(z.string()).optional(),
+  /** The series the grayscale palette picks out; absent means the first. */
+  highlight: z.string().optional(),
+  /** Base text size in canvas px; absent scales with the box. */
+  fontSize: z.number().positive().optional(),
+});
+
+/**
  * Produced by the Keynote importer when it meets an object it cannot map.
  * Carries the original geometry so the slide stays laid out correctly, and
  * renders as a labelled dashed box so the gap is visible rather than silent.
@@ -392,6 +442,7 @@ export const ElementSchema = z.discriminatedUnion('type', [
   ShapeElement,
   HtmlElement,
   WebElement,
+  ChartElement,
   UnsupportedElement,
 ]);
 
@@ -553,6 +604,7 @@ export type VideoEl = z.infer<typeof VideoElement>;
 export type ShapeEl = z.infer<typeof ShapeElement>;
 export type HtmlEl = z.infer<typeof HtmlElement>;
 export type UnsupportedEl = z.infer<typeof UnsupportedElement>;
+export type ChartEl = z.infer<typeof ChartElement>;
 export type Slide = z.infer<typeof SlideSchema>;
 export type Comment = z.infer<typeof CommentSchema>;
 export type Deck = z.infer<typeof DeckSchema>;

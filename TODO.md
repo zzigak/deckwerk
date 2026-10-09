@@ -70,13 +70,16 @@ authors and venue as editable text.
 
 Quarto-like: a CSV (or pasted table) plus a color scheme becomes a native chart.
 
-- [ ] Chart element: bar, grouped bar, line, scatter; data stored in the deck
+- [x] Chart element: bar, grouped bar, line, scatter; data stored in the deck
       (inline CSV) so it diffs and round-trips.
-- [ ] Rendered as SVG at native resolution, styled by the deck theme fonts.
-- [ ] Color schemes: deck palette, Tableau 10, Okabe-Ito (colorblind safe),
+- [x] Rendered as SVG at native resolution, styled by the deck theme fonts.
+- [x] Color schemes: deck palette, Tableau 10, Okabe-Ito (colorblind safe),
       viridis; import a palette from a list of hex colors.
-- [ ] Builds: reveal series or bars step by step.
-- [ ] Import CSV by drag-and-drop; edit data in a small grid in the inspector.
+- [x] Builds: reveal series or bars step by step.
+- [x] Import CSV by drag-and-drop; edit data in the inspector (CSV text area).
+- [ ] Edit chart data in a small grid rather than as CSV text.
+- [ ] Draw a hand-written chart figure in the authoring page before its first
+      save (today it shows only once the deck has compiled it).
 
 ## 7. Presenting from a phone
 

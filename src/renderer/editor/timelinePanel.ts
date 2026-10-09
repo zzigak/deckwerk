@@ -11,6 +11,7 @@ import {
   isParagraphBuild,
 } from '@shared/timeline.js';
 import { durationField } from './durationField.js';
+import { isChartBuildValue } from '@shared/chartBuild.js';
 import {
   addEquationActionOptions,
   applyEquationActionChoice,
@@ -278,6 +279,15 @@ export class TimelinePanel {
       opt.textContent = 'appear by paragraph';
       action.insertBefore(opt, action.children[1]);
     }
+    // A chart can build a series, or a category of bars, at a time.
+    if (targetEl?.type === 'chart') {
+      for (const [value, label] of [['appear:byCategory', 'appear by category'], ['appear:bySeries', 'appear by series']]) {
+        const opt = document.createElement('option');
+        opt.value = value;
+        opt.textContent = label;
+        action.insertBefore(opt, action.children[1]);
+      }
+    }
     // Any element can dissolve in or out; a line or arrow can also be drawn
     // in from its start to its end. Each is one more choice on the same card.
     const optionAfter = (value: string, label: string, after: string): void => {
@@ -295,14 +305,16 @@ export class TimelinePanel {
     optionAfter('disappear:blur', 'blur out', 'disappear:dissolve');
     addEquationActionOptions(action, entry, targetEl);
     action.value = equationActionValue(entry) ?? (byParagraph ? 'appear:paragraph'
+      : isChartBuildValue(entry.action.value) && targetEl?.type === 'chart' ? `appear:${entry.action.value}`
       : effect ? `${entry.action.type}:${effect}` : entry.action.type);
     action.addEventListener('change', () =>
       this.mutate(entry.id, (e) => {
         const [type, variant] = action.value.split(':') as ['appear', string | undefined];
         e.action.type = type;
         if (variant === 'paragraph') e.action.value = 'byParagraph';
+        else if (isChartBuildValue(variant)) e.action.value = variant;
         else if (variant === 'draw' || variant === 'dissolve' || variant === 'blur') e.action.value = variant;
-        else if (['byParagraph', 'draw', 'dissolve', 'blur'].includes(String(e.action.value))) {
+        else if (['byParagraph', 'bySeries', 'byCategory', 'draw', 'dissolve', 'blur'].includes(String(e.action.value))) {
           e.action.value = null;
         }
         // A time belongs to an animation; switching between two keeps the author's.

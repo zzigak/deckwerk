@@ -11,6 +11,8 @@ import {
 } from './equationBuildHtml.js';
 import { shapeSvg } from './shapeSvg.js';
 import { applyTableColumnWidths } from './paragraphs.js';
+import { chartFieldsFromHtml, chartToHtml } from './chartHtml.js';
+import { isChartBuildValue } from './chartBuild.js';
 import { compareDataAttrs, compareFromDataset } from './compare.js';
 import { layoutMaster, placeNewPlaceholders, syncSlideWithLayoutMaster, type FixedLayout } from './layoutMasters.js';
 import {
@@ -424,6 +426,9 @@ export function authoringCss(canvas: { w: number; h: number }): string {
      and clamping it to the slide silently resizes the object. The slide clips
      what overflows, which is what the player does too. */
   img, video { display: block; }
+  /* A chart's content is an inert data script, so a figure given no height
+     would measure as nothing and vanish; a 16:9 box is its natural default. */
+  [data-element="chart"] { display: block; aspect-ratio: 16 / 9; min-width: 240px; }
 `;
 }
 
@@ -1411,6 +1416,12 @@ export function elementFromNode(
     };
   }
 
+  // A chart: options on data attributes, the data as the text of its
+  // `text/csv` script, which the walk hands over as the node's html.
+  if (node.dataset.element === 'chart') {
+    return { ...base, ...chartFieldsFromHtml(node.dataset, node.html) };
+  }
+
   if (node.dataset.element === 'unsupported') {
     // Still a gap, still conspicuous. It only stops being one when the author
     // replaces this element with markup that means something.
@@ -1538,13 +1549,18 @@ export function buildFromNode(
   const effect = node.dataset.buildEffect;
   const animated = effect === 'draw' || effect === 'dissolve' || effect === 'blur';
   const duration = Number(node.dataset.buildDuration);
+  // On a chart, `bySeries` / `byCategory` reveal it a part at a time.
+  const parts = node.dataset.element === 'chart'
+    ? ({ byseries: 'bySeries', series: 'bySeries', bycategory: 'byCategory', category: 'byCategory' } as const)[
+      (effect ?? '').toLowerCase() as 'series']
+    : undefined;
   return {
     id: `${elementId}-build-${index + 1}`,
     trigger: { on, ref: node.dataset.buildRef ?? null, delay: Number(delay ?? 0) || 0 },
     action: {
       type: 'appear',
       target: elementId,
-      value: animated ? effect : null,
+      value: animated ? effect : parts ?? null,
       ...(animated && Number.isFinite(duration) && duration >= 0 ? { duration } : {}),
     },
   };
@@ -1621,6 +1637,9 @@ function elementToHtml(element: SlideElement, build?: TimelineEntry, base?: stri
     build ? `data-build="${build.trigger.on}${build.trigger.delay ? `+${build.trigger.delay}` : ''}"` : '',
     build?.trigger.ref ? `data-build-ref="${escape(build.trigger.ref)}"` : '',
     build && isEffectName(build.action.value)
+      ? `data-build-effect="${build.action.value}"` : '',
+    // A chart revealed a series (or a category) at a time.
+    build && isChartBuildValue(build.action.value)
       ? `data-build-effect="${build.action.value}"` : '',
     build && isEffectName(build.action.value)
       && build.action.duration !== undefined
@@ -1768,6 +1787,8 @@ function elementToHtml(element: SlideElement, build?: TimelineEntry, base?: stri
             + `font:24px system-ui,sans-serif;color:#667;background:#eef0f3;border:2px dashed #99a;box-sizing:border-box;">`
             + `web page: ${escape(element.title || element.src)}</div>`)
         + '</div>';
+    case 'chart':
+      return chartToHtml(element, attrs, styleAttr(position, inline));
     case 'unsupported':
       // An import gap, described well enough to be fixed: replace this element
       // with real markup and it becomes a real object on the way back.

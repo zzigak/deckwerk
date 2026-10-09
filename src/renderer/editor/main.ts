@@ -31,6 +31,7 @@ import { HistoryPanel } from './historyPanel.js';
 import { MediaPanel, installMediaDrop } from './mediaPanel.js';
 import { authoredHtmlSync, fileName } from './htmlCompile.js';
 import { createShapeInsertPicker, createTableInsertPicker, insertText } from './elementCreation.js';
+import { createChartInsertPicker } from './chartCreation.js';
 import { PAPER_ICON, insertPaperCard } from './paperCardDialog.js';
 import { createToolbarPicker, createToolbarSplitButton } from './exportPicker.js';
 import { showPdfExportDialog } from './pdfExportDialog.js';
@@ -540,6 +541,7 @@ function buildToolbar(): void {
     barIconButton('Text', TEXT_ICON, () => addText()),
     createShapeInsertPicker(store),
     createTableInsertPicker(store),
+    createChartInsertPicker(store),
     barIconButton('Paper', PAPER_ICON, () => void insertPaperCard({
       store,
       beginOperation: (message) => operationProgress.begin(message),

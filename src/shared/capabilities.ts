@@ -600,6 +600,35 @@ export function capabilities(): Capability[] {
       ],
     },
     {
+      id: 'chart-element',
+      what: 'A native chart — bar (grouped), stacked bar, line, area or scatter — drawn as SVG from CSV the element carries.',
+      when: 'Any quantitative comparison or trend: results tables, ablations, scaling curves. Prefer it to a pasted chart image: it stays editable, follows the theme and can build a series at a time.',
+      notes: [
+        'In an authoring page: `<figure data-element="chart" data-kind="bar" data-x="model" data-series="score,cost" data-palette="okabe-ito" data-title="…" style="width:1200px;height:640px"><script type="text/csv">model,score,cost\nOurs,0.91,12\nBaseline,0.74,9</script></figure>`. The CSV inside the `text/csv` script is kept exactly (common indentation is stripped). Give the figure a size; without one it is 16:9 at its container width.',
+        'Kinds: bar (several series side by side; `grouped-bar` is accepted), stacked-bar, line, area, scatter. `data-x` names the x column (default: first); `data-series` the plotted columns (default: every numeric column); a name list may be a JSON array when names hold commas.',
+        'Cells may carry units — 12.5%, $1,200, 3.2 ms — which are stripped for plotting; value labels print the cell as written. Empty, n/a and - are gaps.',
+        'Options: data-x-label, data-y-label, data-y-min / data-y-max / data-x-min / data-x-max (omit for auto), data-y-scale="log", data-x-scale="log", data-legend (auto|top|right|bottom|none), data-value-labels="true", data-font-size.',
+        'Palettes: deck (follows the theme, the default), tableau10, okabe-ito (colour-blind safe), viridis, grayscale (greys plus the accent on data-highlight), or custom via data-colors="#264653,#2a9d8f" — data-palette also accepts a hex list or a coolors.co link directly.',
+        'Builds: data-build="click" data-build-effect="bySeries" reveals one series per click; "byCategory" one group of bars per click. In deck.json that is an appear with value "bySeries" or "byCategory".',
+        'Text is drawn in the theme\'s fonts and colours and sized from the box (data-font-size overrides). Leave the chart\'s own title empty when the slide already has one.',
+        'In deck.json the attributes are fields: kind, csv, xColumn, series, title, xLabel, yLabel, yMin, yMax, xMin, xMax, yScale, xScale, legend, valueLabels, palette, colors, highlight, fontSize. Unset yMin/yMax/xMin/xMax fit the data; unset fontSize scales text with the box.',
+      ],
+      elements: [
+        text('cap-chart-title', 'Charts from data', TITLE, { class: ['role-title'] }),
+        {
+          id: 'cap-chart', type: 'chart', x: 160, y: 300, w: 1600, h: 620, rot: 0, z: 2,
+          opacity: 1, class: [], style: {},
+          kind: 'bar', csv: 'model,Accuracy,Recall\nBaseline,0.72,0.64\nAblation,0.78,0.71\nOurs,0.86,0.83',
+          series: [], title: '', xLabel: '', yLabel: 'Score', yScale: 'linear', xScale: 'linear',
+          legend: 'auto', valueLabels: true, palette: 'okabe-ito',
+        },
+      ],
+      timeline: [{
+        id: 'cap-chart-build', trigger: { on: 'click', ref: null, delay: 0 },
+        action: { type: 'appear', target: 'cap-chart', value: 'bySeries' },
+      }],
+    },
+    {
       id: 'html-element',
       what: 'An escape hatch element holding arbitrary markup.',
       when: 'A small structure the object model has no vocabulary for — for example a tight two-column flow inside one box. Reach for real text, table, image, and shape elements first.',

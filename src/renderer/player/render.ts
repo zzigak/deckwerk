@@ -11,6 +11,7 @@ import { quadraticPath, shapeSvg } from '@shared/shapeSvg.js';
 import { isMediaBorderPaint, typedPropertyOwnsCss } from '@shared/nativeCss.js';
 import { applyTableColumnWidths } from '@shared/paragraphs.js';
 import { isEmbeddableWebSrc, webReadinessAction } from '@shared/webBridge.js';
+import { renderCodeBody } from './codeRender.js';
 import { renderChartBody } from './chartBody.js';
 import { syncWipe } from './wipe.js';
 import renderMathInElement from 'katex/contrib/auto-render';
@@ -796,6 +797,8 @@ function renderBody(el: SlideElement, opts: RenderOptions): HTMLElement | SVGEle
     case 'web':
       return renderWeb(el, opts);
 
+    case 'code':
+      return renderCodeBody(el);
     case 'chart':
       return renderChartBody(el);
 

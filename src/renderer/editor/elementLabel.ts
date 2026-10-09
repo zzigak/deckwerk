@@ -119,6 +119,11 @@ export function describeElement(el: SlideElement): string {
       return `${el.type}: ${el.src.split('/').pop()}`;
     case 'web':
       return `web page: ${el.title || el.src.split('/').pop()}`;
+    case 'code': {
+      const first = el.code.split('\n').find((line) => line.trim())?.trim() ?? '';
+      const short = first.length > 32 ? `${first.slice(0, 31)}…` : first;
+      return short ? `code: ${short}` : 'code';
+    }
     case 'chart':
       return `${el.kind.replace('-', ' ')} chart${el.title ? `: ${el.title}` : ''}`;
     case 'shape': {

@@ -22,6 +22,8 @@ import {
 import { countParagraphs, paragraphTexts } from '@shared/paragraphs.js';
 import { describeElement, renderElementLabel } from './elementLabel.js';
 import type { EditorStore } from './store.js';
+import { codeLines, isLineBuild } from '@shared/codeBlocks.js';
+import { defaultLineSpec, lineBuildCardParts } from './lineBuildPanel.js';
 
 /**
  * The Props tab's section: a ruled block under an `insp-subtitle` heading. The
@@ -126,6 +128,23 @@ export class TimelinePanel {
       addPara.addEventListener('click', () => this.addParagraphAnimation(paraTarget.id));
       elements.head.appendChild(addPara);
     }
+    // A code block builds by lines: one card whose steps reveal or highlight
+    // line ranges (lineBuildPanel.ts).
+    const codeTarget = selected.length === 1 && selected[0].type === 'code' ? selected[0] : null;
+    if (codeTarget && !slide.timeline.some((e) => e.action.type === 'lines' && e.action.target === codeTarget.id)) {
+      const addLines = document.createElement('button');
+      addLines.className = 'ghost build-add-paragraph build-add-lines';
+      addLines.textContent = 'Add line build';
+      addLines.title = 'Reveal or highlight this code a few lines per click';
+      addLines.addEventListener('click', () => this.store.commit((deck) => {
+        deck.slides[this.store.get().slideIndex].timeline.push({
+          id: makeId('t'),
+          trigger: { on: 'click', ref: null, delay: 0 },
+          action: { type: 'lines', target: codeTarget.id, value: defaultLineSpec(codeLines(codeTarget.code).length) },
+        });
+      }, { label: 'Add line build' }));
+      elements.head.appendChild(addLines);
+    }
     // An equation with marked terms builds term by term; anything can pulse.
     elements.head.append(...equationBuildButtons(selected, (entry, label) => this.store.commit((deck) => {
       deck.slides[this.store.get().slideIndex].timeline.push(entry);
@@ -219,6 +238,7 @@ export class TimelinePanel {
   private entryRow(entry: TimelineEntry, slide: Slide, numbers: number[]): HTMLElement {
     const elements = slide.elements;
     const byParagraph = isParagraphBuild(entry, slide);
+    const byLines = isLineBuild(entry, slide);
     const effect = buildEffect(entry, slide);
     const row = document.createElement('div');
     row.className = 'timeline-row';
@@ -438,7 +458,7 @@ export class TimelinePanel {
     // points at. How and when it fires comes on the lines below.
     const head = document.createElement('div');
     head.className = 'build-card-head';
-    if (byParagraph) head.append(grip, name, remove);
+    if (byParagraph || byLines) head.append(grip, name, remove);
     else head.append(grip, numChip, name, remove);
     const when = document.createElement('div');
     when.className = 'build-card-body build-card-when';
@@ -454,6 +474,13 @@ export class TimelinePanel {
       over.className = 'build-action-label';
       over.textContent = 'over';
       what.append(over, durationWrap);
+    }
+    if (byLines) {
+      const parts = lineBuildCardParts(entry, numbers, (spec) => this.mutate(entry.id, (e) => {
+        e.action.value = spec;
+      }));
+      row.append(head, when, parts.what, parts.list);
+      return row;
     }
     const equation = equationBuildControls(entry, slide, numbers, (fn) => this.mutate(entry.id, fn));
     what.append(...equation.fields);

@@ -89,6 +89,8 @@ type ContextMenuEntry =
   | 'separator';
 import { isWebBridgeAction } from '@shared/webBridge.js';
 import { reportSelectionViolations } from './selectionInvariants.js';
+import { prepareCodeBlocks, syncCodeBody } from '../player/codeRender.js';
+import { focusCodeSource } from './codeInspector.js';
 import {
   HANDLES,
   type SizeGuide,
@@ -1061,6 +1063,7 @@ export class EditorCanvas {
     }
 
     this.harvestVideos();
+    prepareCodeBlocks(this.store.get().deck);
     const rendered = renderSlide(
       slide,
       { resolveSrc: (src) => window.api.assetUrl(src), mediaPreload: 'metadata' },
@@ -1496,6 +1499,8 @@ export class EditorCanvas {
     const resolve = { resolveSrc: (src: string) => window.api.assetUrl(src) };
     const rendered = this.slideLayer.querySelector<HTMLElement>(':scope > .slide');
     if (rendered) applySlideRootStyles(rendered, slide, resolve);
+    // A theme change can take this path; the Deck code scheme follows it.
+    prepareCodeBlocks(this.store.get().deck);
 
     for (const el of slide.elements) {
       const node = this.slideLayer.querySelector<HTMLElement>(
@@ -1522,6 +1527,8 @@ export class EditorCanvas {
       // A shape's drawing is sized by its own viewBox, so the wrapper's new
       // box is not enough: rebuild the SVG for the current geometry.
       if (el.type === 'shape') syncShapeBody(node, el);
+      // A code block's lines are drawn from its fields; redraw when they change.
+      if (el.type === 'code') syncCodeBody(node, el);
       // A chart is drawn for its box and its data; redraw when either changed.
       if (el.type === 'chart') syncChartBody(node, el);
     }
@@ -3192,6 +3199,9 @@ export class EditorCanvas {
       // toggled on its second pointer-up; toggling again would undo it.
       if (ev.timeStamp - this.mediaToggledAt <= DOUBLE_CLICK_MS) return;
       this.toggleMedia(hit.id);
+    } else if (hit.type === 'code') {
+      // Code is edited as plain text in the inspector, where a paste stays raw.
+      focusCodeSource();
     }
   }
 

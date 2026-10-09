@@ -3,6 +3,7 @@ import { applyParagraphVisibility } from '@shared/paragraphs.js';
 import { applyChartBuildVisibility } from '@shared/chartBuild.js';
 import type { SlideState } from '@shared/timeline.js';
 import { curvedShadowClasses } from '@shared/shapeShadow.js';
+import { applyCodeLineState } from './codeRender.js';
 import { applyTermStates } from './equationBuilds.js';
 
 /**
@@ -17,6 +18,7 @@ export function applyStaticSlideState(
   state: SlideState,
 ): void {
   applyParagraphVisibility(stage, state);
+  applyCodeLineState(stage, slide, state);
   applyChartBuildVisibility(stage, slide, state);
   applyTermStates(stage, slide, state);
   const nodes = new Map(

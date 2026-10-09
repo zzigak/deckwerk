@@ -233,6 +233,7 @@ function similarity(a: SlideElement, b: SlideElement): number {
     }
     case 'html': return b.type === 'html' && a.html === b.html ? 100 : 0;
     case 'web': return b.type === 'web' && a.src === b.src ? 100 : 0;
+    case 'code': return b.type === 'code' && a.code === b.code ? 110 : 0;
     // The same data, or the same titled chart, is the same chart restyled.
     case 'chart': return b.type !== 'chart' ? 0
       : a.csv === b.csv ? 100 : a.title && a.title === b.title ? 80 : 0;

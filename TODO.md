@@ -36,10 +36,10 @@ authors and venue as editable text.
 
 ## 3. Code blocks with syntax highlighting
 
-- [ ] Code element (or a text role) highlighted with Shiki at render time.
-- [ ] Bundled color schemes: GitHub Light, GitHub Dark, One Dark, Solarized
+- [x] Code element (or a text role) highlighted with Shiki at render time.
+- [x] Bundled color schemes: GitHub Light, GitHub Dark, One Dark, Solarized
       Light, Dracula, plus one matching the deck theme; picker in the inspector.
-- [ ] Line builds: reveal or highlight lines step by step (`data-lines="1-3,5"`
+- [x] Line builds: reveal or highlight lines step by step (`data-lines="1-3,5"`
       per build step).
 - [ ] Copy-as-text keeps the raw code; HTML round trip as `<pre><code class="language-…">`.
 

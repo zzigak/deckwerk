@@ -497,6 +497,7 @@ export function capabilities(): Capability[] {
         'The import writes a small runtime that exposes window.deckwerk — onActive(fn), onInactive(fn), onStep(fn), next(), prev(), ready(promise) — and forwards unhandled arrow/space keys so a focused page never traps the presenter.',
         'While presenting, the page is hidden behind its poster until it has loaded and painted. A page that lays itself out from script after load calls `deckwerk.ready(promise)` from its top-level script and the deck also waits for that promise (at most 5 s).',
         'Design for the element box (usually the 1920×1080 canvas) with no scrolling. Clicks inside the page go to the page while `interactive` is true; set it false to have them advance the deck.',
+        'Settings for the page go in `fragment`, handed to it as its address `#…` (HTML `data-fragment`), never in `src`: a dropped 3D model reads `fragment: "shading=normals"` (auto, clay, normals, depth, uv or wireframe).',
         'Nothing inside the page is a slide object: it cannot be restyled with the inspector, Morphed, or auto-fitted. Set `poster` to a still for PDF export and thumbnails.',
       ],
       elements: [

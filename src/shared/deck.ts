@@ -347,6 +347,12 @@ const WebElement = BaseElement.extend({
   interactive: z.boolean().default(true),
   /** Accessible name and inspector label for the embedded page. */
   title: z.string().default(''),
+  /**
+   * Settings for the page, handed to it as the address fragment (`#…`) when it
+   * runs, e.g. a 3D model's `shading=normals`. Kept apart from `src`, which
+   * stays a plain deck-relative file path for export, validation and mirroring.
+   */
+  fragment: z.string().optional(),
 });
 
 /**

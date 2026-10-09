@@ -83,10 +83,13 @@ Quarto-like: a CSV (or pasted table) plus a color scheme becomes a native chart.
 Built into the mesh viewer, chosen in the inspector or with a small toggle on
 the viewer itself.
 
-- [ ] Modes: original materials, clay, surface normals (RGB), depth (z-buffer,
-      near light / far dark), UV checker, wireframe overlay.
-- [ ] One mode per model or for the whole element; remembered in the deck.
-- [ ] Side-by-side views keep one mode switch so comparisons stay fair.
+- [x] Modes: original materials, clay, surface normals (RGB), depth (z-buffer,
+      near light / far dark), UV checker, wireframe.
+- [x] Remembered in the deck: the web element's `fragment` (`shading=normals`),
+      chosen from the inspector's Shading menu; hover buttons switch it live.
+- [x] Side-by-side views share the one mode, so comparisons stay fair.
+- [ ] Per-model modes, and a poster re-captured in the chosen mode (the canvas
+      still shows the import-time still).
 
 ## Smaller follow-ups
 

@@ -6824,7 +6824,9 @@ export class EditorCanvas {
       const slide = deck.slides[this.store.get().slideIndex];
       const z = slide.elements.reduce((max, el) => Math.max(max, el.z), 0) + 1;
       slide.elements.push({
+        // `shading=` marks the page as the 3D viewer, so the inspector offers its shading modes.
         id, type: 'web', src: page.src, poster: page.poster, title: page.title, interactive: true,
+        fragment: 'shading=auto',
         x: Math.round(Math.min(Math.max(0, dropPoint.x - w / 2), canvas.w - w)),
         y: Math.round(Math.min(Math.max(0, dropPoint.y - h / 2), canvas.h - h)),
         w, h, rot: 0, z, opacity: 1, class: [], style: {},

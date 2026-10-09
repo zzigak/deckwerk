@@ -1375,6 +1375,7 @@ export function elementFromNode(
       poster: node.dataset.poster || null,
       interactive: node.dataset.interactive !== 'false',
       title: node.dataset.title ?? '',
+      ...(node.dataset.fragment ? { fragment: node.dataset.fragment } : {}),
     };
   }
 
@@ -1724,6 +1725,7 @@ function elementToHtml(element: SlideElement, build?: TimelineEntry, base?: stri
         + attr('data-poster', element.poster)
         + ` data-interactive="${element.interactive}"`
         + ` data-title="${escape(element.title)}"`
+        + attr('data-fragment', element.fragment ?? null)
         + ` ${styleAttr(position, inline, 'overflow:hidden;')}>`
         + notAnObject(element.poster
           ? `<img src="${escape(element.poster)}" alt="${escape(element.title)}" style="display:block;width:100%;height:100%;object-fit:contain;">`

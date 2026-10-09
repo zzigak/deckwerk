@@ -1,3 +1,4 @@
+import { MESH_SHADING_MODES, meshShadingOf, withMeshShading, type MeshShading } from '@shared/meshShading.js';
 import type { Deck, MediaEffect, Slide, SlideElement } from '@shared/deck.js';
 import { braceDepthOf } from '@shared/brace.js';
 import {
@@ -2261,6 +2262,18 @@ export class Inspector {
           setLabel(this.onToggleWebLive?.(el.id) ?? false);
         });
         page.content.appendChild(live);
+        // A dropped 3D model: how its meshes are shaded while presenting.
+        const shading = meshShadingOf(el.fragment);
+        if (shading !== null) {
+          const field = selectField('Shading', [...MESH_SHADING_MODES], shading, (v) =>
+            this.store.updateSelected((e) => {
+              if (e.type === 'web') e.fragment = withMeshShading(e.fragment, v as MeshShading);
+            }));
+          field.title = 'auto: the model\'s own materials (clay if it has none); '
+            + 'normals: surface direction as colour; depth: near light, far dark; '
+            + 'uv: a checker over the texture coordinates; wireframe: the mesh itself';
+          page.content.appendChild(field);
+        }
         page.content.appendChild(
           textAreaField('Document (deck-relative .html)', el.src, (v) =>
             this.store.updateSelected((e) => {

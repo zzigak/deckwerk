@@ -857,7 +857,7 @@ function renderWeb(
   frame.setAttribute('allow', '');
   frame.setAttribute('loading', preview ? 'lazy' : 'eager');
   frame.title = el.title || 'Embedded web page';
-  frame.src = opts.resolveSrc(el.src);
+  frame.src = opts.resolveSrc(el.src) + (el.fragment ? `#${el.fragment}` : '');
   frame.style.width = '100%';
   frame.style.height = '100%';
   frame.style.border = '0';

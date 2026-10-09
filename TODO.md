@@ -50,6 +50,9 @@ authors and venue as editable text.
       matched glyph to its new place; fade only unmatched ones
       (`f(x) = 0` → `f(x) = y` → `f(x) = y + 1` moves, never blurs).
 - [ ] Fallback to today's cross-fade when nothing matches.
+- [ ] Emphasis build ("pulse"): a marked term grows for a moment (about 1.6x,
+      ~0.8 s) and settles back, to point the audience at one part of the
+      equation without changing it.
 
 ## 5. Media tab
 

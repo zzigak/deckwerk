@@ -67,6 +67,7 @@
     "@gltf-transform/extensions": "^4.5.0",
     "@types/ws": "^8.18.1",
     "codemirror": "^6.0.2",
+    "d3-scale": "^4.0.2",
     "draco3dgltf": "^1.5.7",
     "ffmpeg-static": "^5.2.0",
     "ffprobe-static": "^3.1.0",
@@ -74,11 +75,14 @@
     "katex": "^0.18.4",
     "libheif-js": "^1.19.8",
     "meshoptimizer": "^1.2.0",
+    "qrcode-generator": "^2.0.4",
+    "shiki": "^4.5.0",
     "three": "^0.170.0",
     "ws": "^8.21.3",
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@types/d3-scale": "^4.0.9",
     "@types/jsdom": "^30.0.0",
     "@types/node": "^22.7.4",
     "electron": "^32.1.2",

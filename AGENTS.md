@@ -288,6 +288,33 @@ resizable, editable only by rewriting the markup (`validate` lists them as
 - **A container that mixes loose prose with block children** — usually a block
   element inside a `<p>`, which the HTML parser closes early. Wrap the prose.
 
+### Charts from data: the `chart` element
+
+A chart is a native object drawn from CSV it carries — no image, no script.
+Write a `<figure>` with the options as data attributes and the data in an
+inert `text/csv` script (kept exactly; common indentation is stripped):
+
+```html
+<figure data-element="chart" data-kind="bar" data-x="model" data-series="score,cost"
+        data-palette="okabe-ito" data-y-label="Score" data-build="click"
+        data-build-effect="bySeries" style="width:1200px; height:640px">
+  <script type="text/csv">
+  model,score,cost
+  Ours,0.91,12
+  Baseline,0.74,9
+  </script>
+</figure>
+```
+
+Kinds are `bar` (several series side by side), `stacked-bar`, `line`, `area`
+and `scatter`. Cells may carry units (`12%`, `3.2 ms`). The palette defaults to
+`deck`, the theme's own colours; `okabe-ito` is colour-blind safe; a hex list
+or a coolors.co link in `data-palette` is a custom palette. `bySeries` and
+`byCategory` builds reveal one series, or one group of bars, per click. Every
+attribute is listed under `chart-element` in `slide-agent capabilities`. A
+figure you write shows nothing in your browser until it is saved; the export
+of a saved chart carries the drawing.
+
 ### Interactive pages: the `web` element
 
 Everything above is static by design — the compile strips `<script>`, `<iframe>`

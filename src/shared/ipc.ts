@@ -136,6 +136,8 @@ export interface PresentationState {
   slideStartedAt: number;
   /** Inclusive bounds when presenting a multi-slide rail selection. */
   range?: { start: number; end: number };
+  /** The audience screen is blanked (B). Reported so a phone remote can show it. */
+  blank?: boolean;
 }
 
 export interface DisplayInfo {

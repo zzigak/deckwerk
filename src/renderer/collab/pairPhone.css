@@ -1,0 +1,41 @@
+/*
+ * The Pair phone panel and the Speaker View control that opens it. The panel
+ * is the shared .app-dialog; only what is particular to a QR code lives here.
+ */
+.pair-phone-dialog { width: min(420px, calc(100vw - 56px)); align-items: stretch; }
+.pair-phone-lede { margin: 0; color: var(--muted); line-height: 1.5; }
+.pair-phone-code {
+  display: grid;
+  place-items: center;
+  align-self: center;
+  width: min(260px, 60vh);
+  aspect-ratio: 1;
+  background: #fff;
+}
+.pair-phone-code svg { display: block; width: 100%; height: 100%; }
+.pair-phone-placeholder { color: #565f89; }
+.pair-phone-link { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.pair-phone-link code {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  color: var(--muted);
+  font: 11px var(--mono);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  user-select: all;
+}
+.pair-phone-status { min-height: 1.5em; margin: 0; }
+.pair-phone-status.connected { color: var(--green); }
+.pair-phone-status.connected::before,
+.speaker-phone.connected::before {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  margin-right: 7px;
+  border-radius: 50%;
+  background: var(--green);
+  content: "";
+  vertical-align: 1px;
+}
+.speaker-phone.connected { border-color: var(--green); color: var(--green); }

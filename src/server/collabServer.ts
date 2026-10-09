@@ -79,6 +79,8 @@ import type { LocalAgentLink, LocalAgentRegistry } from './localAgents.js';
 import { planHtmlReplacement } from './htmlReplacement.js';
 import { MirrorThemeRequestSchema, mirrorThemeAction, type MirrorThemeRequest } from './mirrorTheme.js';
 import { htmlDraftWorkflow, type HtmlDraftWorkflow } from './htmlDraftWorkflow.js';
+import { PhoneRemoteRelay } from './phoneRemote.js';
+import { REMOTE_SOCKET_PATH } from '../shared/phoneRemote.js';
 import { injectWebBridgeRuntime } from '../shared/webBridge.js';
 import { importMeshPage } from '../main/meshPage.js';
 import { isMeshName } from '@shared/meshFiles.js';
@@ -3508,8 +3510,33 @@ export async function startCollabServer(options: CollabServerOptions): Promise<R
   // is a megabyte or more of JSON. Uncompressed, that one frame was most of
   // the wait before a presentation could paint its first slide.
   const wss = new WebSocketServer({ noServer: true, perMessageDeflate: { threshold: 1024 } });
+  // Presenting from a phone (phoneRemote.ts): its own socket, never a room,
+  // so a phone's Next press is not something any collaborator can see. The
+  // relay asks the same access question every deck route asks.
+  const phoneRemote = new PhoneRemoteRelay({
+    authorize: async (request, deckId) => {
+      if (!splitDeckPath(deckId) || (hostedDeckId && deckId !== hostedDeckId)) return false;
+      if (!accessControl) return true;
+      const identity = resolveIdentity(request, accessControl);
+      return Boolean(identity) && deckAllowed(identity, deckId);
+    },
+    snapshot: async (deckId) => {
+      const room = await getRoom(deckId);
+      return {
+        deckId,
+        deck: room.session.deck,
+        themeCss: room.session.themeCss,
+        mediaVariants: deckMediaVariants(room.session.dir, room.session.deck),
+      };
+    },
+    origins: () => (boundPort === null ? [] : reachableUrls(host, boundPort)),
+  });
   httpServer.on('upgrade', (request, socket, head) => {
     const url = new URL(request.url ?? '/', 'http://localhost');
+    if (url.pathname === REMOTE_SOCKET_PATH) {
+      phoneRemote.handleUpgrade(request, socket, head);
+      return;
+    }
     if (url.pathname !== '/ws') {
       socket.destroy();
       return;
@@ -3781,6 +3808,7 @@ export async function startCollabServer(options: CollabServerOptions): Promise<R
     },
     close: async () => {
       wss.close();
+      phoneRemote.close();
       unsubscribeSharedAgent?.();
       for (const stream of sharedAgentStreams) stream.response.end();
       sharedAgentStreams.clear();

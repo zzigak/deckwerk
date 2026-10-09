@@ -29,6 +29,8 @@ export interface PresentOptions {
   speakerView?: boolean;
   /** Somewhere to report a blocked pop-up; presenting continues regardless. */
   onStatus?: (message: string) => void;
+  /** Open with the Pair phone code up, for presenting from a phone remote. */
+  pairPhone?: boolean;
 }
 
 let overlay: HTMLIFrameElement | null = null;
@@ -83,7 +85,7 @@ function onFullscreenChange(): void {
 export function presentUrl(
   deckId: string,
   slideIndex: number,
-  extra: { endSlideIndex?: number; role?: 'speaker'; embed?: boolean } = {},
+  extra: { endSlideIndex?: number; role?: 'speaker'; embed?: boolean; pair?: boolean } = {},
 ): string {
   const params = new URLSearchParams({
     deck: deckId,
@@ -95,6 +97,7 @@ export function presentUrl(
   }
   if (extra.role) params.set('role', extra.role);
   if (extra.embed) params.set('embed', '1');
+  if (extra.pair) params.set('pair', '1');
   return `present.html?${params.toString()}`;
 }
 
@@ -134,6 +137,7 @@ export function startPresenting(
     endSlideIndex: options.endSlideIndex,
     role: speakerView ? 'speaker' : undefined,
     embed: true,
+    pair: options.pairPhone,
   });
   frame.allow = 'fullscreen';
   frame.style.cssText = 'position:fixed;inset:0;width:100vw;height:100vh;border:0;'

@@ -12,13 +12,14 @@ simulated and before/after comparisons.
 
 - [x] A "sync group" on video elements (`syncGroup: string`): the player drives
       every video in a group from one clock, so they never drift apart.
-- [ ] One shared scrubber while presenting (hover to show), and play/pause for
+- [x] One shared scrubber while presenting (hover to show), and play/pause for
       the whole group.
-- [ ] Optional wipe: two videos (or images) stacked, with a draggable divider
-      (before/after slider), authored as `compare: "wipe"` on the group.
+- [x] Optional wipe: two videos (or images) stacked, with a draggable divider
+      (before/after slider), authored as `compare: "wipe"` (+ `wipe` position)
+      on the upper layer.
 - [x] Inspector: multi-select videos → "Play in sync"; a synced video shows
       its partners and an Unsync button.
-- [x] HTML round trip: `data-sync-group` (`data-compare` comes with the wipe).
+- [x] HTML round trip: `data-sync-group`, `data-compare`, `data-wipe`.
 
 ## 2. Paper cards from a URL or PDF
 

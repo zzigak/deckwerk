@@ -1,5 +1,6 @@
 import type { Slide, SlideElement, TimelineEntry } from './deck.js';
 import { countParagraphs } from './paragraphs.js';
+import { chartBuildParts, chartBuildTarget } from './chartBuild.js';
 
 /**
  * Timeline reasoning, shared by the player and the editor's timeline panel.
@@ -91,12 +92,15 @@ export function drawDuration(entry: TimelineEntry): number {
 export function expandTimeline(slide: Slide): ExpandedEntry[] {
   const out: ExpandedEntry[] = [];
   for (const entry of slide.timeline) {
-    if (!isParagraphBuild(entry, slide)) {
+    // A chart building by series or by category fans out the same way.
+    const chart = chartBuildTarget(entry, slide);
+    if (!isParagraphBuild(entry, slide) && !chart) {
       out.push({ ...entry, sourceId: entry.id, part: null, partCount: 1 });
       continue;
     }
-    const el = findElement(slide, entry.action.target) as Extract<SlideElement, { type: 'text' }>;
-    const count = countParagraphs(el.html);
+    const count = chart
+      ? chartBuildParts(chart, entry.action.value === 'byCategory' ? 'byCategory' : 'bySeries')
+      : countParagraphs((findElement(slide, entry.action.target) as Extract<SlideElement, { type: 'text' }>).html);
     for (let part = 0; part < count; part++) {
       out.push({
         id: part === 0 ? entry.id : `${entry.id}#p${part}`,
@@ -191,7 +195,7 @@ export function resolveState(slide: Slide, step: number): SlideState {
     // elements need per-paragraph reconciliation even before their first step.
     parts: new Map(
       slide.timeline
-        .filter((entry) => isParagraphBuild(entry, slide))
+        .filter((entry) => isParagraphBuild(entry, slide) || chartBuildTarget(entry, slide) !== null)
         .map((entry) => [entry.action.target, 0]),
     ),
   };

@@ -3,6 +3,12 @@ import { MediaEffectSchema, MIRRORED_TEXT_STYLE_PROPERTIES, SlideSchema } from '
 import type { Deck, MediaEffect, Slide, SlideElement, TimelineEntry } from './deck.js';
 import { fitAutoTextElement } from './autoFit.js';
 import { KATEX_AUTO_RENDER_JS, KATEX_CSS, KATEX_JS } from './katexInline.js';
+import {
+  equationBuildAttributes,
+  equationBuildSpec,
+  equationBuildsFromNode,
+  pageBuildKind,
+} from './equationBuildHtml.js';
 import { shapeSvg } from './shapeSvg.js';
 import { applyTableColumnWidths } from './paragraphs.js';
 import { layoutMaster, placeNewPlaceholders, syncSlideWithLayoutMaster, type FixedLayout } from './layoutMasters.js';
@@ -294,6 +300,13 @@ export function renderAuthoredMath(
     ],
     throwOnError: false,
     strict: 'ignore',
+    // Equation term markers, exactly as the player trusts them
+    // (`katexTermOptions` in shared/equationTerms.ts). Written out rather than
+    // imported, because this function is serialised into the page.
+    trust: (context: { command?: string; class?: string }) => context.command === '\\htmlClass'
+      && (context.class ?? '').trim().split(/\s+/)
+        .every((name) => /^step-[A-Za-z0-9_-]+$/.test(name)),
+    macros: { '\\step': '\\htmlClass{step-#1}{#2}', '\\class': '\\htmlClass{#1}{#2}' },
   });
   // An escaped dollar shows as a dollar, but stays recognisably escaped: the
   // compile reads this page back into the deck, where a bare `$` would be
@@ -813,25 +826,36 @@ function sortedJson(value: unknown): string | undefined {
  */
 function mergedTimeline(previous: Slide, compiled: Slide, theirs = new Set<string>()): TimelineEntry[] {
   const present = new Set(compiled.elements.map((element) => element.id));
+  // Keyed by kind and object: a page states an object's appearance, and its
+  // equation builds (`equationBuildHtml.ts`), each separately.
   const authored = new Map<string, TimelineEntry>();
   for (const entry of compiled.timeline) {
     // An object kept as somebody else left it keeps the builds they gave it.
     if (theirs.has(entry.action.target)) continue;
-    if (entry.action.type === 'appear' && !authored.has(entry.action.target)) authored.set(entry.action.target, entry);
+    const kind = pageBuildKind(entry);
+    if (kind && !authored.has(kind)) authored.set(kind, entry);
   }
   const claimed = new Set<string>();
   const merged: TimelineEntry[] = [];
   for (const entry of previous.timeline) {
     const { target } = entry.action;
     if (!present.has(target)) continue;
-    const page = entry.action.type === 'appear' ? authored.get(target) : undefined;
+    const kind = pageBuildKind(entry);
+    const page = kind ? authored.get(kind) : undefined;
     // The page took the build off this object.
-    if (entry.action.type === 'appear' && !page && !theirs.has(target)) continue;
-    if (page && !claimed.has(target)) {
-      claimed.add(target);
+    if (kind && !page && !theirs.has(target)) continue;
+    if (kind && page && !claimed.has(kind)) {
+      claimed.add(kind);
       const kept = page.trigger.on === entry.trigger.on && entry.trigger.ref && present.has(entry.trigger.ref)
         ? entry.trigger.ref : null;
-      merged.push({ ...structuredClone(entry), trigger: { ...page.trigger, ref: page.trigger.ref ?? kept } });
+      // An equation build's every parameter is on the page, so the page's
+      // action stands; an appearance keeps what its markup cannot say.
+      const action = entry.action.type === 'appear' ? entry.action : page.action;
+      merged.push({
+        ...structuredClone(entry),
+        action: structuredClone(action),
+        trigger: { ...page.trigger, ref: page.trigger.ref ?? kept },
+      });
       continue;
     }
     // Not something a page can state — another kind of step, or a second
@@ -843,7 +867,8 @@ function mergedTimeline(previous: Slide, compiled: Slide, theirs = new Set<strin
   const ids = new Set(merged.map((entry) => entry.id));
   for (const entry of compiled.timeline) {
     if (theirs.has(entry.action.target)) continue;
-    if (entry.action.type === 'appear' && claimed.has(entry.action.target)) continue;
+    const kind = pageBuildKind(entry);
+    if (kind && claimed.has(kind)) continue;
     merged.push({ ...entry, id: uniqueId(entry.id, ids) });
   }
   return merged;
@@ -914,7 +939,8 @@ function elementFingerprint(element: SlideElement, build: string): string {
 /** An object's first appearance, as `data-build` states it. */
 function buildSpec(slide: Slide, elementId: string): string {
   const entry = slide.timeline.find((candidate) => candidate.action.type === 'appear' && candidate.action.target === elementId);
-  return entry ? `${entry.trigger.on}+${entry.trigger.delay}@${entry.trigger.ref ?? ''}` : '';
+  return (entry ? `${entry.trigger.on}+${entry.trigger.delay}@${entry.trigger.ref ?? ''}` : '')
+    + equationBuildSpec(slide, elementId);
 }
 
 /** cyrb53: a quick 53-bit string hash, the same in Node and in any browser. */
@@ -1214,6 +1240,7 @@ export function slideFromMeasured(
     elements.push(element);
     const build = buildFromNode(node, id, timeline.length);
     if (build) timeline.push(build);
+    timeline.push(...equationBuildsFromNode(node, id, timeline.length));
   });
 
   return {
@@ -1538,7 +1565,9 @@ export function slideToHtml(slide: Slide, canvas: { w: number; h: number }): str
   const stamp = pageStampOf([slide])[slide.id];
   const body = [...slide.elements]
     .sort((a, b) => a.z - b.z)
-    .map((element) => elementToHtml(element, builds.get(element.id), stamp.elements[element.id]))
+    .map((element) => elementToHtml(
+      element, builds.get(element.id), stamp.elements[element.id], equationBuildAttributes(slide, element.id),
+    ))
     .join('\n');
 
   // Both halves, and as separate declarations rather than the `background`
@@ -1563,7 +1592,7 @@ export function slideToHtml(slide: Slide, canvas: { w: number; h: number }): str
     + `${background}>\n${body}\n</section>\n`;
 }
 
-function elementToHtml(element: SlideElement, build?: TimelineEntry, base?: string): string {
+function elementToHtml(element: SlideElement, build?: TimelineEntry, base?: string, extraAttrs: string[] = []): string {
   const position = `position:absolute; left:${element.x}px; top:${element.y}px;`
     + ` width:${element.w}px; height:${element.h}px;`
     + (element.rot ? ` transform:rotate(${element.rot}deg);` : '')
@@ -1593,6 +1622,7 @@ function elementToHtml(element: SlideElement, build?: TimelineEntry, base?: stri
       ? `data-build-duration="${build.action.duration}"` : '',
     element.type === 'text' && element.layoutPlaceholder
       ? `data-layout-slot="${element.layoutPlaceholder}"` : '',
+    ...extraAttrs,
   ].filter(Boolean).join(' ');
 
   switch (element.type) {

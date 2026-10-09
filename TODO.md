@@ -58,11 +58,13 @@ authors and venue as editable text.
 
 ## 5. Media tab
 
-- [ ] A panel listing every image/video/web page in the deck, with thumbnails,
+- [x] A panel listing every image/video/web page in the deck, with thumbnails,
       where each is used (slide numbers) and file size.
-- [ ] Drag from the panel onto any slide to reuse it.
-- [ ] Filter by type and by "used on this slide"; reveal-in-slide on click.
-- [ ] Later: find unused and duplicate assets and offer to remove them.
+- [x] Drag from the panel onto any slide to reuse it.
+- [x] Filter by type and by "used on this slide"; reveal-in-slide on click.
+- [x] Find unused assets and offer to move them to the Trash (OS Trash on the
+      desktop, the server's Trash in collab; confirm names every file).
+- [ ] Later: find duplicate assets (same bytes under two names).
 
 ## 6. Charts from data
 

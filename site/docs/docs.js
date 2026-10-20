@@ -183,6 +183,29 @@
   });
   document.querySelector('main').addEventListener('click', closeMenu);
 
+  // ---- theme ----------------------------------------------------------------
+  // System, Light, Dark, in turn. A choice is kept for the next visit; System
+  // forgets it and follows the computer again.
+  const themeButton = document.querySelector('.theme-button');
+  const MODES = ['system', 'light', 'dark'];
+  const LABELS = { system: 'System', light: 'Light', dark: 'Dark' };
+  const showMode = (mode) => {
+    themeButton.dataset.mode = mode;
+    themeButton.setAttribute('aria-label', `Appearance: ${LABELS[mode]}`);
+    themeButton.title = `Appearance: ${LABELS[mode]}`;
+  };
+  showMode(document.documentElement.dataset.theme ?? 'system');
+  themeButton.addEventListener('click', () => {
+    const mode = MODES[(MODES.indexOf(themeButton.dataset.mode) + 1) % MODES.length];
+    if (mode === 'system') delete document.documentElement.dataset.theme;
+    else document.documentElement.dataset.theme = mode;
+    try {
+      if (mode === 'system') localStorage.removeItem('deckwerk.docs.theme');
+      else localStorage.setItem('deckwerk.docs.theme', mode);
+    } catch { /* private mode: the choice lasts for this page */ }
+    showMode(mode);
+  });
+
   // ---- clips ----------------------------------------------------------------
   // Each clip plays while it is on screen, muted and looping, and stops when
   // it scrolls away. With reduced motion only its poster shows.

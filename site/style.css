@@ -226,7 +226,7 @@ footer .spacer { flex: 1; }
 @media (max-width: 900px) {
   .cols, .two, .shots { grid-template-columns: 1fr; }
   .grid, .install .grid { grid-template-columns: 1fr 1fr; }
-  .top nav a:not(.cta) { display: none; }
+  .top nav a:not(.cta):not(.keep) { display: none; }
 }
 @media (max-width: 600px) {
   .grid, .install .grid { grid-template-columns: 1fr; }

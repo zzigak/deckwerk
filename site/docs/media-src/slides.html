@@ -1,0 +1,424 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="deckwerk-change-label" content="Docs deck">
+<title>DeckWerk docs deck</title>
+<base href="../">
+<link rel="stylesheet" href="theme.css">
+<!--
+  The deck behind the pictures on deckwerk.org/docs. build-deck.mts fills the media
+  placeholders in double braces with the imported files and applies this page to a
+  new deck. Each section is one picture; data-name is how capture.mjs finds it.
+  Content sits in the middle of a white slide so the capture can crop to it.
+-->
+<style>
+  .slide { display: flex; align-items: center; justify-content: center; gap: 60px; padding: 120px; box-sizing: border-box; }
+  .col { display: flex; flex-direction: column; gap: 28px; }
+  .row { display: flex; gap: 48px; align-items: center; }
+</style>
+</head>
+<body>
+
+<!-- Text -->
+<section class="slide" data-name="roles">
+  <div class="col" style="width: 1300px">
+    <h1 class="role-title">Results</h1>
+    <p class="role-body">Body text carries <b>bold</b> and <i>italic</i> inline.</p>
+    <p class="role-caption">Caption: a note under a figure.</p>
+  </div>
+</section>
+
+<section class="slide" data-name="fonts">
+  <div class="col" style="width: 1300px">
+    <p class="role-body" style="font-weight: 300; font-size: 64px">Method, light 300</p>
+    <p class="role-body" style="font-weight: 500; font-size: 64px">Method, medium 500</p>
+    <p class="role-body" style="font-weight: 800; font-size: 64px">Method, heavy 800</p>
+    <p class="role-body" style="font-family: ui-monospace, Menlo, monospace; font-size: 56px">Method, monospace</p>
+  </div>
+</section>
+
+<section class="slide" data-name="inline">
+  <div class="col" style="width: 1300px">
+    <p class="role-body" style="font-size: 64px"><b>Bold</b>, <i>italic</i>, <u>underline</u>, <s>strikethrough</s></p>
+    <p class="role-body" style="font-size: 64px">Error <s>4.1%</s> 2.7%, area x<sup>2</sup>, value x<sub>0</sub></p>
+  </div>
+</section>
+
+<section class="slide" data-name="colour">
+  <div class="col" style="width: 1300px">
+    <p class="role-body" style="font-size: 72px">Step 1 is <span style="color: #0588ff">faster</span> than step 2.</p>
+    <p class="role-body" style="font-size: 72px; color: #0069d6">A whole box in dark blue.</p>
+  </div>
+</section>
+
+<section class="slide" data-name="align">
+  <div class="row">
+    <p class="role-body" style="width: 460px; height: 300px; border: 2px solid #c7c7cc; padding: 24px; text-align: left" data-valign="top">Left, top</p>
+    <p class="role-body" style="width: 460px; height: 300px; border: 2px solid #c7c7cc; padding: 24px; text-align: center" data-valign="middle">Centre, middle</p>
+    <p class="role-body" style="width: 460px; height: 300px; border: 2px solid #c7c7cc; padding: 24px; text-align: right" data-valign="bottom">Right, bottom</p>
+  </div>
+</section>
+
+<section class="slide" data-name="spacing">
+  <div class="row" style="align-items: flex-start">
+    <ul class="role-body" style="width: 640px; line-height: 1.1" data-paragraph-spacing="0">
+      <li>Line spacing 1.1</li><li>No gap between items</li><li>Step 3</li>
+    </ul>
+    <ul class="role-body" style="width: 640px; line-height: 1.5" data-paragraph-spacing="36">
+      <li>Line spacing 1.5</li><li>36 px between items</li><li>Step 3</li>
+    </ul>
+  </div>
+</section>
+
+<section class="slide" data-name="lists">
+  <div class="row" style="align-items: flex-start">
+    <ul class="role-body" style="width: 560px"><li>Method</li><li>Results</li><li>Outlook</li></ul>
+    <ol class="role-body" style="width: 560px"><li>Method</li><li>Results</li><li>Outlook</li></ol>
+  </div>
+</section>
+
+<section class="slide" data-name="bullets">
+  <div class="row" style="align-items: flex-start; flex-wrap: wrap; width: 1080px; gap: 48px 60px">
+    <ul class="role-body" data-bullet="disc" style="width: 300px"><li>Disc</li><li>Step 2</li></ul>
+    <ul class="role-body" data-bullet="square" style="width: 300px"><li>Square</li><li>Step 2</li></ul>
+    <ul class="role-body" data-bullet="dash" style="width: 300px"><li>Dash</li><li>Step 2</li></ul>
+    <ul class="role-body" data-bullet="arrow" style="width: 300px"><li>Arrow</li><li>Step 2</li></ul>
+    <ul class="role-body" data-bullet="check" style="width: 300px"><li>Check</li><li>Step 2</li></ul>
+    <ol class="role-body" data-bullet="upper-roman" style="width: 300px"><li>Roman</li><li>Step 2</li></ol>
+  </div>
+</section>
+
+<section class="slide" data-name="indent">
+  <div class="col" style="width: 1200px">
+    <ul class="role-body"><li>Method<ul><li>Step 1</li><li>Step 2<ul><li>Detail</li></ul></li></ul></li><li>Results</li></ul>
+  </div>
+</section>
+
+<section class="slide" data-name="links">
+  <div class="col" style="width: 1300px">
+    <p class="role-body" style="font-size: 64px">Read the <a href="https://deckwerk.org" style="color: #0588ff">project page</a> for details.</p>
+  </div>
+</section>
+
+<section class="slide" data-name="autofit">
+  <div class="row">
+    <h1 class="role-title" style="width: 640px; height: 220px; border: 2px dashed #c7c7cc">Results on every benchmark we tried</h1>
+    <h1 class="role-title" data-autofit="true" style="width: 640px; height: 220px; border: 2px dashed #0588ff">Results on every benchmark we tried</h1>
+  </div>
+</section>
+
+<section class="slide" data-name="textbox">
+  <div class="row">
+    <p class="role-body" style="width: 760px; padding: 40px 48px; background: #e8f3ff; border: 3px solid #0588ff; border-radius: 28px; box-shadow: 0 16px 40px rgba(0, 0, 0, 0.18)">The key result, in a box with a fill, a border and a shadow.</p>
+  </div>
+</section>
+
+<section class="slide" data-name="table">
+  <table class="role-body" style="width: 1100px; border-collapse: collapse">
+    <tr><th style="text-align: left; border-bottom: 3px solid #1d1d1f; padding: 14px 20px">Method</th><th style="text-align: right; border-bottom: 3px solid #1d1d1f; padding: 14px 20px">Score</th><th style="text-align: right; border-bottom: 3px solid #1d1d1f; padding: 14px 20px">Time</th></tr>
+    <tr><td style="padding: 14px 20px">Baseline</td><td style="text-align: right; padding: 14px 20px">0.72</td><td style="text-align: right; padding: 14px 20px">12 s</td></tr>
+    <tr><td style="padding: 14px 20px">Step 1</td><td style="text-align: right; padding: 14px 20px">0.81</td><td style="text-align: right; padding: 14px 20px">9 s</td></tr>
+    <tr style="background: #e8f3ff"><td style="padding: 14px 20px"><b>Method</b></td><td style="text-align: right; padding: 14px 20px"><b>0.93</b></td><td style="text-align: right; padding: 14px 20px"><b>4 s</b></td></tr>
+  </table>
+</section>
+
+<!-- Shapes -->
+<section class="slide" data-name="shapes">
+  <div class="row" style="gap: 56px">
+    <div data-element="shape" data-shape="rect" data-fill="#0588ff" data-radius="16" style="width: 300px; height: 220px"></div>
+    <div data-element="shape" data-shape="ellipse" data-fill="#57a7ff" style="width: 260px; height: 220px"></div>
+    <div data-element="shape" data-shape="path" data-path="M 60 0 L 240 0 L 300 220 L 0 220 Z" data-path-size="300,220" data-fill="#0069d6" style="width: 300px; height: 220px"></div>
+    <div data-element="shape" data-shape="path" data-path="M 80 0 L 300 0 L 220 220 L 0 220 Z" data-path-size="300,220" data-fill="none" data-stroke="#0588ff" data-stroke-width="8" style="width: 300px; height: 220px"></div>
+  </div>
+</section>
+
+<section class="slide" data-name="arrowheads">
+  <div class="col" style="gap: 90px">
+    <div data-element="shape" data-shape="arrow" data-stroke="#1d1d1f" data-stroke-width="8" data-arrow-end="true" style="width: 900px; height: 8px"></div>
+    <div data-element="shape" data-shape="arrow" data-stroke="#0588ff" data-stroke-width="8" data-arrow-start="true" data-arrow-end="true" style="width: 900px; height: 8px"></div>
+    <div data-element="shape" data-shape="arrow" data-stroke="#0069d6" data-stroke-width="16" data-arrow-end="true" data-arrow-size="40" style="width: 900px; height: 16px"></div>
+  </div>
+</section>
+
+<section class="slide" data-name="curved">
+  <div data-element="shape" data-shape="ellipse" data-fill="#0588ff" style="position: absolute; left: 566px; top: 548px; width: 56px; height: 56px"></div>
+  <p class="role-body" style="position: absolute; left: 1090px; top: 500px; width: 460px">Peak at step 3</p>
+  <div data-element="shape" data-shape="arrow" data-stroke="#1d1d1f" data-stroke-width="7" data-arrow-start="true" data-control="840,330" style="position: absolute; left: 640px; top: 400px; width: 420px; height: 250px"></div>
+</section>
+
+<section class="slide" data-name="braces">
+  <p class="role-title" style="width: 1400px; text-align: center; font-weight: 400">$y = a\,x^2 + b\,x + c$</p>
+  <div data-element="shape" data-shape="brace" data-stroke="#0588ff" data-stroke-width="6" data-brace-depth="50" style="position: absolute; left: 860px; top: 600px; width: 330px; height: 50px"></div>
+  <p class="role-caption" style="position: absolute; left: 860px; top: 680px; width: 330px; text-align: center">quadratic term</p>
+</section>
+
+<section class="slide" data-name="strokes">
+  <div class="row" style="gap: 70px">
+    <div data-element="shape" data-shape="path" data-path="M 10 200 C 80 20 220 20 290 200" data-path-size="300,220" data-fill="none" data-stroke="#1d1d1f" data-stroke-width="10" style="width: 300px; height: 220px"></div>
+    <div data-element="shape" data-shape="path" data-path="M 10 200 C 80 20 220 20 290 200" data-path-size="300,220" data-fill="none" data-stroke="#0588ff" data-stroke-width="22" data-stroke-style="brush" style="width: 300px; height: 220px"></div>
+    <div data-element="shape" data-shape="path" data-path="M 10 200 C 80 20 220 20 290 200" data-path-size="300,220" data-fill="none" data-stroke="#1d1d1f" data-stroke-width="8" data-stroke-style="pencil" style="width: 300px; height: 220px"></div>
+    <div data-element="shape" data-shape="path" data-path="M 10 200 C 80 20 220 20 290 200" data-path-size="300,220" data-fill="none" data-stroke="#57a7ff" data-stroke-width="40" data-stroke-style="marker" style="width: 300px; height: 220px"></div>
+  </div>
+</section>
+
+<section class="slide" data-name="shadows">
+  <div class="row" style="gap: 120px">
+    <div data-element="shape" data-shape="rect" data-fill="#ffffff" data-radius="20" style="width: 520px; height: 340px; filter: drop-shadow(0px 16px 32px rgba(0, 0, 0, 0.25))"></div>
+    <div data-element="shape" data-shape="rect" data-fill="#ffffff" data-stroke="#e8e8ed" data-stroke-width="2" data-radius="0" style="width: 520px; height: 340px; --curl-color: rgba(0, 0, 0, 0.45); --curl-blur: 18px; --curl-lift: 18px"></div>
+  </div>
+</section>
+
+<section class="slide" data-name="gradients">
+  <div class="row" style="gap: 100px">
+    <div data-element="shape" data-shape="rect" data-fill="#bfe0ff" data-fill-to="#0069d6" data-fill-angle="270" data-fill-gradient="linear" data-radius="24" style="width: 560px; height: 360px"></div>
+    <div data-element="shape" data-shape="ellipse" data-fill="#dcefff" data-fill-to="#0588ff" data-fill-gradient="radial" style="width: 360px; height: 360px"></div>
+  </div>
+</section>
+
+<section class="slide" data-name="flip">
+  <div class="row" style="gap: 110px">
+    <div data-element="shape" data-shape="path" data-path="M0,90 L300,90 L300,0 L480,150 L300,300 L300,210 L0,210 Z" data-path-size="480,300" data-fill="#c7c7cc" style="width: 360px; height: 225px"></div>
+    <div data-element="shape" data-shape="path" data-path="M0,90 L300,90 L300,0 L480,150 L300,300 L300,210 L0,210 Z" data-path-size="480,300" data-fill="#0588ff" style="width: 360px; height: 225px; transform: scaleX(-1)"></div>
+    <div data-element="shape" data-shape="path" data-path="M0,90 L300,90 L300,0 L480,150 L300,300 L300,210 L0,210 Z" data-path-size="480,300" data-fill="#0069d6" style="width: 360px; height: 225px; transform: rotate(-30deg)"></div>
+  </div>
+</section>
+
+<!-- Images and video -->
+<section class="slide" data-name="images">
+  <div class="row">
+    <img src="{{gradient.png}}" alt="A blue gradient" style="width: 760px; height: 428px; object-fit: cover">
+    <img src="{{fractal.png}}" alt="A blue fractal" style="width: 760px; height: 428px; object-fit: cover">
+  </div>
+</section>
+
+<section class="slide" data-name="crop">
+  <div class="row" style="gap: 80px">
+    <img src="{{fractal.png}}" alt="The whole picture" style="width: 800px; height: 450px; object-fit: cover">
+    <img src="{{fractal.png}}" alt="Cropped to a detail" data-crop="-900,-300,1600,900" style="width: 450px; height: 450px">
+  </div>
+</section>
+
+<section class="slide" data-name="mask">
+  <div class="row" style="gap: 80px">
+    <img src="{{radial.png}}" alt="" data-mask-shape="circle" style="width: 400px; height: 400px; object-fit: cover">
+    <img src="{{fractal.png}}" alt="" data-mask-shape="circle" style="width: 400px; height: 400px; object-fit: cover">
+    <img src="{{gradient.png}}" alt="" data-border-radius="48" style="width: 560px; height: 400px; object-fit: cover">
+  </div>
+</section>
+
+<section class="slide" data-name="effects">
+  <div class="row" style="gap: 40px">
+    <img src="{{fractal.png}}" alt="" style="width: 380px; height: 380px; object-fit: cover" data-border-width="6" data-border-color="#1d1d1f">
+    <img src="{{fractal.png}}" alt="" style="width: 380px; height: 380px; object-fit: cover" data-effects='[{"type":"blur","radius":10}]'>
+    <img src="{{radial.png}}" alt="" style="width: 380px; height: 380px; object-fit: cover" data-effects='[{"type":"posterize","levels":4}]'>
+    <img src="{{fractal.png}}" alt="" style="width: 380px; height: 380px; object-fit: cover" data-effects='[{"type":"grayscale","amount":1},{"type":"gaussianNoise","amount":0.4,"frequencyCutoff":0.3}]'>
+  </div>
+</section>
+
+<section class="slide" data-name="video">
+  <video src="{{blobs-blue.mp4}}" autoplay loop muted data-border-width="2" data-border-color="#d2d2d7" style="width: 1280px; height: 720px; object-fit: cover"></video>
+</section>
+
+<section class="slide" data-name="synced">
+  <div class="row">
+    <video src="{{blobs-blue.mp4}}" autoplay loop muted data-sync-group="pair" data-border-width="2" data-border-color="#d2d2d7" style="width: 800px; height: 450px; object-fit: cover"></video>
+    <video src="{{blobs-orange.mp4}}" autoplay loop muted data-sync-group="pair" data-border-width="2" data-border-color="#d2d2d7" style="width: 800px; height: 450px; object-fit: cover"></video>
+  </div>
+</section>
+
+<section class="slide" data-name="wipe">
+  <video src="{{blobs-orange.mp4}}" autoplay loop muted data-sync-group="wipe" data-border-width="2" data-border-color="#d2d2d7" style="position: absolute; left: 400px; top: 202px; width: 1120px; height: 630px; object-fit: cover"></video>
+  <video src="{{blobs-blue.mp4}}" autoplay loop muted data-sync-group="wipe" data-compare="wipe" data-wipe="0.5" data-border-width="2" data-border-color="#d2d2d7" style="position: absolute; left: 400px; top: 202px; width: 1120px; height: 630px; object-fit: cover"></video>
+</section>
+
+<section class="slide" data-name="life">
+  <video src="{{life.mp4}}" autoplay loop muted data-border-width="2" data-border-color="#d2d2d7" style="width: 1280px; height: 720px; object-fit: cover"></video>
+</section>
+
+<section class="slide" data-name="background" style="background-image: url('{{gradient.png}}'); background-size: cover; background-position: center">
+  <h1 class="role-title" style="width: 1400px; color: #ffffff; text-align: center">Section 2: Method</h1>
+</section>
+
+<!-- Builds -->
+<section class="slide" data-name="build-steps">
+  <div class="row">
+    <p class="role-heading" data-build="click" style="width: 420px; padding: 48px 0; text-align: center; background: #e8f3ff; border-radius: 24px">Step 1</p>
+    <p class="role-heading" data-build="click" style="width: 420px; padding: 48px 0; text-align: center; background: #bfe0ff; border-radius: 24px">Step 2</p>
+    <p class="role-heading" data-build="click" style="width: 420px; padding: 48px 0; text-align: center; background: #57a7ff; color: #ffffff; border-radius: 24px">Step 3</p>
+  </div>
+</section>
+
+<section class="slide" data-name="dissolve-blur">
+  <div class="row" style="gap: 80px">
+    <img src="{{gradient.png}}" alt="" data-build="click" data-build-effect="dissolve" data-build-duration="900" style="width: 640px; height: 400px; object-fit: cover; border-radius: 0">
+    <img src="{{fractal.png}}" alt="" data-build="afterPrev" data-build-effect="blur" data-build-duration="900" style="width: 640px; height: 400px; object-fit: cover">
+  </div>
+</section>
+
+<section class="slide" data-name="line-draw">
+  <div data-element="shape" data-shape="rect" data-fill="#e8f3ff" data-stroke="#0588ff" data-stroke-width="8" data-radius="24" data-build="click" data-build-effect="draw" data-build-duration="900" style="position: absolute; left: 360px; top: 400px; width: 420px; height: 280px"></div>
+  <div data-element="shape" data-shape="arrow" data-stroke="#1d1d1f" data-stroke-width="8" data-arrow-end="true" data-build="afterPrev" data-build-effect="draw" data-build-duration="600" style="position: absolute; left: 820px; top: 536px; width: 300px; height: 8px"></div>
+  <div data-element="shape" data-shape="path" data-path="M 10 140 C 60 10 200 10 240 120 S 380 260 410 60" data-path-size="420,280" data-fill="none" data-stroke="#0069d6" data-stroke-width="18" data-stroke-style="brush" data-build="afterPrev" data-build-effect="draw" data-build-duration="900" style="position: absolute; left: 1160px; top: 400px; width: 420px; height: 280px"></div>
+</section>
+
+<section class="slide" data-name="pop-in">
+  <div class="row" style="gap: 70px">
+    <div data-element="shape" data-shape="ellipse" data-fill="#bfe0ff" data-build="click" data-build-effect="pop" style="width: 240px; height: 240px"></div>
+    <div data-element="shape" data-shape="ellipse" data-fill="#57a7ff" data-build="afterPrev" data-build-effect="pop" style="width: 240px; height: 240px"></div>
+    <div data-element="shape" data-shape="ellipse" data-fill="#0588ff" data-build="afterPrev" data-build-effect="pop" style="width: 240px; height: 240px"></div>
+    <div data-element="shape" data-shape="ellipse" data-fill="#0069d6" data-build="afterPrev" data-build-effect="pop" style="width: 240px; height: 240px"></div>
+  </div>
+</section>
+
+<section class="slide" data-name="keyboard">
+  <h1 class="role-title" data-build="click" data-build-effect="keyboard" data-build-duration="1600" style="width: 1300px">Results on step 3</h1>
+</section>
+
+<section class="slide" data-name="by-paragraph">
+  <ul class="role-body" style="width: 900px" data-paragraph-spacing="20">
+    <li>Method</li><li>Step 1: measure</li><li>Step 2: fit</li><li>Results</li>
+  </ul>
+</section>
+
+<section class="slide" data-name="play">
+  <div class="col" style="align-items: center">
+    <video src="{{blobs-blue.mp4}}" muted data-border-width="2" data-border-color="#d2d2d7" style="width: 960px; height: 540px; object-fit: cover"></video>
+    <p class="role-caption" style="width: 960px; text-align: center">The clip has ended.</p>
+  </div>
+</section>
+
+<section class="slide" data-name="emphasis">
+  <div class="row" style="gap: 120px">
+    <div data-element="shape" data-shape="ellipse" data-fill="#0588ff" data-pulse="click" style="width: 240px; height: 240px"></div>
+    <div data-element="shape" data-shape="rect" data-fill="#57a7ff" data-radius="24" data-jiggle="click" style="width: 240px; height: 240px"></div>
+    <div data-element="shape" data-shape="ellipse" data-fill="#0069d6" data-pop="click" style="width: 240px; height: 240px"></div>
+  </div>
+</section>
+
+<!-- Transitions -->
+<section class="slide" data-name="morph-a">
+  <div data-element="shape" data-shape="rect" data-fill="#0588ff" data-radius="24" data-morph="box" style="position: absolute; left: 260px; top: 360px; width: 360px; height: 360px"></div>
+  <div data-element="shape" data-shape="ellipse" data-fill="#bfe0ff" data-morph="dot" style="position: absolute; left: 1300px; top: 420px; width: 240px; height: 240px"></div>
+  <p class="role-heading" data-morph="label" style="position: absolute; left: 260px; top: 760px; width: 600px">Step 1</p>
+</section>
+
+<section class="slide" data-name="morph-b" data-morph-from-previous="true" data-morph-duration="1200">
+  <div data-element="shape" data-shape="rect" data-fill="#0069d6" data-radius="120" data-morph="box" style="position: absolute; left: 1100px; top: 200px; width: 560px; height: 560px"></div>
+  <div data-element="shape" data-shape="ellipse" data-fill="#57a7ff" data-morph="dot" style="position: absolute; left: 380px; top: 300px; width: 120px; height: 120px"></div>
+  <p class="role-heading" data-morph="label" style="position: absolute; left: 380px; top: 480px; width: 600px">Step 2</p>
+</section>
+
+<section class="slide" data-name="eq-morph-a">
+  <p class="role-title" data-morph="eq" style="width: 1500px; text-align: center; font-weight: 400">$$a^2 = c^2$$</p>
+</section>
+
+<section class="slide" data-name="eq-morph-b" data-morph-from-previous="true" data-morph-duration="1200">
+  <p class="role-title" data-morph="eq" style="width: 1500px; text-align: center; font-weight: 400">$$a^2 + b^2 = c^2$$</p>
+</section>
+
+<section class="slide" data-name="eq-morph-c" data-morph-from-previous="true" data-morph-duration="1200">
+  <p class="role-title" data-morph="eq" style="width: 1500px; text-align: center; font-weight: 400">$$c = \sqrt{a^2 + b^2}$$</p>
+</section>
+
+<!-- Equations -->
+<section class="slide" data-name="latex">
+  <div class="col" style="width: 1400px">
+    <p class="role-body" style="font-size: 56px">Inline: the mean $\bar{x} = \frac{1}{n}\sum_i x_i$ stays in the sentence.</p>
+    <p class="role-body" style="font-size: 56px">$$\int_0^1 x^2\,dx = \frac{1}{3}$$</p>
+  </div>
+</section>
+
+<section class="slide" data-name="term-build">
+  <p class="role-title" data-term-build="click" style="width: 1500px; text-align: center; font-weight: 400">$$y = \step{1}{a\,x^2} + \step{2}{b\,x} + \step{3}{c}$$</p>
+</section>
+
+<section class="slide" data-name="term-colour">
+  <p class="role-title" data-term-build="click" data-term-effect="color" data-term-color="#0588ff" style="width: 1500px; text-align: center; font-weight: 400">$$y = \step{1}{a\,x^2} + \step{2}{b\,x} + c$$</p>
+</section>
+
+<section class="slide" data-name="term-pulse">
+  <p class="role-title" data-pulse="click" data-pulse-term="2" style="width: 1500px; text-align: center; font-weight: 400">$$y = \step{1}{a\,x^2} + \step{2}{b\,x} + c$$</p>
+</section>
+
+<!-- Code, charts, papers, 3D, web -->
+<section class="slide" data-name="code">
+  <pre data-element="code" data-language="python" data-scheme="github-light" data-font-size="34" data-line-numbers="true" style="width: 1100px; height: 260px; border-radius: 16px; border: 2px solid #e8e8ed"><code>
+def step(x, dt):
+    v = velocity(x)
+    x = x + dt * v
+    return x
+</code></pre>
+</section>
+
+<section class="slide" data-name="code-lines">
+  <pre data-element="code" data-language="python" data-scheme="deck" data-font-size="34" data-line-numbers="true" data-build-lines="1-2; 3-4; highlight:3" style="width: 1100px; height: 260px; border-radius: 16px; border: 2px solid #e8e8ed"><code>
+def step(x, dt):
+    v = velocity(x)
+    x = x + dt * v
+    return x
+</code></pre>
+</section>
+
+<section class="slide" data-name="chart">
+  <figure data-element="chart" data-kind="bar" data-x="method" data-y-label="Score" data-value-labels="true" style="width: 1400px; height: 760px">
+    <script type="text/csv">
+    method,Step 1,Step 2
+    Baseline,0.62,0.70
+    Method A,0.74,0.81
+    Method B,0.83,0.92
+    </script>
+  </figure>
+</section>
+
+<section class="slide" data-name="chart-style">
+  <figure data-element="chart" data-kind="line" data-x="step" data-y-label="Error" data-palette="okabe-ito" data-legend="right" style="width: 1400px; height: 760px">
+    <script type="text/csv">
+    step,Baseline,Method A,Method B
+    1,0.90,0.85,0.80
+    2,0.72,0.60,0.52
+    3,0.61,0.45,0.33
+    4,0.55,0.37,0.22
+    5,0.52,0.33,0.15
+    </script>
+  </figure>
+</section>
+
+<section class="slide" data-name="chart-build">
+  <figure data-element="chart" data-kind="bar" data-x="method" data-y-label="Score" data-build="click" data-build-effect="bySeries" style="width: 1400px; height: 760px">
+    <script type="text/csv">
+    method,Step 1,Step 2
+    Baseline,0.62,0.70
+    Method A,0.74,0.81
+    Method B,0.83,0.92
+    </script>
+  </figure>
+</section>
+
+<section class="slide" data-name="paper">
+  <div class="col" style="width: 800px; gap: 20px">
+    <img src="{{paper-page.png}}" alt="A paper's first page" style="width: 800px; height: 450px; object-fit: cover; object-position: top; border-radius: 6px; box-shadow: 0px 10px 32px rgba(0, 0, 0, 0.18)">
+    <p class="role-body" style="font-weight: 700; font-size: 40px">A Method for Step-by-Step Results</p>
+    <p class="role-caption">First Author et al., Venue 2026</p>
+  </div>
+</section>
+
+<section class="slide" data-name="model">
+  <div data-element="web" data-src="{{mesh.src}}" data-poster="{{mesh.poster}}" data-title="Torus" data-fragment="shading=clay" style="width: 960px; height: 720px"></div>
+</section>
+
+<section class="slide" data-name="web">
+  <div data-element="web" data-src="{{web.src}}" data-poster="{{web.poster}}" data-title="Wave" style="width: 1400px; height: 700px"></div>
+</section>
+
+<section class="slide" data-name="html-region">
+  <div data-element="html" class="role-body" style="width: 1200px; height: 420px">
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; height: 100%">
+      <div style="background: #e8f3ff; border-radius: 20px; padding: 32px">Method<br><span style="color: #6e6e73">two columns in one box</span></div>
+      <div style="background: #0588ff; color: #ffffff; border-radius: 20px; padding: 32px; clip-path: polygon(0 0, 100% 0, 100% 80%, 80% 100%, 0 100%)">Results</div>
+    </div>
+  </div>
+</section>
+
+</body>
+</html>

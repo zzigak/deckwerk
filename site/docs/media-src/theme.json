@@ -1,0 +1,15 @@
+{
+  "id": "docs-blue",
+  "name": "Docs blue",
+  "description": "White, system type and one blue accent, for the pictures on deckwerk.org/docs.",
+  "fonts": {
+    "title": { "family": "-apple-system, system-ui, \"Segoe UI\", sans-serif", "size": 96, "weight": 700, "lineHeight": 1.05, "letterSpacing": "-0.03em" },
+    "heading": { "family": "-apple-system, system-ui, \"Segoe UI\", sans-serif", "size": 60, "weight": 600, "lineHeight": 1.1, "letterSpacing": "-0.02em" },
+    "body": { "family": "-apple-system, system-ui, \"Segoe UI\", sans-serif", "size": 46, "weight": 400, "lineHeight": 1.3, "letterSpacing": "-0.01em" },
+    "caption": { "family": "-apple-system, system-ui, \"Segoe UI\", sans-serif", "size": 30, "weight": 500, "lineHeight": 1.3, "letterSpacing": "0", "color": "#6e6e73" },
+    "base": { "family": "-apple-system, system-ui, \"Segoe UI\", sans-serif", "size": 42, "weight": 400, "lineHeight": 1.3, "letterSpacing": "0" }
+  },
+  "palette": ["#1d1d1f", "#6e6e73", "#0588ff", "#57a7ff", "#0069d6", "#c7c7cc", "#e8e8ed", "#ffffff"],
+  "colors": { "background": "#ffffff", "text": "#1d1d1f", "muted": "#6e6e73", "accent": "#0588ff" },
+  "mode": "light"
+}

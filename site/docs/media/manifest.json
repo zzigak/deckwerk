@@ -1,0 +1,487 @@
+{
+ "3d-models": {
+  "kind": "still",
+  "w": 305,
+  "h": 194
+ },
+ "add-build": {
+  "kind": "clip",
+  "w": 660,
+  "h": 130
+ },
+ "add-media": {
+  "kind": "still",
+  "w": 840,
+  "h": 270
+ },
+ "agent-desktop": {
+  "kind": "still",
+  "w": 412,
+  "h": 94
+ },
+ "align": {
+  "kind": "still",
+  "w": 319,
+  "h": 109
+ },
+ "alignment": {
+  "kind": "still",
+  "w": 872,
+  "h": 232
+ },
+ "appearance": {
+  "kind": "still",
+  "w": 1680,
+  "h": 1000
+ },
+ "apply-theme": {
+  "kind": "still",
+  "w": 319,
+  "h": 311
+ },
+ "arrange": {
+  "kind": "still",
+  "w": 200,
+  "h": 343
+ },
+ "arrowheads": {
+  "kind": "still",
+  "w": 506,
+  "h": 178
+ },
+ "auto-fit": {
+  "kind": "still",
+  "w": 724,
+  "h": 251
+ },
+ "background": {
+  "kind": "still",
+  "w": 960,
+  "h": 540
+ },
+ "braces": {
+  "kind": "still",
+  "w": 482,
+  "h": 177
+ },
+ "build-order": {
+  "kind": "still",
+  "w": 1140,
+  "h": 700
+ },
+ "build-preview": {
+  "kind": "still",
+  "w": 319,
+  "h": 360
+ },
+ "bullet-styles": {
+  "kind": "still",
+  "w": 356,
+  "h": 277
+ },
+ "by-paragraph": {
+  "kind": "clip",
+  "w": 230,
+  "h": 185
+ },
+ "chart": {
+  "kind": "still",
+  "w": 739,
+  "h": 411
+ },
+ "chart-builds": {
+  "kind": "clip",
+  "w": 730,
+  "h": 404
+ },
+ "chart-style": {
+  "kind": "still",
+  "w": 730,
+  "h": 414
+ },
+ "chat": {
+  "kind": "still",
+  "w": 319,
+  "h": 520
+ },
+ "code-block": {
+  "kind": "still",
+  "w": 606,
+  "h": 186
+ },
+ "colour-picker": {
+  "kind": "still",
+  "w": 292,
+  "h": 384
+ },
+ "comments": {
+  "kind": "still",
+  "w": 527,
+  "h": 300
+ },
+ "contact-sheet": {
+  "kind": "still",
+  "w": 709,
+  "h": 431
+ },
+ "crop": {
+  "kind": "still",
+  "w": 721,
+  "h": 281
+ },
+ "curved-arrows": {
+  "kind": "still",
+  "w": 451,
+  "h": 146
+ },
+ "dissolve-blur": {
+  "kind": "clip",
+  "w": 733,
+  "h": 256
+ },
+ "download-deck": {
+  "kind": "still",
+  "w": 192,
+  "h": 347
+ },
+ "edit-points": {
+  "kind": "still",
+  "w": 360,
+  "h": 203
+ },
+ "edit-theme": {
+  "kind": "still",
+  "w": 319,
+  "h": 600
+ },
+ "emphasis": {
+  "kind": "clip",
+  "w": 582,
+  "h": 240
+ },
+ "equation-morph": {
+  "kind": "clip",
+  "w": 371,
+  "h": 118
+ },
+ "export-pdf": {
+  "kind": "still",
+  "w": 448,
+  "h": 144
+ },
+ "export-web": {
+  "kind": "still",
+  "w": 488,
+  "h": 258
+ },
+ "file-menu": {
+  "kind": "still",
+  "w": 192,
+  "h": 333
+ },
+ "flip-rotate": {
+  "kind": "still",
+  "w": 694,
+  "h": 181
+ },
+ "fonts": {
+  "kind": "still",
+  "w": 348,
+  "h": 247
+ },
+ "geometry": {
+  "kind": "still",
+  "w": 319,
+  "h": 295
+ },
+ "gradients": {
+  "kind": "still",
+  "w": 566,
+  "h": 236
+ },
+ "guides": {
+  "kind": "still",
+  "w": 856,
+  "h": 366
+ },
+ "hide-slide": {
+  "kind": "still",
+  "w": 220,
+  "h": 440
+ },
+ "history": {
+  "kind": "still",
+  "w": 319,
+  "h": 400
+ },
+ "hover-bar": {
+  "kind": "clip",
+  "w": 689,
+  "h": 408
+ },
+ "html-region": {
+  "kind": "still",
+  "w": 640,
+  "h": 266
+ },
+ "indent": {
+  "kind": "still",
+  "w": 245,
+  "h": 206
+ },
+ "inline-styles": {
+  "kind": "still",
+  "w": 511,
+  "h": 148
+ },
+ "keyboard": {
+  "kind": "clip",
+  "w": 394,
+  "h": 104
+ },
+ "latex": {
+  "kind": "still",
+  "w": 665,
+  "h": 225
+ },
+ "layout-masters": {
+  "kind": "still",
+  "w": 1680,
+  "h": 1000
+ },
+ "layouts": {
+  "kind": "still",
+  "w": 319,
+  "h": 119
+ },
+ "line-builds": {
+  "kind": "clip",
+  "w": 598,
+  "h": 178
+ },
+ "line-draw": {
+  "kind": "clip",
+  "w": 654,
+  "h": 188
+ },
+ "links": {
+  "kind": "still",
+  "w": 480,
+  "h": 85
+ },
+ "lists": {
+  "kind": "still",
+  "w": 488,
+  "h": 140
+ },
+ "mask": {
+  "kind": "still",
+  "w": 816,
+  "h": 256
+ },
+ "media-advanced": {
+  "kind": "still",
+  "w": 319,
+  "h": 82
+ },
+ "media-effects": {
+  "kind": "still",
+  "w": 876,
+  "h": 258
+ },
+ "media-tab": {
+  "kind": "still",
+  "w": 319,
+  "h": 500
+ },
+ "morph": {
+  "kind": "clip",
+  "w": 749,
+  "h": 361
+ },
+ "morph-editor": {
+  "kind": "still",
+  "w": 1508,
+  "h": 705
+ },
+ "morph-many": {
+  "kind": "still",
+  "w": 319,
+  "h": 420
+ },
+ "object-list": {
+  "kind": "still",
+  "w": 219,
+  "h": 273
+ },
+ "open-settings": {
+  "kind": "still",
+  "w": 448,
+  "h": 491
+ },
+ "paper-card": {
+  "kind": "still",
+  "w": 459,
+  "h": 331
+ },
+ "pen": {
+  "kind": "still",
+  "w": 192,
+  "h": 166
+ },
+ "phone-client": {
+  "kind": "still",
+  "w": 390,
+  "h": 844
+ },
+ "play-pause": {
+  "kind": "clip",
+  "w": 528,
+  "h": 352
+ },
+ "pop-in": {
+  "kind": "clip",
+  "w": 641,
+  "h": 176
+ },
+ "presence": {
+  "kind": "still",
+  "w": 754,
+  "h": 232
+ },
+ "present": {
+  "kind": "still",
+  "w": 210,
+  "h": 88
+ },
+ "presenter-display": {
+  "kind": "still",
+  "w": 1600,
+  "h": 900
+ },
+ "rulers": {
+  "kind": "still",
+  "w": 571,
+  "h": 513
+ },
+ "shadows": {
+  "kind": "still",
+  "w": 644,
+  "h": 242
+ },
+ "shape-kinds": {
+  "kind": "still",
+  "w": 722,
+  "h": 170
+ },
+ "slide-rail": {
+  "kind": "still",
+  "w": 220,
+  "h": 340
+ },
+ "spacing": {
+  "kind": "still",
+  "w": 651,
+  "h": 186
+ },
+ "speaker-notes": {
+  "kind": "still",
+  "w": 936,
+  "h": 196
+ },
+ "stroke-styles": {
+  "kind": "still",
+  "w": 763,
+  "h": 137
+ },
+ "synced-videos": {
+  "kind": "clip",
+  "w": 872,
+  "h": 274
+ },
+ "tables": {
+  "kind": "still",
+  "w": 606,
+  "h": 235
+ },
+ "term-builds": {
+  "kind": "clip",
+  "w": 474,
+  "h": 112
+ },
+ "term-colour": {
+  "kind": "clip",
+  "w": 474,
+  "h": 112
+ },
+ "term-pulse": {
+  "kind": "clip",
+  "w": 474,
+  "h": 114
+ },
+ "text-box": {
+  "kind": "still",
+  "w": 600,
+  "h": 299
+ },
+ "text-box-style": {
+  "kind": "still",
+  "w": 490,
+  "h": 169
+ },
+ "text-colour": {
+  "kind": "still",
+  "w": 446,
+  "h": 144
+ },
+ "text-roles": {
+  "kind": "still",
+  "w": 414,
+  "h": 175
+ },
+ "themes": {
+  "kind": "still",
+  "w": 262,
+  "h": 680
+ },
+ "trim": {
+  "kind": "still",
+  "w": 319,
+  "h": 211
+ },
+ "video": {
+  "kind": "clip",
+  "w": 689,
+  "h": 408
+ },
+ "video-speed": {
+  "kind": "clip",
+  "w": 824,
+  "h": 474
+ },
+ "web-element": {
+  "kind": "still",
+  "w": 674,
+  "h": 305
+ },
+ "wipe": {
+  "kind": "clip",
+  "w": 608,
+  "h": 365
+ },
+ "wipe-button": {
+  "kind": "still",
+  "w": 1014,
+  "h": 342
+ },
+ "wipe-length": {
+  "kind": "still",
+  "w": 713,
+  "h": 434
+ },
+ "zoom": {
+  "kind": "still",
+  "w": 194,
+  "h": 56
+ }
+}

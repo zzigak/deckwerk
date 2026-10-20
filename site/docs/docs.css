@@ -1,0 +1,289 @@
+/* deckwerk.org/docs: one page, every feature. A left sidebar of categories,
+   one reading column, a thin top bar with the name and the search field.
+   System type throughout; monospace only for code. */
+
+:root {
+  --bg: #ffffff;
+  --side: #f5f5f7;
+  --box: #f5f5f7;
+  --ink: #1d1d1f;
+  --ink-2: #6e6e73;
+  --rule: #d2d2d7;
+  --rule-soft: #e8e8ed;
+  --accent: #0588ff;
+  --accent-text: #0069d6;
+  --current: rgba(0, 0, 0, 0.06);
+  --hover: rgba(0, 0, 0, 0.04);
+  --field: #ffffff;
+  --mark: #fff3b0;
+  --sans: -apple-system, system-ui, "Segoe UI", sans-serif;
+  --mono: ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  --top: 52px;
+  --side-w: 288px;
+  --gutter: 48px;
+  --column: 780px;
+  color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #000000;
+    --side: #161617;
+    --box: #1d1d1f;
+    --ink: #f5f5f7;
+    --ink-2: #a1a1a6;
+    --rule: #424245;
+    --rule-soft: #2c2c2e;
+    --accent: #0588ff;
+    --accent-text: #57a7ff;
+    --current: rgba(255, 255, 255, 0.1);
+    --hover: rgba(255, 255, 255, 0.06);
+    --field: #1d1d1f;
+    --mark: #5c4a00;
+  }
+}
+
+* { box-sizing: border-box; }
+html { scroll-padding-top: calc(var(--top) + 16px); -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 17px;
+  line-height: 1.47;
+  letter-spacing: -0.022em;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: var(--accent-text); text-decoration: none; }
+a:hover { text-decoration: underline; }
+code, pre, kbd { font-family: var(--mono); font-size: 0.82em; letter-spacing: 0; }
+img { max-width: 100%; height: auto; display: block; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+
+/* ---- top bar ---------------------------------------------------------- */
+.bar {
+  position: sticky; top: 0; z-index: 20;
+  height: var(--top);
+  /* The name and the search field are one group, centred on the page like
+     the sidebar and text below. */
+  display: flex; justify-content: center;
+  align-items: center; gap: 20px;
+  padding: 0 24px;
+  background: color-mix(in srgb, var(--bg) 86%, transparent);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  border-bottom: 1px solid var(--rule);
+}
+.brand { display: flex; align-items: center; gap: 8px; color: var(--ink); font-weight: 600; font-size: 17px; white-space: nowrap; }
+.brand:hover { text-decoration: none; }
+.brand img { width: 22px; height: 22px; border-radius: 5px; }
+.brand-name span { color: var(--ink-2); font-weight: 400; }
+.search {
+  position: relative;
+  flex: 0 1 520px;
+  min-width: 0;
+}
+.search svg { position: absolute; left: 10px; top: 50%; width: 15px; height: 15px; transform: translateY(-50%); color: var(--ink-2); pointer-events: none; }
+.search input {
+  width: 100%;
+  height: 34px;
+  padding: 0 36px 0 32px;
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  background: var(--field);
+  color: var(--ink);
+  font: inherit;
+  font-size: 15px;
+  letter-spacing: -0.01em;
+  -webkit-appearance: none;
+  appearance: none;
+}
+.search input::placeholder { color: var(--ink-2); }
+.search input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 25%, transparent); }
+.search input::-webkit-search-cancel-button { display: none; }
+.search kbd {
+  position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
+  min-width: 20px; padding: 1px 5px; text-align: center;
+  border: 1px solid var(--rule); border-radius: 4px;
+  color: var(--ink-2); font-size: 12px; line-height: 16px;
+  pointer-events: none;
+}
+.search input:focus + kbd, .search input:not(:placeholder-shown) + kbd { display: none; }
+.menu-button {
+  display: none;
+  width: 34px; height: 34px; padding: 0;
+  border: 1px solid var(--rule); border-radius: 8px;
+  background: var(--field); color: var(--ink);
+  cursor: pointer;
+}
+.menu-button svg { width: 16px; height: 16px; display: block; margin: auto; }
+/* Without the script there is no search to run, so the field is not shown. */
+html:not(.js) .search, html:not(.js) .menu-button, html:not(.js) .chev { display: none !important; }
+
+/* ---- layout ----------------------------------------------------------- */
+/* The sidebar and the reading column are one centred group, so the empty
+   space falls at the window's edges and not between the two. */
+.layout {
+  display: grid;
+  grid-template-columns: var(--side-w) minmax(0, 1fr);
+  gap: var(--gutter);
+  max-width: calc(var(--side-w) + var(--gutter) + var(--column) + 48px);
+  margin: 0 auto;
+  padding: 0 24px;
+}
+.side {
+  position: sticky; top: calc(var(--top) + 24px);
+  align-self: start;
+  height: calc(100vh - var(--top) - 48px);
+  height: calc(100dvh - var(--top) - 48px);
+  margin-top: 24px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: var(--side);
+  border: 1px solid var(--rule-soft);
+  border-radius: 14px;
+  padding: 14px 10px 32px;
+  font-size: 14px;
+  letter-spacing: -0.01em;
+}
+.side ul { list-style: none; margin: 0; padding: 0; }
+.side .cat { margin-bottom: 2px; }
+.side .cat-head { display: flex; align-items: center; border-radius: 6px; }
+.side .cat-head:hover { background: var(--hover); }
+.side .cat-head a {
+  flex: 1;
+  padding: 6px 8px 6px 4px;
+  color: var(--ink);
+  font-weight: 600;
+  line-height: 20px;
+}
+.side .cat-head a:hover { text-decoration: none; }
+html:not(.js) .side .cat-head a { padding-left: 8px; }
+.side .chev {
+  flex: none;
+  width: 20px; height: 32px; padding: 0; margin-left: 2px;
+  border: 0; background: none; color: var(--ink-2);
+  cursor: pointer;
+}
+.side .chev svg { width: 14px; height: 14px; display: block; margin: auto; transition: transform 0.15s; }
+.side .cat.open .chev svg { transform: rotate(90deg); }
+.js .side .cat:not(.open) > ul { display: none; }
+.side li a {
+  display: block;
+  padding: 5px 8px 5px 26px;
+  border-radius: 6px;
+  color: var(--ink);
+  line-height: 20px;
+}
+.side li a:hover { background: var(--hover); text-decoration: none; }
+.side li a.current { background: var(--current); color: var(--accent-text); font-weight: 600; }
+.side .hidden { display: none; }
+
+main { min-width: 0; padding: 48px 0 120px; }
+.column { max-width: var(--column); }
+
+/* ---- type ------------------------------------------------------------- */
+h1, h2, h3 { margin: 0; font-weight: 700; color: var(--ink); }
+h1 { font-size: 48px; line-height: 1.08; letter-spacing: -0.03em; }
+.lead { font-size: 21px; line-height: 1.38; letter-spacing: -0.02em; margin: 20px 0 0; color: var(--ink); }
+.intro p { margin: 16px 0 0; }
+.intro { padding-bottom: 8px; }
+section.category { padding-top: 56px; }
+h2 { font-size: 32px; line-height: 1.125; letter-spacing: -0.025em; }
+.category > .blurb { margin: 10px 0 0; color: var(--ink-2); }
+.feature { padding-top: 36px; }
+.feature + .feature { margin-top: 4px; }
+h3 { font-size: 21px; line-height: 1.24; letter-spacing: -0.02em; }
+h3 .new { margin-left: 6px; font-size: 15px; font-weight: 400; color: var(--ink-2); letter-spacing: -0.01em; }
+h3 a.self { color: inherit; }
+h3 a.self:hover { text-decoration: none; }
+.feature p { margin: 8px 0 0; }
+.feature .where b { font-weight: 600; }
+.feature .where { color: var(--ink); }
+.path { white-space: normal; }
+.path .sep { color: var(--ink-2); padding: 0 0.25em; }
+details.html { margin-top: 10px; }
+details.html summary {
+  display: inline-block;
+  cursor: pointer;
+  color: var(--accent-text);
+  font-size: 15px;
+  list-style: none;
+}
+details.html summary::-webkit-details-marker { display: none; }
+details.html summary::before { content: "\203A"; display: inline-block; width: 0.9em; transition: transform 0.15s; }
+details.html[open] summary::before { transform: rotate(90deg); }
+pre {
+  margin: 8px 0 0;
+  padding: 14px 16px;
+  background: var(--box);
+  border-radius: 12px;
+  overflow-x: auto;
+  max-width: 100%;
+  line-height: 1.5;
+  font-size: 14px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+pre code { font-size: inherit; }
+p code, li code { padding: 1px 5px; border-radius: 5px; background: var(--box); }
+kbd.key {
+  display: inline-block;
+  padding: 0 6px;
+  border: 1px solid var(--rule);
+  border-bottom-width: 2px;
+  border-radius: 5px;
+  font-family: var(--sans);
+  font-size: 0.82em;
+  line-height: 1.5;
+}
+/* A picture sits in a full-width white panel, like the slide it came from,
+   at half a slide pixel to the CSS pixel, so every picture shares one scale. */
+figure {
+  margin: 14px 0 0;
+  display: flex; justify-content: center;
+  background: #ffffff;
+  border: 1px solid var(--rule-soft);
+  border-radius: 12px;
+  overflow: hidden;
+}
+figure img, figure video { display: block; max-width: 100%; height: auto; background: #ffffff; }
+mark { background: var(--mark); color: inherit; border-radius: 2px; }
+.none { display: none; padding-top: 48px; color: var(--ink-2); }
+.none.show { display: block; }
+.feature.hidden, .category.hidden, .intro.hidden { display: none; }
+footer { margin-top: 80px; padding-top: 20px; border-top: 1px solid var(--rule-soft); font-size: 14px; color: var(--ink-2); }
+
+/* ---- narrow ----------------------------------------------------------- */
+@media (max-width: 900px) {
+  .layout { grid-template-columns: minmax(0, 1fr); gap: 0; padding: 0; }
+  .menu-button { display: block; }
+  .bar { justify-content: flex-start; padding: 0 16px; gap: 10px; }
+  .brand-name span { display: none; }
+  .search { flex: 1 1 auto; }
+  .search kbd { display: none; }
+  html.js .side {
+    position: fixed; z-index: 15;
+    top: var(--top); left: 0; bottom: 0;
+    width: min(320px, 86vw);
+    height: auto;
+    margin: 0;
+    border: 0;
+    border-right: 1px solid var(--rule);
+    border-radius: 0;
+    transform: translateX(-100%);
+    transition: transform 0.2s ease;
+    box-shadow: none;
+  }
+  html.js body.menu-open .side { transform: none; box-shadow: 0 0 40px rgba(0, 0, 0, 0.18); }
+  html:not(.js) .side { position: static; height: auto; margin: 16px; }
+  main { padding: 32px 16px 96px; }
+  h1 { font-size: 36px; }
+  .lead { font-size: 19px; }
+  h2 { font-size: 28px; }
+  section.category { padding-top: 44px; }
+}
+@media (max-width: 420px) {
+  .brand-name { display: none; }
+}

@@ -1,0 +1,1035 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DeckWerk docs</title>
+<meta name="description" content="Every DeckWerk feature: what it does and where it is in the app.">
+<link rel="icon" href="../assets/icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="docs.css">
+<script>document.documentElement.classList.add('js');</script>
+</head>
+<body>
+
+<header class="bar">
+  <button class="menu-button" type="button" aria-label="Categories" aria-expanded="false" aria-controls="sidebar">
+    <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 4h12M2 8h12M2 12h12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+  </button>
+  <a class="brand" href="../index.html"><img src="../assets/icon.svg" alt=""><span class="brand-name">DeckWerk <span>Docs</span></span></a>
+  <label class="search">
+    <svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="4.75" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M10.5 10.5 14 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+    <input id="search" type="search" placeholder="Search features" autocomplete="off" spellcheck="false" aria-label="Search features">
+    <kbd>/</kbd>
+  </label>
+</header>
+
+<div class="layout">
+<nav class="side" id="sidebar" aria-label="Features">
+<ul>
+<!-- docs:nav -->
+<li class="cat" data-cat="slides">
+<div class="cat-head"><button class="chev" type="button" aria-expanded="true" aria-label="Slides and layout"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><a href="#slides">Slides and layout</a></div>
+<ul>
+<li><a href="#slide-navigator">Slide navigator</a></li>
+<li><a href="#skip-slide">Skip a slide</a></li>
+<li><a href="#slide-layouts">Slide layouts</a></li>
+<li><a href="#master-slides">Master slides</a></li>
+<li><a href="#background">Slide background</a></li>
+<li><a href="#themes">Themes</a></li>
+<li><a href="#edit-theme">Edit a theme</a></li>
+<li><a href="#apply-theme">Apply a theme</a></li>
+<li><a href="#alignment-guides">Alignment guides</a></li>
+<li><a href="#rulers">Rulers</a></li>
+<li><a href="#zoom">Zoom</a></li>
+<li><a href="#object-list">Object list</a></li>
+<li><a href="#align">Align and distribute</a></li>
+<li><a href="#arrange">Bring to front, send to back</a></li>
+<li><a href="#presenter-notes">Presenter notes</a></li>
+<li><a href="#history">Edit history</a></li>
+</ul>
+</li>
+<li class="cat" data-cat="text">
+<div class="cat-head"><button class="chev" type="button" aria-expanded="true" aria-label="Text"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><a href="#text">Text</a></div>
+<ul>
+<li><a href="#text-box">Text boxes</a></li>
+<li><a href="#text-styles">Text styles</a></li>
+<li><a href="#fonts">Font, size and weight</a></li>
+<li><a href="#inline-styles">Bold, italic, underline, strikethrough</a></li>
+<li><a href="#text-colour">Text colour</a></li>
+<li><a href="#alignment">Text alignment</a></li>
+<li><a href="#spacing">Line and paragraph spacing</a></li>
+<li><a href="#lists">Bullets and numbering</a></li>
+<li><a href="#bullet-styles">Bullet styles</a></li>
+<li><a href="#indent">Indent</a></li>
+<li><a href="#links">Links</a></li>
+<li><a href="#shrink-to-fit">Shrink text to fit</a></li>
+<li><a href="#text-box-style">Text box fill, border and shadow</a></li>
+<li><a href="#tables">Tables</a></li>
+<li><a href="#spelling">Spelling and grammar</a></li>
+</ul>
+</li>
+<li class="cat" data-cat="shapes">
+<div class="cat-head"><button class="chev" type="button" aria-expanded="true" aria-label="Shapes and drawing"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><a href="#shapes">Shapes and drawing</a></div>
+<ul>
+<li><a href="#shape-kinds">Shapes</a></li>
+<li><a href="#arrowheads">Arrowheads</a></li>
+<li><a href="#curved-arrows">Curved arrows</a></li>
+<li><a href="#braces">Curly braces</a></li>
+<li><a href="#draw-with-pen">Draw with Pen</a></li>
+<li><a href="#line-styles">Line styles</a></li>
+<li><a href="#edit-points">Edit points</a></li>
+<li><a href="#shadows">Shadows</a></li>
+<li><a href="#gradients">Gradient fills</a></li>
+<li><a href="#flip-rotate">Flip and rotate</a></li>
+<li><a href="#geometry">Position, size and opacity</a></li>
+<li><a href="#colours">Colours and eyedropper</a></li>
+</ul>
+</li>
+<li class="cat" data-cat="media">
+<div class="cat-head"><button class="chev" type="button" aria-expanded="true" aria-label="Images and video"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><a href="#media">Images and video</a></div>
+<ul>
+<li><a href="#images">Images</a></li>
+<li><a href="#video">Video</a></li>
+<li><a href="#crop">Crop</a></li>
+<li><a href="#mask">Circle crop and rounded corners</a></li>
+<li><a href="#borders-effects">Picture borders and effects</a></li>
+<li><a href="#trim">Trim video</a></li>
+<li><a href="#play-together">Play videos together</a></li>
+<li><a href="#before-after">Before and after comparison</a></li>
+<li><a href="#wipe-button">Compare button</a></li>
+<li><a href="#comparison-length">Comparison length</a></li>
+<li><a href="#video-controls">Video controls while presenting</a></li>
+<li><a href="#video-speed">Video speed</a></li>
+<li><a href="#media-browser">Media browser</a></li>
+<li><a href="#media-advanced">Re-encode or paint</a></li>
+</ul>
+</li>
+<li class="cat" data-cat="animations">
+<div class="cat-head"><button class="chev" type="button" aria-expanded="true" aria-label="Animations"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><a href="#animations">Animations</a></div>
+<ul>
+<li><a href="#add-animation">Add an animation</a></li>
+<li><a href="#animation-order">Animation order</a></li>
+<li><a href="#dissolve-blur">Appear, dissolve and blur</a></li>
+<li><a href="#line-draw">Line Draw</a></li>
+<li><a href="#pop-in">Pop</a></li>
+<li><a href="#keyboard">Keyboard</a></li>
+<li><a href="#by-paragraph">By paragraph</a></li>
+<li><a href="#play-pause">Start and stop video</a></li>
+<li><a href="#actions">Actions: pulse, jiggle and pop</a></li>
+<li><a href="#preview-animations">Preview animations</a></li>
+</ul>
+</li>
+<li class="cat" data-cat="transitions">
+<div class="cat-head"><button class="chev" type="button" aria-expanded="true" aria-label="Transitions"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><a href="#transitions">Transitions</a></div>
+<ul>
+<li><a href="#morph">Morph</a></li>
+<li><a href="#morph-editor">Pair objects by hand</a></li>
+<li><a href="#morph-many">Morph across several slides</a></li>
+<li><a href="#equation-morph">Equation Morph</a></li>
+</ul>
+</li>
+<li class="cat" data-cat="equations">
+<div class="cat-head"><button class="chev" type="button" aria-expanded="true" aria-label="Equations"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><a href="#equations">Equations</a></div>
+<ul>
+<li><a href="#latex">LaTeX equations</a></li>
+<li><a href="#term-builds">Build an equation term by term</a></li>
+<li><a href="#term-colour">Colour terms</a></li>
+<li><a href="#term-pulse">Pulse a term</a></li>
+</ul>
+</li>
+<li class="cat" data-cat="code">
+<div class="cat-head"><button class="chev" type="button" aria-expanded="true" aria-label="Code blocks"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><a href="#code">Code blocks</a></div>
+<ul>
+<li><a href="#code-block">Code blocks</a></li>
+<li><a href="#line-builds">Reveal code line by line</a></li>
+</ul>
+</li>
+<li class="cat" data-cat="charts">
+<div class="cat-head"><button class="chev" type="button" aria-expanded="true" aria-label="Charts"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><a href="#charts">Charts</a></div>
+<ul>
+<li><a href="#chart">Charts</a></li>
+<li><a href="#chart-style">Chart colours and labels</a></li>
+<li><a href="#chart-builds">Animate a chart</a></li>
+</ul>
+</li>
+<li class="cat" data-cat="papers">
+<div class="cat-head"><button class="chev" type="button" aria-expanded="true" aria-label="Paper cards"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><a href="#papers">Paper cards</a></div>
+<ul>
+<li><a href="#paper-card">Paper cards</a></li>
+</ul>
+</li>
+<li class="cat" data-cat="models">
+<div class="cat-head"><button class="chev" type="button" aria-expanded="true" aria-label="3D models"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><a href="#models">3D models</a></div>
+<ul>
+<li><a href="#3d-models">3D models</a></li>
+</ul>
+</li>
+<li class="cat" data-cat="web">
+<div class="cat-head"><button class="chev" type="button" aria-expanded="true" aria-label="Web pages"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><a href="#web">Web pages</a></div>
+<ul>
+<li><a href="#web-element">Live web pages</a></li>
+<li><a href="#html-element">HTML regions</a></li>
+</ul>
+</li>
+<li class="cat" data-cat="presenting">
+<div class="cat-head"><button class="chev" type="button" aria-expanded="true" aria-label="Presenting"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><a href="#presenting">Presenting</a></div>
+<ul>
+<li><a href="#present">Play the slideshow</a></li>
+<li><a href="#presenter-display">Presenter display</a></li>
+<li><a href="#present-keys">Keys while presenting</a></li>
+<li><a href="#black-screen">Black screen</a></li>
+<li><a href="#phone-remote">Phone remote</a></li>
+<li><a href="#phone-client">Phone view</a></li>
+</ul>
+</li>
+<li class="cat" data-cat="collaboration">
+<div class="cat-head"><button class="chev" type="button" aria-expanded="true" aria-label="Collaboration"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><a href="#collaboration">Collaboration</a></div>
+<ul>
+<li><a href="#collaborate">Collaborate</a></li>
+<li><a href="#presence">See who is editing</a></li>
+<li><a href="#comments">Comments</a></li>
+<li><a href="#chat">Chat</a></li>
+<li><a href="#headless-server">Headless server</a></li>
+<li><a href="#download-deck">Download a deck</a></li>
+</ul>
+</li>
+<li class="cat" data-cat="agents">
+<div class="cat-head"><button class="chev" type="button" aria-expanded="true" aria-label="Working with agents"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><a href="#agents">Working with agents</a></div>
+<ul>
+<li><a href="#agent-desktop">Agent… in the desktop app</a></li>
+<li><a href="#agent-browser">Agent… in the browser</a></li>
+<li><a href="#agent-loop">How an agent edits</a></li>
+<li><a href="#agent-check">Render and check</a></li>
+<li><a href="#agent-capabilities">Capabilities</a></li>
+<li><a href="#what-to-ask">What to ask</a></li>
+</ul>
+</li>
+<li class="cat" data-cat="export">
+<div class="cat-head"><button class="chev" type="button" aria-expanded="true" aria-label="Import and export"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><a href="#export">Import and export</a></div>
+<ul>
+<li><a href="#export-pdf">Export to PDF</a></li>
+<li><a href="#export-web">Export for the web</a></li>
+<li><a href="#export-images">Export images</a></li>
+<li><a href="#save-as">Save As</a></li>
+<li><a href="#import">Open Keynote and PowerPoint files</a></li>
+</ul>
+</li>
+<li class="cat" data-cat="settings">
+<div class="cat-head"><button class="chev" type="button" aria-expanded="true" aria-label="Settings and appearance"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><a href="#settings">Settings and appearance</a></div>
+<ul>
+<li><a href="#open-settings">Settings</a></li>
+<li><a href="#appearance">Light and dark</a></li>
+<li><a href="#ui-font">Interface font and size</a></li>
+<li><a href="#shortcuts">Keyboard shortcuts</a></li>
+</ul>
+</li>
+<!-- /docs:nav -->
+</ul>
+</nav>
+
+<main>
+<div class="column">
+<div class="intro">
+<h1>DeckWerk features</h1>
+<p class="lead">Every feature DeckWerk has, and where to find it in the app.</p>
+<p>Each entry says what the feature does and where it is. Features go by the names Keynote and PowerPoint use, and search finds those names too. Paths use the labels the app shows: <span class="path">Props<span class="sep">&#8250;</span>Typography<span class="sep">&#8250;</span>Role</span> is the Role field in the Typography section of the Props tab. Shortcuts are written for macOS; on Windows and Linux use Ctrl for Cmd.</p>
+<p>Where an agent writes the feature in a slide's HTML, <b>In HTML</b> shows the markup. Entries marked (new) are on a branch and not in a release yet.</p>
+</div>
+<p class="none">No features match.</p>
+<!-- docs:content -->
+<section class="category" id="slides">
+<h2>Slides and layout</h2>
+<article class="feature" id="slide-navigator" data-aka="slide thumbnails, slide sorter, slide pane, rail">
+<h3><a class="self" href="#slide-navigator">Slide navigator</a></h3>
+<p class="what">The slide thumbnails down the left of the window. Drag a thumbnail to move the slide. With the thumbnails focused, Return adds a slide, Delete removes one and the arrow keys move between slides.</p>
+<p class="where"><b>Where:</b> <span class="path">Left column<span class="sep">&#8250;</span>+ Slide, Duplicate, Hide, Delete, or right-click a thumbnail</span></p>
+<figure><img src="media/slide-rail.webp" width="220" height="340" alt="The slide thumbnails down the left of the window, the first one selected." loading="lazy" decoding="async"></figure>
+</article>
+<article class="feature" id="skip-slide" data-aka="hide slide, hidden slide, skipped slide">
+<h3><a class="self" href="#skip-slide">Skip a slide</a></h3>
+<p class="what">A skipped slide stays in the deck and can still be edited. Presenting and the web export leave it out. Several skipped slides in a row fold into one &quot;N hidden&quot; row in the navigator.</p>
+<p class="where"><b>Where:</b> <span class="path">Slide navigator<span class="sep">&#8250;</span>Hide, or right-click a thumbnail<span class="sep">&#8250;</span>Hide slide</span></p>
+<figure><img src="media/hide-slide.webp" width="220" height="440" alt="A skipped slide in the slide navigator, dimmed and marked Hidden." loading="lazy" decoding="async"></figure>
+</article>
+<article class="feature" id="slide-layouts" data-aka="layout, title and content, title slide">
+<h3><a class="self" href="#slide-layouts">Slide layouts</a></h3>
+<p class="what">A layout places the title and body boxes of a slide. There are three: Freeform, Title + body and Title slide.</p>
+<p class="where"><b>Where:</b> <span class="path">Props tab (nothing selected)<span class="sep">&#8250;</span>Layout<span class="sep">&#8250;</span>Preset, or right-click a thumbnail<span class="sep">&#8250;</span>Layout</span></p>
+<figure><img src="media/layouts.webp" width="319" height="119" alt="The Layout section of the Props sidebar with its Preset menu and Background colour." loading="lazy" decoding="async"></figure>
+<details class="html"><summary>In HTML</summary><pre><code>&lt;section class=&quot;slide&quot; data-layout=&quot;standard&quot;&gt;
+  &lt;h1 class=&quot;role-title&quot;&gt;Results&lt;/h1&gt;
+&lt;/section&gt;</code></pre></details>
+</article>
+<article class="feature" id="master-slides" data-aka="edit layouts, slide master, layout master">
+<h3><a class="self" href="#master-slides">Master slides</a></h3>
+<p class="what">Change where a layout puts its boxes, for every slide that uses it. The layout editor has Text, Shape, Duplicate and Delete tools.</p>
+<p class="where"><b>Where:</b> <span class="path">Design tab<span class="sep">&#8250;</span>Layouts<span class="sep">&#8250;</span>Edit layouts…, or Props tab<span class="sep">&#8250;</span>Layout<span class="sep">&#8250;</span>Preset<span class="sep">&#8250;</span>Edit layouts…</span></p>
+<figure><img src="media/layout-masters.webp" width="1680" height="1000" alt="The layout editor: the fixed layouts on the left and the Title + body layout open." loading="lazy" decoding="async"></figure>
+</article>
+<article class="feature" id="background" data-aka="background colour, background image, format background">
+<h3><a class="self" href="#background">Slide background</a></h3>
+<p class="what">Each slide can have its own background colour. A full-bleed background picture is set in HTML or by an agent; the editor shows it but has no control for it.</p>
+<p class="where"><b>Where:</b> <span class="path">Props tab (nothing selected)<span class="sep">&#8250;</span>Layout<span class="sep">&#8250;</span>Background</span></p>
+<figure><img src="media/background.webp" width="960" height="540" alt="A slide with a blue gradient picture behind a white title." loading="lazy" decoding="async"></figure>
+<details class="html"><summary>In HTML</summary><pre><code>&lt;section class=&quot;slide&quot; style=&quot;background-color:#0f172a&quot;&gt;
+&lt;section class=&quot;slide&quot; style=&quot;background-image:url('assets/photo.jpg')&quot;&gt;</code></pre></details>
+</article>
+<article class="feature" id="themes" data-aka="theme chooser, design, templates">
+<h3><a class="self" href="#themes">Themes</a></h3>
+<p class="what">A theme is a set of fonts for title, body and caption, a colour palette, and background and text colours. DeckWerk ships 12 themes, each in a light and a dark version. Choosing a theme moves nothing on a slide.</p>
+<p class="where"><b>Where:</b> <span class="path">Design tab<span class="sep">&#8250;</span>Current theme<span class="sep">&#8250;</span>click the theme card</span></p>
+<figure><img src="media/themes.webp" width="262" height="680" alt="The theme chooser, a column of theme cards with their fonts and colours." loading="lazy" decoding="async"></figure>
+</article>
+<article class="feature" id="edit-theme" data-aka="theme fonts, theme colours, customise theme">
+<h3><a class="self" href="#edit-theme">Edit a theme</a></h3>
+<p class="what">Change the typefaces, the type sizes and line spacing for Title, Body and Caption, the four main colours and the palette swatches.</p>
+<p class="where"><b>Where:</b> <span class="path">Design tab<span class="sep">&#8250;</span>Default<span class="sep">&#8250;</span>Edit…</span></p>
+<figure><img src="media/edit-theme.webp" width="319" height="600" alt="The theme editor in the Design sidebar: typefaces, sizes and colours." loading="lazy" decoding="async"></figure>
+</article>
+<article class="feature" id="apply-theme" data-aka="reapply theme, reset slide">
+<h3><a class="self" href="#apply-theme">Apply a theme</a></h3>
+<p class="what">Restyle slides that already exist: the whole deck, the selected slides or the selected objects. You choose which text styles and which properties (typography, type sizes, colour) to take.</p>
+<p class="where"><b>Where:</b> <span class="path">Design tab<span class="sep">&#8250;</span>Apply theme<span class="sep">&#8250;</span>Apply to</span></p>
+<figure><img src="media/apply-theme.webp" width="319" height="311" alt="The Apply theme section: Apply to, text styles and properties to take." loading="lazy" decoding="async"></figure>
+</article>
+<article class="feature" id="alignment-guides" data-aka="smart guides, snapping, snap to">
+<h3><a class="self" href="#alignment-guides">Alignment guides</a></h3>
+<p class="what">While you drag, objects snap to the slide edges and centre, to other objects' edges and centres, to equal spacing and to matching sizes. Hold Cmd (Ctrl on Windows and Linux) to drag without snapping.</p>
+<p class="where"><b>Where:</b> <span class="path">On the slide, while moving or resizing an object</span></p>
+<figure><img src="media/guides.webp" width="856" height="366" alt="A shape being dragged, with guide marks showing the spacing to its neighbours." loading="lazy" decoding="async"></figure>
+</article>
+<article class="feature" id="rulers" data-aka="show rulers">
+<h3><a class="self" href="#rulers">Rulers</a></h3>
+<p class="what">Rulers along the top and left of the slide show the selection's extent and the pointer position in slide pixels.</p>
+<p class="where"><b>Where:</b> <span class="path">Zoom controls at the bottom of the slide<span class="sep">&#8250;</span>ruler button, or Cmd+R</span></p>
+<figure><img src="media/rulers.webp" width="571" height="513" alt="Rulers along the top and left of the slide, marking the selected shape." loading="lazy" decoding="async"></figure>
+</article>
+<article class="feature" id="zoom" data-aka="fit slide, zoom to fit">
+<h3><a class="self" href="#zoom">Zoom</a></h3>
+<p class="what">Zoom the slide in and out, or fit it to the window.</p>
+<p class="where"><b>Where:</b> <span class="path">Zoom controls<span class="sep">&#8250;</span>Zoom out, percentage, Zoom in, Re-center slide, or Cmd+=, Cmd+- and Cmd+0 (fit)</span></p>
+<figure><img src="media/zoom.webp" width="194" height="56" alt="The zoom controls: rulers, zoom out, 100%, zoom in, re-center." loading="lazy" decoding="async"></figure>
+</article>
+<article class="feature" id="object-list" data-aka="selection pane, layers, object list">
+<h3><a class="self" href="#object-list">Object list</a></h3>
+<p class="what">Every object on the slide, front to back, including ones covered by others. Click a row to select the object. Drag rows to restack.</p>
+<p class="where"><b>Where:</b> <span class="path">Layers button at the top of the column left of the slide<span class="sep">&#8250;</span>Objects</span></p>
+<figure><img src="media/object-list.webp" width="219" height="273" alt="The object list: four shapes on the slide, front to back." loading="lazy" decoding="async"></figure>
+</article>
+<article class="feature" id="align" data-aka="align objects, distribute horizontally, match size">
+<h3><a class="self" href="#align">Align and distribute</a></h3>
+<p class="what">Align several objects by their edges or centres, spread them evenly, or match their width and height to the first one selected.</p>
+<p class="where"><b>Where:</b> <span class="path">Select several objects<span class="sep">&#8250;</span>Props tab<span class="sep">&#8250;</span>Align</span></p>
+<figure><img src="media/align.webp" width="319" height="109" alt="The Align section: align left, centre, right, top, middle, bottom, and distribute." loading="lazy" decoding="async"></figure>
+</article>
+<article class="feature" id="arrange" data-aka="arrange, layer order, z order, bring forward, send backward">
+<h3><a class="self" href="#arrange">Bring to front, send to back</a></h3>
+<p class="what">Move an object in front of or behind others.</p>
+<p class="where"><b>Where:</b> <span class="path">Right-click<span class="sep">&#8250;</span>Bring to front, Bring forward, Send backward, Send to back, or Props tab<span class="sep">&#8250;</span>Geometry<span class="sep">&#8250;</span>Layer<span class="sep">&#8250;</span>Arrange, or ] and [ (with Shift for front and back)</span></p>
+<figure><img src="media/arrange.webp" width="200" height="343" alt="The right-click menu of a shape, with Bring to front, Bring forward, Send backward and Send to back." loading="lazy" decoding="async"></figure>
+</article>
+<article class="feature" id="presenter-notes" data-aka="speaker notes, notes, notes pane">
+<h3><a class="self" href="#presenter-notes">Presenter notes</a></h3>
+<p class="what">Notes for each slide, shown on the presenter display. They are Markdown and live in <code>notes.md</code> in the deck folder, one section per slide.</p>
+<p class="where"><b>Where:</b> <span class="path">Notes button at the bottom left of the slide</span></p>
+<figure><img src="media/speaker-notes.webp" width="936" height="196" alt="The notes drawer under the slide with one line of notes." loading="lazy" decoding="async"></figure>
+</article>
+<article class="feature" id="history" data-aka="undo history, versions, revert, browse versions">
+<h3><a class="self" href="#history">Edit history</a></h3>
+<p class="what">Every edit, yours, a collaborator's or an agent's, as a list you can go back to. Going back is an edit too, so it can be undone.</p>
+<p class="where"><b>Where:</b> <span class="path">History tab, or Cmd+Z and Cmd+Shift+Z</span></p>
+<figure><img src="media/history.webp" width="319" height="400" alt="The History tab listing the last edits, the current one highlighted." loading="lazy" decoding="async"></figure>
+</article>
+</section>
+<section class="category" id="text">
+<h2>Text</h2>
+<article class="feature" id="text-box" data-aka="text box, add text, edit text">
+<h3><a class="self" href="#text-box">Text boxes</a></h3>
+<p class="what">Text adds a box that grows with what you type. Double-click a box, or right-click &gt; Edit text, to change it.</p>
+<p class="where"><b>Where:</b> <span class="path">Toolbar<span class="sep">&#8250;</span>Text</span></p>
+<figure><img src="media/text-box.webp" width="600" height="299" alt="A title being edited on the slide, its box outlined." loading="lazy" decoding="async"></figure>
+<details class="html"><summary>In HTML</summary><pre><code>&lt;p class=&quot;role-body&quot;&gt;Body text with &lt;b&gt;bold&lt;/b&gt; and &lt;i&gt;italic&lt;/i&gt;.&lt;/p&gt;</code></pre></details>
+</article>
+<article class="feature" id="text-styles" data-aka="paragraph styles, title, body, caption, role, reset to theme">
+<h3><a class="self" href="#text-styles">Text styles</a></h3>
+<p class="what">A text style (Title, Body or Caption) takes its font, size and colour from the theme, so a theme change restyles the text. A &quot;+&quot; after the style means the box has its own changes; Reset to theme removes them.</p>
+<p class="where"><b>Where:</b> <span class="path">Props tab<span class="sep">&#8250;</span>Typography<span class="sep">&#8250;</span>Role, and Reset to theme below it</span></p>
+<figure><img src="media/text-roles.webp" width="414" height="175" alt="A title, a body line and a caption, each in its theme style." loading="lazy" decoding="async"></figure>
+<details class="html"><summary>In HTML</summary><pre><code>&lt;h1 class=&quot;role-title&quot;&gt;A title&lt;/h1&gt;
+&lt;p class=&quot;role-caption&quot;&gt;Figure: First Author et al.&lt;/p&gt;</code></pre></details>
+</article>
+<article class="feature" id="fonts" data-aka="typeface, font size, bold weight">
+<h3><a class="self" href="#fonts">Font, size and weight</a></h3>
+<p class="what">Pick a font (theme fonts first, then installed fonts), a size in pixels and a weight from 1 to 1000. When the text has been shrunk to fit, the size field says &quot;Fitted to N px&quot;.</p>
+<p class="where"><b>Where:</b> <span class="path">Props tab<span class="sep">&#8250;</span>Typography<span class="sep">&#8250;</span>Font family, Font size, Font weight</span></p>
+<figure><img src="media/fonts.webp" width="348" height="247" alt="One line in light, medium and heavy weights and in a monospace font." loading="lazy" decoding="async"></figure>
+</article>
+<article class="feature" id="inline-styles" data-aka="superscript, subscript, font style">
+<h3><a class="self" href="#inline-styles">Bold, italic, underline, strikethrough</a></h3>
+<p class="what">Style selected characters, or the whole box when it is selected but not being edited. Superscript and subscript work on selected characters.</p>
+<p class="where"><b>Where:</b> <span class="path">Props tab<span class="sep">&#8250;</span>Typography<span class="sep">&#8250;</span>Style, or Cmd+B, Cmd+I, Cmd+U, Cmd+Shift+X (strikethrough), Cmd+Shift+= (superscript), Cmd+Shift+- (subscript)</span></p>
+<figure><img src="media/inline-styles.webp" width="511" height="148" alt="Bold, italic, underlined and struck-through words, a superscript and a subscript." loading="lazy" decoding="async"></figure>
+<details class="html"><summary>In HTML</summary><pre><code>&lt;p&gt;Error &lt;s&gt;4.1%&lt;/s&gt; 2.7%, x&lt;sup&gt;2&lt;/sup&gt;&lt;/p&gt;</code></pre></details>
+</article>
+<article class="feature" id="text-colour" data-aka="font colour, text color">
+<h3><a class="self" href="#text-colour">Text colour</a></h3>
+<p class="what">Colour the whole box or selected characters. The clear option goes back to the theme's text colour.</p>
+<p class="where"><b>Where:</b> <span class="path">Props tab<span class="sep">&#8250;</span>Typography<span class="sep">&#8250;</span>Colour</span></p>
+<figure><img src="media/text-colour.webp" width="446" height="144" alt="A sentence with one word in blue, and a line in dark blue." loading="lazy" decoding="async"></figure>
+</article>
+<article class="feature" id="alignment" data-aka="align text, justify, vertical alignment">
+<h3><a class="self" href="#alignment">Text alignment</a></h3>
+<p class="what">Horizontal alignment (left, centre, right, justify) and where the text sits in its box (top, middle, bottom).</p>
+<p class="where"><b>Where:</b> <span class="path">Props tab<span class="sep">&#8250;</span>Paragraph<span class="sep">&#8250;</span>Align, Vertical</span></p>
+<figure><img src="media/alignment.webp" width="872" height="232" alt="Three boxes: text at the top left, the middle centre and the bottom right." loading="lazy" decoding="async"></figure>
+<details class="html"><summary>In HTML</summary><pre><code>&lt;p class=&quot;role-body&quot; style=&quot;text-align:center&quot; data-valign=&quot;bottom&quot;&gt;…&lt;/p&gt;</code></pre></details>
+</article>
+<article class="feature" id="spacing" data-aka="line spacing, space before, space after">
+<h3><a class="self" href="#spacing">Line and paragraph spacing</a></h3>
+<p class="what">Line spacing is a multiple of the font size. Paragraph spacing is the gap in pixels between paragraphs and between list items.</p>
+<p class="where"><b>Where:</b> <span class="path">Props tab<span class="sep">&#8250;</span>Paragraph<span class="sep">&#8250;</span>Line spacing, Paragraph spacing</span></p>
+<figure><img src="media/spacing.webp" width="651" height="186" alt="Two lists, one tightly spaced and one with wide gaps between items." loading="lazy" decoding="async"></figure>
+<details class="html"><summary>In HTML</summary><pre><code>&lt;ul data-paragraph-spacing=&quot;12&quot; style=&quot;line-height:1.2&quot;&gt;…&lt;/ul&gt;</code></pre></details>
+</article>
+<article class="feature" id="lists" data-aka="lists, bulleted list, numbered list">
+<h3><a class="self" href="#lists">Bullets and numbering</a></h3>
+<p class="what">Bulleted and numbered lists are real lists, so an animation can reveal them one item at a time. The bullets can have their own colour.</p>
+<p class="where"><b>Where:</b> <span class="path">Props tab<span class="sep">&#8250;</span>Paragraph<span class="sep">&#8250;</span>List<span class="sep">&#8250;</span>No list, Bulleted list, Numbered list, then Marker colour</span></p>
+<figure><img src="media/lists.webp" width="488" height="140" alt="A bulleted list and a numbered list side by side." loading="lazy" decoding="async"></figure>
+<details class="html"><summary>In HTML</summary><pre><code>&lt;ul&gt;
+  &lt;li&gt;First point&lt;/li&gt;
+  &lt;li&gt;Second point&lt;/li&gt;
+&lt;/ul&gt;</code></pre></details>
+</article>
+<article class="feature" id="bullet-styles" data-aka="bullet character, numbering style, check marks, roman numerals">
+<h3><a class="self" href="#bullet-styles">Bullet styles</a></h3>
+<p class="what">Bullets: disc, circle, square, dash, triangle, arrow, check. Numbers: 1. and 1) numbers, lower and capital letters, lower and capital Roman numerals.</p>
+<p class="where"><b>Where:</b> <span class="path">Props tab<span class="sep">&#8250;</span>Paragraph<span class="sep">&#8250;</span>Bullet (turn on a list first)</span></p>
+<figure><img src="media/bullet-styles.webp" width="356" height="277" alt="Six lists with disc, square, dash, arrow, check and Roman numeral markers." loading="lazy" decoding="async"></figure>
+<details class="html"><summary>In HTML</summary><pre><code>&lt;ul data-bullet=&quot;check&quot;&gt;…&lt;/ul&gt;
+&lt;ol data-bullet=&quot;lower-roman&quot;&gt;…&lt;/ol&gt;</code></pre></details>
+</article>
+<article class="feature" id="indent" data-aka="increase indent, decrease indent, list level, outdent">
+<h3><a class="self" href="#indent">Indent</a></h3>
+<p class="what">Move a list item or a paragraph one level in or out. A list item moves under the item above it.</p>
+<p class="where"><b>Where:</b> <span class="path">Props tab<span class="sep">&#8250;</span>Paragraph<span class="sep">&#8250;</span>Indent, or Tab and Shift+Tab in a list, or Cmd+] and Cmd+[</span></p>
+<figure><img src="media/indent.webp" width="245" height="206" alt="A list with items at three levels of indent." loading="lazy" decoding="async"></figure>
+<details class="html"><summary>In HTML</summary><pre><code>&lt;p data-indent=&quot;1&quot;&gt;An indented paragraph&lt;/p&gt;</code></pre></details>
+</article>
+<article class="feature" id="links" data-aka="hyperlink, url">
+<h3><a class="self" href="#links">Links</a></h3>
+<p class="what">Paste an http(s) or www. address while text is selected to link that text. Typing an address followed by Space or Return links the address.</p>
+<p class="where"><b>Where:</b> <span class="path">While editing text<span class="sep">&#8250;</span>select text<span class="sep">&#8250;</span>paste a URL</span></p>
+<figure><img src="media/links.webp" width="480" height="85" alt="A sentence with the words &quot;project page&quot; as a link." loading="lazy" decoding="async"></figure>
+<details class="html"><summary>In HTML</summary><pre><code>&lt;a href=&quot;https://example.org/paper&quot;&gt;Paper&lt;/a&gt;</code></pre></details>
+</article>
+<article class="feature" id="shrink-to-fit" data-aka="auto-fit, autofit, shrink text on overflow, resize shape to fit text">
+<h3><a class="self" href="#shrink-to-fit">Shrink text to fit</a></h3>
+<p class="what">Shrinks text so it stays inside its box. Size box to text makes the box hug its text instead. With automatic line breaks off, a long line either shrinks or is condensed sideways.</p>
+<p class="where"><b>Where:</b> <span class="path">Props tab<span class="sep">&#8250;</span>Paragraph<span class="sep">&#8250;</span>Auto-fit text to box, Size box to text, Disable automatic line breaks<span class="sep">&#8250;</span>Compress by</span></p>
+<figure><img src="media/auto-fit.webp" width="724" height="251" alt="The same long title twice: overflowing its box, and shrunk to fit it." loading="lazy" decoding="async"></figure>
+<details class="html"><summary>In HTML</summary><pre><code>&lt;h1 class=&quot;role-title&quot; data-autofit=&quot;true&quot;&gt;A long title&lt;/h1&gt;
+&lt;p data-nowrap data-fit-mode=&quot;condense&quot;&gt;One line, never wrapped&lt;/p&gt;</code></pre></details>
+</article>
+<article class="feature" id="text-box-style" data-aka="shape fill, text box outline, text shadow">
+<h3><a class="self" href="#text-box-style">Text box fill, border and shadow</a></h3>
+<p class="what">Give a text box a fill, a border and rounded corners, and a shadow on the box or on the letters.</p>
+<p class="where"><b>Where:</b> <span class="path">Props tab<span class="sep">&#8250;</span>Box<span class="sep">&#8250;</span>Fill, Border, Width, Radius, and Props tab<span class="sep">&#8250;</span>Text shadow<span class="sep">&#8250;</span>Drop shadow</span></p>
+<figure><img src="media/text-box-style.webp" width="490" height="169" alt="A sentence in a light blue box with a blue border, rounded corners and a shadow." loading="lazy" decoding="async"></figure>
+</article>
+<article class="feature" id="tables" data-aka="insert table, table cells">
+<h3><a class="self" href="#tables">Tables</a></h3>
+<p class="what">Insert a table up to 8 rows by 10 columns. Cells take fills, text colour and borders, and columns can be added and removed.</p>
+<p class="where"><b>Where:</b> <span class="path">Toolbar<span class="sep">&#8250;</span>Table<span class="sep">&#8250;</span>pick a size, then Props tab<span class="sep">&#8250;</span>Table</span></p>
+<figure><img src="media/tables.webp" width="606" height="235" alt="A table of three methods with score and time, the best row highlighted." loading="lazy" decoding="async"></figure>
+<details class="html"><summary>In HTML</summary><pre><code>&lt;table&gt;
+  &lt;tr&gt;&lt;th&gt;Method&lt;/th&gt;&lt;th&gt;Score&lt;/th&gt;&lt;/tr&gt;
+  &lt;tr&gt;&lt;td&gt;Step 1&lt;/td&gt;&lt;td&gt;0.81&lt;/td&gt;&lt;/tr&gt;
+&lt;/table&gt;</code></pre></details>
+</article>
+<article class="feature" id="spelling" data-aka="spell check, proofing">
+<h3><a class="self" href="#spelling">Spelling and grammar</a></h3>
+<p class="what">Spelling and grammar are checked on your computer while you type. Right-click a marked word for suggestions, Add to dictionary or Ignore.</p>
+<p class="where"><b>Where:</b> <span class="path">While editing text<span class="sep">&#8250;</span>right-click<span class="sep">&#8250;</span>Check spelling and grammar</span></p>
+</article>
+</section>
+<section class="category" id="shapes">
+<h2>Shapes and drawing</h2>
+<article class="feature" id="shape-kinds" data-aka="insert shape, rectangle, ellipse, trapezoid, parallelogram">
+<h3><a class="self" href="#shape-kinds">Shapes</a></h3>
+<p class="what">Rectangles, ellipses, trapezoids, parallelograms, four-sided shapes, lines and arrows. Change the kind, fill, outline, width and corner radius after inserting.</p>
+<p class="where"><b>Where:</b> <span class="path">Toolbar<span class="sep">&#8250;</span>Shape, then Props tab<span class="sep">&#8250;</span>Style</span></p>
+<figure><img src="media/shape-kinds.webp" width="722" height="170" alt="A rounded rectangle, an ellipse, a trapezoid and an outlined parallelogram." loading="lazy" decoding="async"></figure>
+<details class="html"><summary>In HTML</summary><pre><code>&lt;div data-element=&quot;shape&quot; data-shape=&quot;rect&quot; data-stroke=&quot;#2563eb&quot;
+     data-stroke-width=&quot;4&quot; data-radius=&quot;16&quot; style=&quot;width:460px;height:240px&quot;&gt;&lt;/div&gt;</code></pre></details>
+</article>
+<article class="feature" id="arrowheads" data-aka="line endpoints, arrow, line ends">
+<h3><a class="self" href="#arrowheads">Arrowheads</a></h3>
+<p class="what">Put a head on either end of a line or arrow, or both. Head size is in pixels; Auto scales it with the line width.</p>
+<p class="where"><b>Where:</b> <span class="path">Props tab<span class="sep">&#8250;</span>Style<span class="sep">&#8250;</span>Head at end, Head at start, Head size</span></p>
+<figure><img src="media/arrowheads.webp" width="506" height="178" alt="Three arrows: one head, two heads, and a thick line with a large head." loading="lazy" decoding="async"></figure>
+<details class="html"><summary>In HTML</summary><pre><code>data-shape=&quot;arrow&quot; data-arrow-start=&quot;true&quot; data-arrow-end=&quot;true&quot; data-arrow-size=&quot;24&quot;</code></pre></details>
+</article>
+<article class="feature" id="curved-arrows" data-aka="curved line, curved connector, callout arrow">
+<h3><a class="self" href="#curved-arrows">Curved arrows</a></h3>
+<p class="what">An arrow with one bend handle. Drag the round handle to bend it; the head turns with the end of the curve.</p>
+<p class="where"><b>Where:</b> <span class="path">Toolbar<span class="sep">&#8250;</span>Shape<span class="sep">&#8250;</span>Curved arrow, or Props tab<span class="sep">&#8250;</span>Style<span class="sep">&#8250;</span>Curved on an arrow</span></p>
+<figure><img src="media/curved-arrows.webp" width="451" height="146" alt="A curved arrow from a label to a point." loading="lazy" decoding="async"></figure>
+<details class="html"><summary>In HTML</summary><pre><code>data-shape=&quot;arrow&quot; data-arrow-end=&quot;true&quot; data-control=&quot;950,260&quot;</code></pre></details>
+</article>
+<article class="feature" id="braces" data-aka="brace, bracket">
+<h3><a class="self" href="#braces">Curly braces</a></h3>
+<p class="what">A brace laid out like a line. Its depth sets how far the point sticks out.</p>
+<p class="where"><b>Where:</b> <span class="path">Toolbar<span class="sep">&#8250;</span>Shape<span class="sep">&#8250;</span>Curly brace, then Props tab<span class="sep">&#8250;</span>Style<span class="sep">&#8250;</span>Depth, or drag the brace's tip</span></p>
+<figure><img src="media/braces.webp" width="482" height="177" alt="A curly brace under part of an equation, with a label." loading="lazy" decoding="async"></figure>
+<details class="html"><summary>In HTML</summary><pre><code>&lt;div data-element=&quot;shape&quot; data-shape=&quot;brace&quot; data-brace-depth=&quot;40&quot;&gt;&lt;/div&gt;</code></pre></details>
+</article>
+<article class="feature" id="draw-with-pen" data-aka="pen tool, freeform, scribble, bezier, path">
+<h3><a class="self" href="#draw-with-pen">Draw with Pen</a></h3>
+<p class="what">Draw a free-form shape. Click for corners, drag for curves. Click the first point to close and fill the shape, or press Return to finish an open line. Backspace removes the last point.</p>
+<p class="where"><b>Where:</b> <span class="path">Toolbar<span class="sep">&#8250;</span>Pen, or Toolbar<span class="sep">&#8250;</span>Shape<span class="sep">&#8250;</span>Draw with Pen</span></p>
+<figure><img src="media/pen.webp" width="192" height="166" alt="The Pen button in the toolbar with its menu: Pen, Brush, Pencil, Marker." loading="lazy" decoding="async"></figure>
+<details class="html"><summary>In HTML</summary><pre><code>&lt;div data-element=&quot;shape&quot; data-shape=&quot;path&quot; data-path=&quot;M 0 150 C 0 -50 300 -50 300 150 Z&quot;
+     data-path-size=&quot;300,150&quot; style=&quot;width:300px;height:150px&quot;&gt;&lt;/div&gt;</code></pre></details>
+</article>
+<article class="feature" id="line-styles" data-aka="stroke style, brush, pencil, marker, highlighter">
+<h3><a class="self" href="#line-styles">Line styles</a></h3>
+<p class="what">A drawn line can be Pen (even), Brush (swells and tapers), Pencil (thin and grainy) or Marker (a wide see-through highlighter).</p>
+<p class="where"><b>Where:</b> <span class="path">Toolbar<span class="sep">&#8250;</span>Pen<span class="sep">&#8250;</span>style menu before drawing, or Props tab<span class="sep">&#8250;</span>Style<span class="sep">&#8250;</span>Stroke style after</span></p>
+<figure><img src="media/stroke-styles.webp" width="763" height="137" alt="The same arc drawn as Pen, Brush, Pencil and Marker." loading="lazy" decoding="async"></figure>
+<details class="html"><summary>In HTML</summary><pre><code>data-shape=&quot;path&quot; data-stroke-style=&quot;brush&quot;</code></pre></details>
+</article>
+<article class="feature" id="edit-points" data-aka="make editable, edit shape, bezier handles">
+<h3><a class="self" href="#edit-points">Edit points</a></h3>
+<p class="what">Drag the points of a drawn shape to change it.</p>
+<p class="where"><b>Where:</b> <span class="path">Double-click a drawn shape, or right-click<span class="sep">&#8250;</span>Edit points, or Props tab<span class="sep">&#8250;</span>Style<span class="sep">&#8250;</span>Edit points</span></p>
+<figure><img src="media/edit-points.webp" width="360" height="203" alt="A brush stroke with its points and handles shown for editing." loading="lazy" decoding="async"></figure>
+</article>
+<article class="feature" id="shadows" data-aka="drop shadow, curved shadow, contact shadow">
+<h3><a class="self" href="#shadows">Shadows</a></h3>
+<p class="what">A drop shadow with colour, blur, angle and distance, or a curved shadow where the object lifts at its bottom corners. The shadow follows the shape's own outline.</p>
+<p class="where"><b>Where:</b> <span class="path">Props tab<span class="sep">&#8250;</span>Shadow<span class="sep">&#8250;</span>Drop shadow<span class="sep">&#8250;</span>Style: Drop or Curved</span></p>
+<figure><img src="media/shadows.webp" width="644" height="242" alt="Two white cards: one with a soft drop shadow, one lifting at its corners." loading="lazy" decoding="async"></figure>
+<details class="html"><summary>In HTML</summary><pre><code>style=&quot;filter: drop-shadow(0px 8px 24px rgba(0, 0, 0, 0.3))&quot;</code></pre></details>
+</article>
+<article class="feature" id="gradients" data-aka="gradient, linear gradient, radial gradient">
+<h3><a class="self" href="#gradients">Gradient fills</a></h3>
+<p class="what">Fill a shape with a linear or radial gradient from its fill colour to a second colour. A linear gradient has an angle.</p>
+<p class="where"><b>Where:</b> <span class="path">Props tab<span class="sep">&#8250;</span>Style<span class="sep">&#8250;</span>Fill style<span class="sep">&#8250;</span>Linear gradient or Radial gradient, then To and Angle</span></p>
+<figure><img src="media/gradients.webp" width="566" height="236" alt="A rectangle with a top-to-bottom blue gradient and a circle with a radial one." loading="lazy" decoding="async"></figure>
+<details class="html"><summary>In HTML</summary><pre><code>data-fill=&quot;#f59e0b&quot; data-fill-to=&quot;#dc2626&quot; data-fill-angle=&quot;270&quot; data-fill-gradient=&quot;linear&quot;</code></pre></details>
+</article>
+<article class="feature" id="flip-rotate" data-aka="flip horizontal, flip vertical, mirror, rotation">
+<h3><a class="self" href="#flip-rotate">Flip and rotate</a></h3>
+<p class="what">Rotate any object with the dial or an exact angle (Shift snaps to 15°). Flip mirrors it along the slide's own axes; text stays editable.</p>
+<p class="where"><b>Where:</b> <span class="path">Props tab<span class="sep">&#8250;</span>Geometry<span class="sep">&#8250;</span>Rotate, Angle, Flip</span></p>
+<figure><img src="media/flip-rotate.webp" width="694" height="181" alt="An arrow as drawn, flipped horizontally, and rotated." loading="lazy" decoding="async"></figure>
+<details class="html"><summary>In HTML</summary><pre><code>style=&quot;transform: rotate(30deg) scaleX(-1)&quot;</code></pre></details>
+</article>
+<article class="feature" id="geometry" data-aka="arrange inspector, size and position, transparency, nudge">
+<h3><a class="self" href="#geometry">Position, size and opacity</a></h3>
+<p class="what">Exact position and size in slide pixels, and opacity from 0 to 100%. Arrow keys nudge by 1 pixel, Shift+arrow by 10. Alt-drag makes a copy.</p>
+<p class="where"><b>Where:</b> <span class="path">Props tab<span class="sep">&#8250;</span>Geometry<span class="sep">&#8250;</span>Position, Size, Opacity</span></p>
+<figure><img src="media/geometry.webp" width="319" height="295" alt="The Geometry section: position, size, rotation dial, flip buttons, opacity and layer." loading="lazy" decoding="async"></figure>
+</article>
+<article class="feature" id="colours" data-aka="colour picker, color picker, eyedropper, swatches">
+<h3><a class="self" href="#colours">Colours and eyedropper</a></h3>
+<p class="what">Every colour field opens the same picker, with the theme's swatches and an eyedropper that picks a colour from anywhere on screen.</p>
+<p class="where"><b>Where:</b> <span class="path">Any colour field<span class="sep">&#8250;</span>Pick a colour from the screen</span></p>
+<figure><img src="media/colour-picker.webp" width="292" height="384" alt="The colour picker with theme colours, a hue slider, opacity and the eyedropper button." loading="lazy" decoding="async"></figure>
+</article>
+</section>
+<section class="category" id="media">
+<h2>Images and video</h2>
+<article class="feature" id="images" data-aka="insert picture, photo, pdf figure, svg">
+<h3><a class="self" href="#images">Images</a></h3>
+<p class="what">Drag or paste images onto a slide: PNG, JPEG, GIF, WebP, SVG, AVIF, PDF, HEIC, TIFF and BMP. PDFs and SVGs stay vector.</p>
+<p class="where"><b>Where:</b> <span class="path">Drag a file onto the slide, or paste</span></p>
+<figure><img src="media/add-media.webp" width="840" height="270" alt="A blue gradient picture and a blue fractal picture side by side." loading="lazy" decoding="async"></figure>
+<details class="html"><summary>In HTML</summary><pre><code>&lt;img src=&quot;assets/figure.png&quot; alt=&quot;Results&quot; style=&quot;width:800px;height:500px;object-fit:contain&quot;&gt;</code></pre></details>
+</article>
+<article class="feature" id="video" data-aka="movie, insert video, autoplay, loop">
+<h3><a class="self" href="#video">Video</a></h3>
+<p class="what">Drag or paste MP4, MOV, M4V, WebM, MKV or AVI. A slide video plays by itself, loops and is muted unless you change it. Formats a browser cannot play are converted on import.</p>
+<p class="where"><b>Where:</b> <span class="path">Drag a file onto the slide, then Props tab<span class="sep">&#8250;</span>Playback<span class="sep">&#8250;</span>Autoplay, Loop, Mute, Controls, Play preview</span></p>
+<figure><video width="689" height="408" poster="media/video.webp" muted loop playsinline controls preload="none" aria-label="A clip of two soft blue shapes moving, playing on a slide."><source src="media/video.mp4" type="video/mp4"></video></figure>
+<details class="html"><summary>In HTML</summary><pre><code>&lt;video src=&quot;assets/clip.mp4&quot; autoplay loop muted&gt;&lt;/video&gt;</code></pre></details>
+</article>
+<article class="feature" id="crop" data-aka="mask, edit mask, crop picture">
+<h3><a class="self" href="#crop">Crop</a></h3>
+<p class="what">Move and scale the picture inside its box. The file on disk is not changed, and the crop can be changed or reset later. Works the same on video.</p>
+<p class="where"><b>Where:</b> <span class="path">Double-click an image, or Props tab<span class="sep">&#8250;</span>Mask<span class="sep">&#8250;</span>Edit mask, or right-click<span class="sep">&#8250;</span>Edit mask (crop)</span></p>
+<figure><img src="media/crop.webp" width="721" height="281" alt="A whole picture, and the same picture cropped to a square detail." loading="lazy" decoding="async"></figure>
+<details class="html"><summary>In HTML</summary><pre><code>&lt;img src=&quot;assets/figure.png&quot; data-crop=&quot;-300,-200,1200,800&quot;&gt;</code></pre></details>
+</article>
+<article class="feature" id="mask" data-aka="mask with shape, circular mask, crop to shape, rounded picture">
+<h3><a class="self" href="#mask">Circle crop and rounded corners</a></h3>
+<p class="what">Crop an image or video to a circle, or round its corners.</p>
+<p class="where"><b>Where:</b> <span class="path">Props tab<span class="sep">&#8250;</span>Mask<span class="sep">&#8250;</span>Circular mask, Corner radius, or right-click<span class="sep">&#8250;</span>Circular mask</span></p>
+<figure><img src="media/mask.webp" width="816" height="256" alt="Two pictures cropped to circles and one with rounded corners." loading="lazy" decoding="async"></figure>
+<details class="html"><summary>In HTML</summary><pre><code>&lt;img src=&quot;assets/headshot.jpg&quot; data-mask-shape=&quot;circle&quot; style=&quot;width:440px;height:440px&quot;&gt;</code></pre></details>
+</article>
+<article class="feature" id="borders-effects" data-aka="picture border, blur, posterize, greyscale, grayscale, noise, artistic effects">
+<h3><a class="self" href="#borders-effects">Picture borders and effects</a></h3>
+<p class="what">A border with colour and width, and effects that stack in order: blur, posterize, greyscale and Gaussian noise. Reorder them with the arrows.</p>
+<p class="where"><b>Where:</b> <span class="path">Props tab<span class="sep">&#8250;</span>Border<span class="sep">&#8250;</span>Color, Width, and Props tab<span class="sep">&#8250;</span>Effects<span class="sep">&#8250;</span>+ Add effect</span></p>
+<figure><img src="media/media-effects.webp" width="876" height="258" alt="One picture four ways: with a border, blurred, posterized, and greyscale with noise." loading="lazy" decoding="async"></figure>
+<details class="html"><summary>In HTML</summary><pre><code>data-border-width=&quot;6&quot; data-border-color=&quot;#111111&quot; data-border-radius=&quot;12&quot;</code></pre></details>
+</article>
+<article class="feature" id="trim" data-aka="edit movie, start and end, shorten video">
+<h3><a class="self" href="#trim">Trim video</a></h3>
+<p class="what">Play only part of a clip. Looping repeats the trimmed part. The file on disk is not changed.</p>
+<p class="where"><b>Where:</b> <span class="path">Props tab<span class="sep">&#8250;</span>Trim<span class="sep">&#8250;</span>Range, and Reset trim</span></p>
+<figure><img src="media/trim.webp" width="319" height="211" alt="The Trim section: a frame of the clip and a range slider with two handles." loading="lazy" decoding="async"></figure>
+<details class="html"><summary>In HTML</summary><pre><code>&lt;video src=&quot;assets/clip.mp4&quot; data-trim=&quot;12,20&quot;&gt;&lt;/video&gt;</code></pre></details>
+</article>
+<article class="feature" id="play-together" data-aka="synced videos, sync group, play in sync, side by side">
+<h3><a class="self" href="#play-together">Play videos together</a></h3>
+<p class="what">Videos played together start, pause and loop from one clock while presenting, each from its own trim start.</p>
+<p class="where"><b>Where:</b> <span class="path">Select several videos<span class="sep">&#8250;</span>Props tab<span class="sep">&#8250;</span>Playback<span class="sep">&#8250;</span>Play in sync, and Unsync on one of them</span></p>
+<figure><video width="872" height="274" poster="media/synced-videos.webp" muted loop playsinline controls preload="none" aria-label="Two clips side by side, blue and orange, moving in step."><source src="media/synced-videos.mp4" type="video/mp4"></video></figure>
+<details class="html"><summary>In HTML</summary><pre><code>&lt;video src=&quot;assets/a.mp4&quot; data-sync-group=&quot;pair&quot;&gt;&lt;/video&gt;
+&lt;video src=&quot;assets/b.mp4&quot; data-sync-group=&quot;pair&quot;&gt;&lt;/video&gt;</code></pre></details>
+</article>
+<article class="feature" id="before-after" data-aka="wipe, compare, slider comparison, divider">
+<h3><a class="self" href="#before-after">Before and after comparison</a></h3>
+<p class="what">Two pictures or videos stacked in one box with a divider between them: the upper one shows left of the divider, the lower one right of it. Videos compared this way also play together. The presenter can drag the divider while presenting.</p>
+<p class="where"><b>Where:</b> <span class="path">Select two images or two videos<span class="sep">&#8250;</span>Props tab<span class="sep">&#8250;</span>Compare<span class="sep">&#8250;</span>Arrange as wipe, then Wipe<span class="sep">&#8250;</span>Divider, Turn off wipe</span></p>
+<figure><video width="608" height="365" poster="media/wipe.webp" muted loop playsinline controls preload="none" aria-label="Two clips stacked in one box, a divider being dragged across to show more of either."><source src="media/wipe.mp4" type="video/mp4"></video></figure>
+<details class="html"><summary>In HTML</summary><pre><code>&lt;video src=&quot;assets/before.mp4&quot; data-sync-group=&quot;w&quot;&gt;&lt;/video&gt;
+&lt;video src=&quot;assets/after.mp4&quot; data-sync-group=&quot;w&quot; data-compare=&quot;wipe&quot; data-wipe=&quot;0.5&quot;&gt;&lt;/video&gt;</code></pre></details>
+</article>
+<article class="feature" id="wipe-button" data-aka="wipe button, arrange as wipe">
+<h3><a class="self" href="#wipe-button">Compare button</a> <span class="new">(new)</span></h3>
+<p class="what">Selecting two images or two videos shows a small Wipe button under them on the slide. It does the same as Arrange as wipe. The same item is in the right-click menu.</p>
+<p class="where"><b>Where:</b> <span class="path">Select two images or two videos<span class="sep">&#8250;</span>Wipe</span></p>
+<figure><img src="media/wipe-button.webp" width="1014" height="342" alt="Two selected videos with a small Wipe button under them." loading="lazy" decoding="async"></figure>
+</article>
+<article class="feature" id="comparison-length" data-aka="wipe length, sync length, shortest, hold last frame">
+<h3><a class="self" href="#comparison-length">Comparison length</a> <span class="new">(new)</span></h3>
+<p class="what">When the two clips of a comparison differ in length: Shortest ends with the shorter clip, Hold last runs to the longer clip and freezes the shorter one on its last frame, Black runs to the longer clip and blacks out the shorter one.</p>
+<p class="where"><b>Where:</b> <span class="path">Select a compared pair of videos<span class="sep">&#8250;</span>Length<span class="sep">&#8250;</span>Shortest, Hold last, Black, or Props tab<span class="sep">&#8250;</span>Wipe<span class="sep">&#8250;</span>Length</span></p>
+<figure><img src="media/wipe-length.webp" width="713" height="434" alt="A compared pair of videos with the Length choices under it: Shortest, Hold last, Black." loading="lazy" decoding="async"></figure>
+<details class="html"><summary>In HTML</summary><pre><code>&lt;video src=&quot;assets/after.mp4&quot; data-sync-group=&quot;w&quot; data-sync-length=&quot;hold&quot;&gt;&lt;/video&gt;</code></pre></details>
+</article>
+<article class="feature" id="video-controls" data-aka="hover bar, scrubber, playback controls, media controls">
+<h3><a class="self" href="#video-controls">Video controls while presenting</a></h3>
+<p class="what">While presenting, hovering a video shows a bar along its bottom: play and pause, a scrubber over the trimmed part, the time and a speed slider. For videos played together it controls them all. It never shows in PDFs or thumbnails.</p>
+<p class="where"><b>Where:</b> <span class="path">While presenting, move the pointer over a video</span></p>
+<figure><video width="689" height="408" poster="media/hover-bar.webp" muted loop playsinline controls preload="none" aria-label="A clip playing with a bar along its bottom: pause, a scrubber, the time and a speed slider."><source src="media/hover-bar.mp4" type="video/mp4"></video></figure>
+</article>
+<article class="feature" id="video-speed" data-aka="playback speed, fast forward, slow motion">
+<h3><a class="self" href="#video-speed">Video speed</a></h3>
+<p class="what">Speed up or slow down every video on the current slide while presenting: 0.25, 0.5, 1, 1.5, 2, 4 or 8 times. Leaving the slide returns to normal speed.</p>
+<p class="where"><b>Where:</b> <span class="path">While presenting,<span class="sep">&#8250;</span>or ] (faster), &lt; or [ (slower), = (normal), or the speed slider in the video controls</span></p>
+<figure><video width="824" height="474" poster="media/video-speed.webp" muted loop playsinline controls preload="none" aria-label="A clip speeding up while presenting, with the speed shown in the corner."><source src="media/video-speed.mp4" type="video/mp4"></video></figure>
+</article>
+<article class="feature" id="media-browser" data-aka="media tab, media library, unused files, reduce file size">
+<h3><a class="self" href="#media-browser">Media browser</a></h3>
+<p class="what">Every image, video, web page and 3D model in the deck, with the slides that use it. Search by file name, filter by type, add a file to the current slide, and find and remove unused files.</p>
+<p class="where"><b>Where:</b> <span class="path">Media tab<span class="sep">&#8250;</span>Search, Type, On this slide, +, Unused files<span class="sep">&#8250;</span>Rescan</span></p>
+<figure><img src="media/media-tab.webp" width="319" height="500" alt="The Media tab listing the deck's pictures and clips with the slides that use them." loading="lazy" decoding="async"></figure>
+</article>
+<article class="feature" id="media-advanced" data-aka="edit with ffmpeg, rasterize, download original">
+<h3><a class="self" href="#media-advanced">Re-encode or paint</a></h3>
+<p class="what">Edit w/ ffmpeg re-encodes a video into a new file. Rasterize &amp; paint paints over an image as a new PNG. The original is kept in both cases. Download original saves the source file.</p>
+<p class="where"><b>Where:</b> <span class="path">Props tab<span class="sep">&#8250;</span>Advanced<span class="sep">&#8250;</span>Edit w/ ffmpeg… or Rasterize &amp; paint…, or right-click<span class="sep">&#8250;</span>Download original…</span></p>
+<figure><img src="media/media-advanced.webp" width="319" height="82" alt="The Advanced section of a selected video with Edit w/ ffmpeg…." loading="lazy" decoding="async"></figure>
+</article>
+</section>
+<section class="category" id="animations">
+<h2>Animations</h2>
+<p class="blurb">The app calls them builds, in the Build tab (Keynote: Animate; PowerPoint: Animations).</p>
+<article class="feature" id="add-animation" data-aka="build in, build out, build, on click, with previous, after previous">
+<h3><a class="self" href="#add-animation">Add an animation</a></h3>
+<p class="what">An animation shows, hides or moves an object during a slide. Each step runs on a click, with the step before it, after it, or when a video ends, with an optional delay. Objects without an animation are on screen from the start.</p>
+<p class="where"><b>Where:</b> <span class="path">Build tab<span class="sep">&#8250;</span>select an object<span class="sep">&#8250;</span>Add animation, then the trigger (click, after, with, media) and the action menu</span></p>
+<figure><video width="660" height="130" poster="media/add-build.webp" muted loop playsinline controls preload="none" aria-label="Three boxes appearing one per click: Step 1, Step 2, Step 3."><source src="media/add-build.mp4" type="video/mp4"></video></figure>
+<details class="html"><summary>In HTML</summary><pre><code>&lt;img src=&quot;assets/a.png&quot; data-build=&quot;click&quot;&gt;
+&lt;img src=&quot;assets/b.png&quot; data-build=&quot;afterPrev+500&quot;&gt;</code></pre></details>
+</article>
+<article class="feature" id="animation-order" data-aka="build order, animation pane, reorder animations">
+<h3><a class="self" href="#animation-order">Animation order</a></h3>
+<p class="what">While the Build tab is open, each object shows a numbered badge for its steps. Drag a step's handle to reorder it; drop it on the middle of another step to play both together.</p>
+<p class="where"><b>Where:</b> <span class="path">Build tab<span class="sep">&#8250;</span>Build steps<span class="sep">&#8250;</span>drag the handle</span></p>
+<figure><img src="media/build-order.webp" width="1140" height="700" alt="The Build tab with three steps, and numbered badges on the matching objects on the slide." loading="lazy" decoding="async"></figure>
+</article>
+<article class="feature" id="dissolve-blur" data-aka="fade, fade in, fade out, disappear, dissolve">
+<h3><a class="self" href="#dissolve-blur">Appear, dissolve and blur</a></h3>
+<p class="what">Appear and disappear are instant. Dissolve fades in or out. Blur comes into focus, or goes out of it.</p>
+<p class="where"><b>Where:</b> <span class="path">Build tab<span class="sep">&#8250;</span>action menu<span class="sep">&#8250;</span>appear, dissolve in, blur in, disappear, dissolve out, blur out</span></p>
+<figure><video width="733" height="256" poster="media/dissolve-blur.webp" muted loop playsinline controls preload="none" aria-label="A picture fading in, then a second one coming into focus."><source src="media/dissolve-blur.mp4" type="video/mp4"></video></figure>
+<details class="html"><summary>In HTML</summary><pre><code>data-build=&quot;click&quot; data-build-effect=&quot;dissolve&quot; data-build-duration=&quot;500&quot;</code></pre></details>
+</article>
+<article class="feature" id="line-draw" data-aka="draw, wipe in, trace outline">
+<h3><a class="self" href="#line-draw">Line Draw</a></h3>
+<p class="what">A line or arrow grows from its start, head first. A box, ellipse or drawn shape is traced along its outline and its fill fades in after. Works on every line style.</p>
+<p class="where"><b>Where:</b> <span class="path">Build tab<span class="sep">&#8250;</span>action menu<span class="sep">&#8250;</span>line draw (shapes only)</span></p>
+<figure><video width="654" height="188" poster="media/line-draw.webp" muted loop playsinline controls preload="none" aria-label="A box drawn along its outline, then an arrow growing, then a brush stroke drawn in."><source src="media/line-draw.mp4" type="video/mp4"></video></figure>
+<details class="html"><summary>In HTML</summary><pre><code>data-build=&quot;click&quot; data-build-effect=&quot;draw&quot;</code></pre></details>
+</article>
+<article class="feature" id="pop-in" data-aka="pop in, grow, zoom in, bounce">
+<h3><a class="self" href="#pop-in">Pop</a></h3>
+<p class="what">The object grows in from smaller, overshoots a little and settles.</p>
+<p class="where"><b>Where:</b> <span class="path">Build tab<span class="sep">&#8250;</span>action menu<span class="sep">&#8250;</span>pop in, then from and overshoot</span></p>
+<figure><video width="641" height="176" poster="media/pop-in.webp" muted loop playsinline controls preload="none" aria-label="Four circles popping in one after another."><source src="media/pop-in.mp4" type="video/mp4"></video></figure>
+<details class="html"><summary>In HTML</summary><pre><code>data-build=&quot;click&quot; data-build-effect=&quot;pop&quot; data-build-pop-from=&quot;0.6&quot; data-build-pop-peak=&quot;1.06&quot;</code></pre></details>
+</article>
+<article class="feature" id="keyboard" data-aka="typewriter, type in">
+<h3><a class="self" href="#keyboard">Keyboard</a></h3>
+<p class="what">Text types in a character at a time behind a moving caret.</p>
+<p class="where"><b>Where:</b> <span class="path">Build tab<span class="sep">&#8250;</span>action menu<span class="sep">&#8250;</span>keyboard (text only)</span></p>
+<figure><video width="394" height="104" poster="media/keyboard.webp" muted loop playsinline controls preload="none" aria-label="A title typing in letter by letter behind a caret."><source src="media/keyboard.mp4" type="video/mp4"></video></figure>
+<details class="html"><summary>In HTML</summary><pre><code>data-build=&quot;afterPrev&quot; data-build-effect=&quot;keyboard&quot; data-build-duration=&quot;1500&quot;</code></pre></details>
+</article>
+<article class="feature" id="by-paragraph" data-aka="deliver by paragraph, by bullet, one bullet at a time">
+<h3><a class="self" href="#by-paragraph">By paragraph</a></h3>
+<p class="what">Reveal a text box one paragraph or list item at a time, from one animation step.</p>
+<p class="where"><b>Where:</b> <span class="path">Build tab<span class="sep">&#8250;</span>Add animation by paragraph, or action menu<span class="sep">&#8250;</span>appear by paragraph</span></p>
+<figure><video width="230" height="185" poster="media/by-paragraph.webp" muted loop playsinline controls preload="none" aria-label="A list revealed one item per click."><source src="media/by-paragraph.mp4" type="video/mp4"></video></figure>
+</article>
+<article class="feature" id="play-pause" data-aka="play movie, pause movie, media trigger">
+<h3><a class="self" href="#play-pause">Start and stop video</a></h3>
+<p class="what">Start or pause a video as an animation step. The media trigger starts the next step when a video ends.</p>
+<p class="where"><b>Where:</b> <span class="path">Build tab<span class="sep">&#8250;</span>action menu<span class="sep">&#8250;</span>play, pause, and the media trigger</span></p>
+<figure><video width="528" height="352" poster="media/play-pause.webp" muted loop playsinline controls preload="none" aria-label="A clip starting on a click, and a caption appearing when it ends."><source src="media/play-pause.mp4" type="video/mp4"></video></figure>
+</article>
+<article class="feature" id="actions" data-aka="emphasis, pulse, jiggle, action build, damping">
+<h3><a class="self" href="#actions">Actions: pulse, jiggle and pop</a></h3>
+<p class="what">Movements that end where they began. Pulse enlarges the object, holds, and settles back; pulse (lift) also casts a shadow and rises above its neighbours. Jiggle wobbles side to side. Pop eases up and back down. Damping (0 to 1) sets how soft the movement is.</p>
+<p class="where"><b>Where:</b> <span class="path">Build tab<span class="sep">&#8250;</span>Add pulse, then action menu<span class="sep">&#8250;</span>pulse, pulse (lift), jiggle, pop, and scale, damping</span></p>
+<figure><video width="582" height="240" poster="media/emphasis.webp" muted loop playsinline controls preload="none" aria-label="A circle pulsing, a square wobbling and a second circle popping, one per click."><source src="media/emphasis.mp4" type="video/mp4"></video></figure>
+<details class="html"><summary>In HTML</summary><pre><code>data-pulse=&quot;click&quot; data-pulse-scale=&quot;1.6&quot; data-pulse-lift=&quot;true&quot;
+data-jiggle=&quot;click&quot;  data-pop=&quot;click&quot; data-pop-scale=&quot;1.3&quot;</code></pre></details>
+</article>
+<article class="feature" id="preview-animations" data-aka="play slide, preview build, preview">
+<h3><a class="self" href="#preview-animations">Preview animations</a></h3>
+<p class="what">Preview plays the selected object's animation in place. Play slide runs every step of the slide in turn. The button reads Stop while playing; Esc also stops.</p>
+<p class="where"><b>Where:</b> <span class="path">Build tab<span class="sep">&#8250;</span>▶ Preview, ▶▶ Play slide</span></p>
+<figure><img src="media/build-preview.webp" width="319" height="360" alt="The top of the Build tab with Preview and Play slide." loading="lazy" decoding="async"></figure>
+</article>
+</section>
+<section class="category" id="transitions">
+<h2>Transitions</h2>
+<article class="feature" id="morph" data-aka="magic move, smart animate, transition">
+<h3><a class="self" href="#morph">Morph</a></h3>
+<p class="what">Animate from one slide to the next (Keynote calls it Magic Move): paired objects move, resize and change colour, and everything else fades. Enable and Auto-Pair pairs what it can match. Duration is per slide; the motion curve is for the whole deck.</p>
+<p class="where"><b>Where:</b> <span class="path">Select the earlier slide<span class="sep">&#8250;</span>Props tab<span class="sep">&#8250;</span>Morph<span class="sep">&#8250;</span>Enable and Auto-Pair, Duration, Motion curve</span></p>
+<figure><video width="749" height="361" poster="media/morph.webp" muted loop playsinline controls preload="none" aria-label="A box, a dot and a label moving, resizing and changing colour into the next slide."><source src="media/morph.mp4" type="video/mp4"></video></figure>
+<details class="html"><summary>In HTML</summary><pre><code>&lt;h1 data-morph=&quot;diagram&quot;&gt;…&lt;/h1&gt;
+&lt;section class=&quot;slide&quot; data-morph-from-previous=&quot;true&quot; data-morph-duration=&quot;1000&quot;&gt;</code></pre></details>
+</article>
+<article class="feature" id="morph-editor" data-aka="magic move matching, morph pairs">
+<h3><a class="self" href="#morph-editor">Pair objects by hand</a></h3>
+<p class="what">Choose an object on the source slide, then its partner on the target slide. Auto-pair and Clear pairs reset the pairing.</p>
+<p class="where"><b>Where:</b> <span class="path">Props tab<span class="sep">&#8250;</span>Morph<span class="sep">&#8250;</span>Open Morph editor…</span></p>
+<figure><img src="media/morph-editor.webp" width="1508" height="705" alt="The Morph editor: the source slide on the left, the target on the right, pairs numbered." loading="lazy" decoding="async"></figure>
+</article>
+<article class="feature" id="morph-many" data-aka="magic move all">
+<h3><a class="self" href="#morph-many">Morph across several slides</a></h3>
+<p class="what">Turn on Morph and auto-pair for every slide in a selection at once.</p>
+<p class="where"><b>Where:</b> <span class="path">Select several slides in the navigator<span class="sep">&#8250;</span>Props tab<span class="sep">&#8250;</span>Enable Morph &amp; Auto-Pair</span></p>
+<figure><img src="media/morph-many.webp" width="319" height="420" alt="Two slides selected, with Enable Morph &amp; Auto-Pair in the sidebar." loading="lazy" decoding="async"></figure>
+</article>
+<article class="feature" id="equation-morph" data-aka="magic move equations, equation transition">
+<h3><a class="self" href="#equation-morph">Equation Morph</a></h3>
+<p class="what">When two paired text boxes hold different equations, each shared symbol travels to its new place and size, and symbols only one side has fade in or out. It happens on its own for any paired maths.</p>
+<p class="where"><b>Where:</b> <span class="path">Pair two equations with Morph</span></p>
+<figure><video width="371" height="118" poster="media/equation-morph.webp" muted loop playsinline controls preload="none" aria-label="An equation growing over three slides, its symbols moving to their new places."><source src="media/equation-morph.mp4" type="video/mp4"></video></figure>
+<details class="html"><summary>In HTML</summary><pre><code>&lt;p data-morph=&quot;eq&quot;&gt;$$a^2 + b^2 = c^2$$&lt;/p&gt;</code></pre></details>
+</article>
+</section>
+<section class="category" id="equations">
+<h2>Equations</h2>
+<article class="feature" id="latex" data-aka="math, maths, katex, insert equation">
+<h3><a class="self" href="#latex">LaTeX equations</a></h3>
+<p class="what">Write maths in any text box between dollar signs: <code>$…$</code> inline, <code>$$…$$</code> on its own line. It renders as you type. Write a literal dollar as <code>\$</code>.</p>
+<p class="where"><b>Where:</b> <span class="path">Any text box<span class="sep">&#8250;</span>type <code>$…$</code></span></p>
+<figure><img src="media/latex.webp" width="665" height="225" alt="An inline equation in a sentence and a display integral below it." loading="lazy" decoding="async"></figure>
+<details class="html"><summary>In HTML</summary><pre><code>&lt;p&gt;The mean $\bar{x}$ and $$\int_0^1 x^2\,dx = \frac{1}{3}$$&lt;/p&gt;</code></pre></details>
+</article>
+<article class="feature" id="term-builds" data-aka="term build, equation animation">
+<h3><a class="self" href="#term-builds">Build an equation term by term</a></h3>
+<p class="what">Mark terms in the TeX with <code>\step{1}{…}</code>, <code>\step{2}{…}</code>, and the equation appears one term per click. Terms not yet shown keep their place, so nothing moves.</p>
+<p class="where"><b>Where:</b> <span class="path">Build tab<span class="sep">&#8250;</span>Add term build<span class="sep">&#8250;</span>action build terms</span></p>
+<figure><video width="474" height="112" poster="media/term-builds.webp" muted loop playsinline controls preload="none" aria-label="An equation whose terms appear one per click, holding their places."><source src="media/term-builds.mp4" type="video/mp4"></video></figure>
+<details class="html"><summary>In HTML</summary><pre><code>&lt;p data-term-build=&quot;click&quot;&gt;$$y = \step{1}{a x^2} + \step{2}{b x} + \step{3}{c}$$&lt;/p&gt;</code></pre></details>
+</article>
+<article class="feature" id="term-colour" data-aka="highlight term, colour equation">
+<h3><a class="self" href="#term-colour">Colour terms</a></h3>
+<p class="what">Paint marked terms a colour, one step at a time, and they stay painted.</p>
+<p class="where"><b>Where:</b> <span class="path">Build tab<span class="sep">&#8250;</span>Add term build<span class="sep">&#8250;</span>action color terms<span class="sep">&#8250;</span>Highlight</span></p>
+<figure><video width="474" height="112" poster="media/term-colour.webp" muted loop playsinline controls preload="none" aria-label="Two terms of an equation turning blue, one per click."><source src="media/term-colour.mp4" type="video/mp4"></video></figure>
+<details class="html"><summary>In HTML</summary><pre><code>data-term-build=&quot;click&quot; data-term-effect=&quot;color&quot; data-term-color=&quot;#0588ff&quot;</code></pre></details>
+</article>
+<article class="feature" id="term-pulse" data-aka="emphasis term, point at term">
+<h3><a class="self" href="#term-pulse">Pulse a term</a></h3>
+<p class="what">Pulse, jiggle or pop one marked term to point at it. Without a term the whole object moves.</p>
+<p class="where"><b>Where:</b> <span class="path">Build tab<span class="sep">&#8250;</span>Add pulse<span class="sep">&#8250;</span>term</span></p>
+<figure><video width="474" height="114" poster="media/term-pulse.webp" muted loop playsinline controls preload="none" aria-label="One term of an equation growing for a moment and settling back."><source src="media/term-pulse.mp4" type="video/mp4"></video></figure>
+<details class="html"><summary>In HTML</summary><pre><code>data-pulse=&quot;click&quot; data-pulse-term=&quot;2&quot;</code></pre></details>
+</article>
+</section>
+<section class="category" id="code">
+<h2>Code blocks</h2>
+<article class="feature" id="code-block" data-aka="source code, syntax highlighting, listing">
+<h3><a class="self" href="#code-block">Code blocks</a></h3>
+<p class="what">Source code highlighted in a choice of colour schemes, offline. Whitespace is kept exactly. The Deck scheme takes its colours from the theme.</p>
+<p class="where"><b>Where:</b> <span class="path">Toolbar<span class="sep">&#8250;</span>Code, then Props tab<span class="sep">&#8250;</span>Code<span class="sep">&#8250;</span>Source, Language, and Appearance<span class="sep">&#8250;</span>Colour scheme, Size, Line numbers</span></p>
+<figure><img src="media/code-block.webp" width="606" height="186" alt="Four lines of Python, highlighted, with line numbers." loading="lazy" decoding="async"></figure>
+<details class="html"><summary>In HTML</summary><pre><code>&lt;pre data-element=&quot;code&quot; data-language=&quot;python&quot; data-scheme=&quot;deck&quot; data-line-numbers=&quot;true&quot;&gt;
+&lt;code&gt;def f(x):
+    return x * 2&lt;/code&gt;&lt;/pre&gt;</code></pre></details>
+</article>
+<article class="feature" id="line-builds" data-aka="line build, highlight lines, code animation">
+<h3><a class="self" href="#line-builds">Reveal code line by line</a></h3>
+<p class="what">Reveal or highlight lines step by step. Steps are separated by <code>;</code>: <code>1-3</code> reveals lines 1 to 3, <code>highlight:5</code> dims every other line, <code>highlight:all</code> ends the highlight.</p>
+<p class="where"><b>Where:</b> <span class="path">Build tab<span class="sep">&#8250;</span>Add line build<span class="sep">&#8250;</span>lines</span></p>
+<figure><video width="598" height="178" poster="media/line-builds.webp" muted loop playsinline controls preload="none" aria-label="Code appearing two lines at a time, then one line highlighted while the rest dim."><source src="media/line-builds.mp4" type="video/mp4"></video></figure>
+<details class="html"><summary>In HTML</summary><pre><code>&lt;pre data-element=&quot;code&quot; data-build-lines=&quot;1-3; 4-6; highlight:5&quot;&gt;…&lt;/pre&gt;</code></pre></details>
+</article>
+</section>
+<section class="category" id="charts">
+<h2>Charts</h2>
+<article class="feature" id="chart" data-aka="insert chart, bar chart, line chart, scatter plot, csv">
+<h3><a class="self" href="#chart">Charts</a></h3>
+<p class="what">Bar, stacked bar, line, area and scatter charts drawn from CSV kept in the chart. They use the theme's fonts and colours and stay editable. Cells may carry units like 12% or 3.2 ms.</p>
+<p class="where"><b>Where:</b> <span class="path">Toolbar<span class="sep">&#8250;</span>Chart<span class="sep">&#8250;</span>Bar, Stacked bar, Line, Area, Scatter or From CSV file…, or drop a CSV file on the slide, then Props tab<span class="sep">&#8250;</span>Type, Data, Axes</span></p>
+<figure><img src="media/chart.webp" width="739" height="411" alt="A grouped bar chart of three methods in two steps, in the theme's blues." loading="lazy" decoding="async"></figure>
+<details class="html"><summary>In HTML</summary><pre><code>&lt;figure data-element=&quot;chart&quot; data-kind=&quot;bar&quot; data-x=&quot;method&quot; style=&quot;width:1200px;height:640px&quot;&gt;
+  &lt;script type=&quot;text/csv&quot;&gt;method,score
+Step 1,0.81
+Baseline,0.72&lt;/script&gt;
+&lt;/figure&gt;</code></pre></details>
+</article>
+<article class="feature" id="chart-style" data-aka="chart style, palette, legend, data labels, colour-blind">
+<h3><a class="self" href="#chart-style">Chart colours and labels</a></h3>
+<p class="what">Palettes: Deck, Tableau 10, Okabe-Ito (colour-blind safe), Viridis, Grayscale + accent, or your own from a hex list or a coolors.co link. Legend position, value labels on bars and text size are set here too.</p>
+<p class="where"><b>Where:</b> <span class="path">Props tab<span class="sep">&#8250;</span>Style<span class="sep">&#8250;</span>Palette, Import palette, Highlight, Legend, Value labels on bars, Text size</span></p>
+<figure><img src="media/chart-style.webp" width="730" height="414" alt="A line chart in the colour-blind safe palette with the legend on the right." loading="lazy" decoding="async"></figure>
+<details class="html"><summary>In HTML</summary><pre><code>data-palette=&quot;okabe-ito&quot; data-legend=&quot;top&quot; data-value-labels=&quot;true&quot;</code></pre></details>
+</article>
+<article class="feature" id="chart-builds" data-aka="chart build, by series, by category">
+<h3><a class="self" href="#chart-builds">Animate a chart</a></h3>
+<p class="what">Reveal a chart one series or one group of bars per click.</p>
+<p class="where"><b>Where:</b> <span class="path">Build tab<span class="sep">&#8250;</span>action menu<span class="sep">&#8250;</span>appear by series, appear by category</span></p>
+<figure><video width="730" height="404" poster="media/chart-builds.webp" muted loop playsinline controls preload="none" aria-label="A bar chart revealing its first series, then its second."><source src="media/chart-builds.mp4" type="video/mp4"></video></figure>
+<details class="html"><summary>In HTML</summary><pre><code>data-build=&quot;click&quot; data-build-effect=&quot;bySeries&quot;</code></pre></details>
+</article>
+</section>
+<section class="category" id="papers">
+<h2>Paper cards</h2>
+<article class="feature" id="paper-card" data-aka="citation, related work, reference, arxiv">
+<h3><a class="self" href="#paper-card">Paper cards</a></h3>
+<p class="what">A related-work card: the top of the paper's first page (or a screenshot of its project page) with a shadow, the title in bold and an &quot;Authors, Venue Year&quot; line. It is three ordinary objects you can move and restyle.</p>
+<p class="where"><b>Where:</b> <span class="path">Toolbar<span class="sep">&#8250;</span>Paper<span class="sep">&#8250;</span>arXiv, DOI or web address, or Choose PDF…, then Insert</span></p>
+<figure><img src="media/paper-card.webp" width="459" height="331" alt="A card with the top of a paper's first page, its title in bold and an author line." loading="lazy" decoding="async"></figure>
+</article>
+</section>
+<section class="category" id="models">
+<h2>3D models</h2>
+<article class="feature" id="3d-models" data-aka="3d object, glb, gltf, obj, mesh">
+<h3><a class="self" href="#3d-models">3D models</a></h3>
+<p class="what">Drop a .glb, .gltf or .obj file on a slide to get an interactive 3D view. Models dropped together share one view. While presenting, drag to orbit and scroll to zoom.</p>
+<p class="where"><b>Where:</b> <span class="path">Drag a model onto the slide, then Props tab<span class="sep">&#8250;</span>Web page<span class="sep">&#8250;</span>Shading (auto, clay, normals, depth, uv, wireframe)</span></p>
+<figure><img src="media/3d-models.webp" width="305" height="194" alt="A torus in clay shading." loading="lazy" decoding="async"></figure>
+<details class="html"><summary>In HTML</summary><pre><code>data-element=&quot;web&quot; data-fragment=&quot;shading=normals&quot;</code></pre></details>
+</article>
+</section>
+<section class="category" id="web">
+<h2>Web pages</h2>
+<article class="feature" id="web-element" data-aka="web view, embed, iframe, interactive, html page">
+<h3><a class="self" href="#web-element">Live web pages</a></h3>
+<p class="what">A complete HTML page running live in a box on the slide: an interactive chart, a slider demo, a page someone already built. It runs sandboxed with no network. The editor shows a still of it until you interact with it.</p>
+<p class="where"><b>Where:</b> <span class="path">Added by an agent, then double-click it, or Props tab<span class="sep">&#8250;</span>Web page<span class="sep">&#8250;</span>Interact with page, and Page receives clicks while presenting</span></p>
+<figure><img src="media/web-element.webp" width="674" height="305" alt="A live page on a slide: a wave and a slider that changes its frequency." loading="lazy" decoding="async"></figure>
+<details class="html"><summary>In HTML</summary><pre><code>&lt;div data-element=&quot;web&quot; data-src=&quot;assets/web/chart.a1b2c3d4.html&quot;
+     data-title=&quot;Training curves&quot; style=&quot;width:1680px;height:780px&quot;&gt;&lt;/div&gt;</code></pre></details>
+</article>
+<article class="feature" id="html-element" data-aka="raw html, embedded markup">
+<h3><a class="self" href="#html-element">HTML regions</a></h3>
+<p class="what">Markup the editor has no object for (a multi-part SVG, a clipped panel) is kept as one HTML region. You can move and resize it; its contents change only by rewriting the markup.</p>
+<p class="where"><b>Where:</b> <span class="path">On the slide, like any object</span></p>
+<figure><img src="media/html-region.webp" width="640" height="266" alt="Two coloured panels in one HTML region, one with a clipped corner." loading="lazy" decoding="async"></figure>
+<details class="html"><summary>In HTML</summary><pre><code>&lt;div data-element=&quot;html&quot;&gt;…&lt;/div&gt;</code></pre></details>
+</article>
+</section>
+<section class="category" id="presenting">
+<h2>Presenting</h2>
+<article class="feature" id="present" data-aka="present, play, slideshow, start presentation">
+<h3><a class="self" href="#present">Play the slideshow</a></h3>
+<p class="what">Starts from the current slide. With several slides selected in the navigator, only those are shown. The audience view goes to a second display when there is one.</p>
+<p class="where"><b>Where:</b> <span class="path">Toolbar<span class="sep">&#8250;</span>Present</span></p>
+<figure><img src="media/present.webp" width="210" height="88" alt="The Present button and its menu with Present in Speaker View." loading="lazy" decoding="async"></figure>
+</article>
+<article class="feature" id="presenter-display" data-aka="presenter view, speaker view, presenter notes, timer">
+<h3><a class="self" href="#presenter-display">Presenter display</a></h3>
+<p class="what">Your screen shows the current and next slide, elapsed and per-slide timers, the time and your notes, with Previous, Blank, Next, Switch displays and End show. It opens on its own when there are two displays.</p>
+<p class="where"><b>Where:</b> <span class="path">Toolbar<span class="sep">&#8250;</span>Present menu<span class="sep">&#8250;</span>Present in Speaker View</span></p>
+<figure><img src="media/presenter-display.webp" width="1600" height="900" alt="The presenter display: the current slide, the next slide, timers and notes." loading="lazy" decoding="async"></figure>
+</article>
+<article class="feature" id="present-keys" data-aka="keyboard shortcuts presenting, next slide, previous slide">
+<h3><a class="self" href="#present-keys">Keys while presenting</a></h3>
+<p class="what">Next: Right, Down, Space, Page Down, Return or click. Previous: Left, Up, Page Up, Backspace or right-click. Home goes to the first slide, Esc ends the show. The pointer hides after a second without moving.</p>
+<p class="where"><b>Where:</b> <span class="path">In the presentation window</span></p>
+</article>
+<article class="feature" id="black-screen" data-aka="blank screen, b key, pause show">
+<h3><a class="self" href="#black-screen">Black screen</a></h3>
+<p class="what">Black out the audience screen and bring it back.</p>
+<p class="where"><b>Where:</b> <span class="path">While presenting, B, or the presenter display<span class="sep">&#8250;</span>Blank</span></p>
+</article>
+<article class="feature" id="phone-remote" data-aka="keynote remote, remote control, clicker">
+<h3><a class="self" href="#phone-remote">Phone remote</a></h3>
+<p class="what">In a collaboration session, hand the remote to someone in it, for example your own phone. Their screen shows the current and next slide, notes, timers and large Previous and Next buttons. Swiping works too.</p>
+<p class="where"><b>Where:</b> <span class="path">Presenter display<span class="sep">&#8250;</span>Remote…, or R, or the Remote… button in the presentation, then Give remote</span></p>
+</article>
+<article class="feature" id="phone-client" data-aka="mobile, iphone, android">
+<h3><a class="self" href="#phone-client">Phone view</a></h3>
+<p class="what">A session link opened on a phone gives a layout made for it: slides, notes and comments. On a phone you can edit presenter notes and comments and present, but not change slides.</p>
+<p class="where"><b>Where:</b> <span class="path">Open the invite link on a phone<span class="sep">&#8250;</span>Notes, Comments, All slides, Present, Agent</span></p>
+<figure><img src="media/phone-client.webp" width="390" height="844" alt="The deck on a phone: the slide, the thumbnails and the notes." loading="lazy" decoding="async"></figure>
+</article>
+</section>
+<section class="category" id="collaboration">
+<h2>Collaboration</h2>
+<article class="feature" id="collaborate" data-aka="live editing, share, invite, co-editing, real-time">
+<h3><a class="self" href="#collaborate">Collaborate</a></h3>
+<p class="what">Starts a live session and copies an invite link. Anyone on the same local network or tailnet opens it in a browser, enters a name and edits with you. End collaboration saves and closes the session for everyone.</p>
+<p class="where"><b>Where:</b> <span class="path">Toolbar<span class="sep">&#8250;</span>Collaborate, then End collaboration</span></p>
+<figure><img src="media/presence.webp" width="754" height="232" alt="A second person, Alex, with a shape selected and a named pointer on the slide." loading="lazy" decoding="async"></figure>
+</article>
+<article class="feature" id="presence" data-aka="presence, cursors, collaborators">
+<h3><a class="self" href="#presence">See who is editing</a></h3>
+<p class="what">Everyone's slide, pointer and selection show as they work. Click a person's chip in the toolbar to go to where they are.</p>
+<p class="where"><b>Where:</b> <span class="path">Toolbar<span class="sep">&#8250;</span>a person's chip</span></p>
+<figure><img src="media/presence.webp" width="754" height="232" alt="A second person, Alex, with a shape selected and a named pointer on the slide." loading="lazy" decoding="async"></figure>
+</article>
+<article class="feature" id="comments" data-aka="review, notes for reviewers, resolve">
+<h3><a class="self" href="#comments">Comments</a></h3>
+<p class="what">Threads on a slide or an object, with replies, Resolve and a Link that opens the deck at the thread. Open threads show as an amber highlight in the editor, never when presenting.</p>
+<p class="where"><b>Where:</b> <span class="path">Right-click an object<span class="sep">&#8250;</span>Comment…, or right-click the slide background or a thumbnail<span class="sep">&#8250;</span>Comment on slide…</span></p>
+<figure><img src="media/comments.webp" width="527" height="300" alt="A comment on a shape, with Resolve, Edit and a reply field." loading="lazy" decoding="async"></figure>
+</article>
+<article class="feature" id="chat" data-aka="messages, mention, @agent">
+<h3><a class="self" href="#chat">Chat</a></h3>
+<p class="what">A chat for everyone in a browser session, kept apart from the deck. Type @ to mention someone, or @agent for the agent.</p>
+<p class="where"><b>Where:</b> <span class="path">Chat tab (browser editor)</span></p>
+<figure><img src="media/chat.webp" width="319" height="520" alt="The Chat tab with one message to @agent." loading="lazy" decoding="async"></figure>
+</article>
+<article class="feature" id="headless-server" data-aka="server, shared decks, team server">
+<h3><a class="self" href="#headless-server">Headless server</a></h3>
+<p class="what">Keep a folder of decks available for editing in the browser without the desktop app running. Each subfolder with a deck shows up in the list. Run it only on a network you trust.</p>
+<p class="where"><b>Where:</b> <span class="path"><code>npm run collab -- /path/to/decks</code> in a DeckWerk checkout</span></p>
+</article>
+<article class="feature" id="download-deck" data-aka="download, zip, save a copy">
+<h3><a class="self" href="#download-deck">Download a deck</a></h3>
+<p class="what">Download the deck you are editing in the browser as a zip of its folder.</p>
+<p class="where"><b>Where:</b> <span class="path">Browser editor<span class="sep">&#8250;</span>File<span class="sep">&#8250;</span>Save and export<span class="sep">&#8250;</span>Deck archive (.zip)…</span></p>
+<figure><img src="media/download-deck.webp" width="192" height="347" alt="The browser editor's File menu with Deck archive (.zip)…." loading="lazy" decoding="async"></figure>
+</article>
+</section>
+<section class="category" id="agents">
+<h2>Working with agents</h2>
+<p class="blurb">An agent (Claude Code, Codex or similar) edits the same deck you do. Its edits land as named steps in History, so you can undo them.</p>
+<article class="feature" id="agent-desktop" data-aka="ai, assistant, claude, codex">
+<h3><a class="self" href="#agent-desktop">Agent… in the desktop app</a></h3>
+<p class="what">Saves the deck and shows its folder path to copy. Start your agent in that folder: the <code>AGENTS.md</code> there tells it how to work on the deck.</p>
+<p class="where"><b>Where:</b> <span class="path">Toolbar<span class="sep">&#8250;</span>Agent…<span class="sep">&#8250;</span>Copy</span></p>
+<figure><img src="media/agent-desktop.webp" width="412" height="94" alt="The agent panel with the deck folder path and a Copy button." loading="lazy" decoding="async"></figure>
+</article>
+<article class="feature" id="agent-browser" data-aka="copy prompt, ai, assistant">
+<h3><a class="self" href="#agent-browser">Agent… in the browser</a></h3>
+<p class="what">Copies a prompt. Paste it into your agent and it sets up a live folder copy of the deck by itself. The panel says Connected once it is in.</p>
+<p class="where"><b>Where:</b> <span class="path">Browser editor<span class="sep">&#8250;</span>Agent…<span class="sep">&#8250;</span>Copy prompt</span></p>
+</article>
+<article class="feature" id="agent-loop" data-aka="slide-agent, authoring html, agent loop">
+<h3><a class="self" href="#agent-loop">How an agent edits</a></h3>
+<p class="what">The agent exports slides as an HTML page, edits it, and saves it in the deck's <code>edit/</code> folder. The editor picks up each save within a few seconds as one undoable change. New slides start from <code>slide-agent new</code>, which can only add.</p>
+<p class="where"><b>Where:</b> <span class="path"><code>slide-agent context</code>, <code>slide-agent inspect --html --slide 4</code>, <code>slide-agent new</code></span></p>
+<details class="html"><summary>In HTML</summary><pre><code>slide-agent context
+slide-agent inspect --html --slide 4 &gt; edit/work.html</code></pre></details>
+</article>
+<article class="feature" id="agent-check" data-aka="render, validate, contact sheet, overflow">
+<h3><a class="self" href="#agent-check">Render and check</a></h3>
+<p class="what">An agent can render slides to PNG (with every animation finished, or as a contact sheet) and check for overflowing text, missing files and broken references.</p>
+<p class="where"><b>Where:</b> <span class="path"><code>slide-agent render</code>, <code>slide-agent validate</code></span></p>
+<figure><img src="media/contact-sheet.webp" width="709" height="431" alt="A contact sheet of rendered slides." loading="lazy" decoding="async"></figure>
+</article>
+<article class="feature" id="agent-capabilities" data-aka="feature list, cookbook">
+<h3><a class="self" href="#agent-capabilities">Capabilities</a></h3>
+<p class="what">Every feature on this page that an agent can author, with a working example. Agents read it before they write a slide.</p>
+<p class="where"><b>Where:</b> <span class="path"><code>slide-agent capabilities</code></span></p>
+</article>
+<article class="feature" id="what-to-ask" data-aka="prompting, requests">
+<h3><a class="self" href="#what-to-ask">What to ask</a></h3>
+<p class="what">Name slides by the number the navigator shows. Say what should change and what must stay. Ask for the deck's own style unless you want a new one, and ask the agent to render the slides it changed. For example: &quot;Slide 12 is too dense: split it into two slides, keep the figure, move the details to the notes, and render both.&quot;</p>
+<p class="where"><b>Where:</b> <span class="path">Your agent's prompt</span></p>
+</article>
+</section>
+<section class="category" id="export">
+<h2>Import and export</h2>
+<article class="feature" id="export-pdf" data-aka="pdf, print, handout">
+<h3><a class="self" href="#export-pdf">Export to PDF</a></h3>
+<p class="what">One page per slide, or one page per animation step.</p>
+<p class="where"><b>Where:</b> <span class="path">File<span class="sep">&#8250;</span>Save and export<span class="sep">&#8250;</span>Export PDF…<span class="sep">&#8250;</span>Include each stage of builds</span></p>
+<figure><img src="media/export-pdf.webp" width="448" height="144" alt="The Export PDF dialog with Include each stage of builds." loading="lazy" decoding="async"></figure>
+</article>
+<article class="feature" id="export-web" data-aka="html export, website, web player">
+<h3><a class="self" href="#export-web">Export for the web</a></h3>
+<p class="what">A folder that plays the deck in any browser with the same player the app uses. Balanced and Compact cut each video to the part the slides play and re-encode it; Original copies media unchanged. Skipped slides are left out.</p>
+<p class="where"><b>Where:</b> <span class="path">File<span class="sep">&#8250;</span>Save and export<span class="sep">&#8250;</span>Export Web…<span class="sep">&#8250;</span>Media quality</span></p>
+<figure><img src="media/export-web.webp" width="488" height="258" alt="The Export for the web dialog with its Media quality menu." loading="lazy" decoding="async"></figure>
+</article>
+<article class="feature" id="export-images" data-aka="png, slide images, screenshots">
+<h3><a class="self" href="#export-images">Export images</a></h3>
+<p class="what">Slides as PNG files. There is no menu item for it; an agent or the command line renders them.</p>
+<p class="where"><b>Where:</b> <span class="path"><code>slide-agent render &lt;deck&gt; --slide 4 --output &lt;folder&gt;</code></span></p>
+</article>
+<article class="feature" id="save-as" data-aka="duplicate deck, save a copy, file menu">
+<h3><a class="self" href="#save-as">Save As</a></h3>
+<p class="what">A deck is a folder. Save As copies it to a new folder and switches to the copy. Edits save on their own; Cmd+S saves at once.</p>
+<p class="where"><b>Where:</b> <span class="path">File<span class="sep">&#8250;</span>Save and export<span class="sep">&#8250;</span>Save As…</span></p>
+<figure><img src="media/file-menu.webp" width="192" height="333" alt="The File menu: New, Open, Keynote, PowerPoint, Save As, Export PDF, Export Web." loading="lazy" decoding="async"></figure>
+</article>
+<article class="feature" id="import" data-aka="import, keynote, powerpoint, pptx, key">
+<h3><a class="self" href="#import">Open Keynote and PowerPoint files</a></h3>
+<p class="what">Open a .key, .pptx, .ppsx or .potx file as a new DeckWerk deck. Keynote does not need to be installed. Anything that cannot be converted becomes a placeholder.</p>
+<p class="where"><b>Where:</b> <span class="path">File<span class="sep">&#8250;</span>Import<span class="sep">&#8250;</span>Keynote… or PowerPoint…, or the welcome screen</span></p>
+<figure><img src="media/file-menu.webp" width="192" height="333" alt="The File menu: New, Open, Keynote, PowerPoint, Save As, Export PDF, Export Web." loading="lazy" decoding="async"></figure>
+</article>
+</section>
+<section class="category" id="settings">
+<h2>Settings and appearance</h2>
+<article class="feature" id="open-settings" data-aka="preferences, options">
+<h3><a class="self" href="#open-settings">Settings</a></h3>
+<p class="what">Settings change the editor, not your slides, and apply at once.</p>
+<p class="where"><b>Where:</b> <span class="path">DeckWerk menu<span class="sep">&#8250;</span>Settings…, or Cmd+, (Ctrl+, on Windows and Linux)</span></p>
+<figure><img src="media/open-settings.webp" width="448" height="491" alt="The Settings dialog: theme, interface font and scale." loading="lazy" decoding="async"></figure>
+</article>
+<article class="feature" id="appearance" data-aka="dark mode, appearance, theme of the app">
+<h3><a class="self" href="#appearance">Light and dark</a></h3>
+<p class="what">The editor follows the system, or stays light or dark.</p>
+<p class="where"><b>Where:</b> <span class="path">Settings<span class="sep">&#8250;</span>Appearance<span class="sep">&#8250;</span>Theme<span class="sep">&#8250;</span>System, Light, Dark, or DeckWerk menu<span class="sep">&#8250;</span>Appearance</span></p>
+<figure><img src="media/appearance.webp" width="1680" height="1000" alt="The editor in its dark appearance." loading="lazy" decoding="async"></figure>
+</article>
+<article class="feature" id="ui-font" data-aka="ui font, scale, zoom interface, text size">
+<h3><a class="self" href="#ui-font">Interface font and size</a></h3>
+<p class="what">The font of the editor's own controls (DeckWerk's Monaspace Krypton, the system font, or an installed font) and their size, from 85% to 130%. Slides keep their own fonts.</p>
+<p class="where"><b>Where:</b> <span class="path">Settings<span class="sep">&#8250;</span>Interface<span class="sep">&#8250;</span>Font, Scale</span></p>
+<figure><img src="media/open-settings.webp" width="448" height="491" alt="The Settings dialog: theme, interface font and scale." loading="lazy" decoding="async"></figure>
+</article>
+<article class="feature" id="shortcuts" data-aka="hotkeys, keys">
+<h3><a class="self" href="#shortcuts">Keyboard shortcuts</a></h3>
+<p class="what">Cmd+Z undo, Cmd+Shift+Z redo, Cmd+S save, Cmd+D duplicate, Cmd+A select all, N new slide, Cmd+R rulers, Escape deselect. On Windows and Linux use Ctrl.</p>
+<p class="where"><b>Where:</b> <span class="path">Anywhere in the editor</span></p>
+</article>
+</section>
+<!-- /docs:content -->
+<footer>DeckWerk is MIT licensed. Source and releases: <a href="https://github.com/vsitzmann/deckwerk">github.com/vsitzmann/deckwerk</a>.</footer>
+</div>
+</main>
+</div>
+
+<script src="docs.js"></script>
+</body>
+</html>
